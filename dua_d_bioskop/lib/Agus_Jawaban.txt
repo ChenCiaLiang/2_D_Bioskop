@@ -1,0 +1,3 @@
+Apa susahnya modul Git dan Github?
+Susahnya dikarenakan masih baru pertama kali menggunakan dan cukup membingunkan dengan kata-kata nya seperti pull, commit
+dan masih harus dibiasakan terlebih dahulu
