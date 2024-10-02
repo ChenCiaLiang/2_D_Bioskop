@@ -1,0 +1,36 @@
+name: tubez
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+
+  google_fonts: ^2.0.0
+  font_awesome_flutter: ^10.4.0
+  cupertino_icons: ^1.0.2
+  url_launcher: ^6.1.6
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets: 
+    - images/
+
+  fonts:
+    - family: Poppins 
+      fonts:
+        - asset: fonts/Poppins-Bold.ttf
+        - asset: fonts/Poppins-Light.ttf
+        - asset: fonts/Poppins-Medium.ttf
+        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/Poppins-SemiBold.ttf
