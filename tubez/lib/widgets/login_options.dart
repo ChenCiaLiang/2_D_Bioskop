@@ -23,13 +23,6 @@ class LoginOption extends StatelessWidget {
             Direct.launchURL('https://www.instagram.com/');
           },
         ),
-        BuildButton(
-          iconImage: Image(
-              height: 35, width: 35, image: AssetImage('images/discord.png')),
-          onPressed: () {
-            Direct.launchURL('https://www.instagram.com/');
-          },
-        ),
       ],
     );
   }

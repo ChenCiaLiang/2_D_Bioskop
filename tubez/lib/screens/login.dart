@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/screens/singup.dart';
+import 'package:tubez/screens/signup.dart';
 import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/login_form.dart';
 import 'package:tubez/widgets/login_options.dart';
@@ -11,6 +11,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: kDefaultPadding,
         child: Column(
