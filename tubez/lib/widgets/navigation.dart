@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:tubez/controller/navigationcontroller.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:tubez/screens/home.dart';
@@ -32,14 +31,24 @@ class _navigationBarState extends State<navigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+      bottomNavigationBar: GNav(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        backgroundColor: const Color.fromARGB(255, 37, 36, 36),
+        color: Colors.amber,
+        activeColor: Colors.amber,
+        tabBackgroundColor: const Color.fromARGB(255, 72, 60, 44),
+        padding: const EdgeInsets.all(16),
+        gap: 8,
+        tabs: const [
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
+          ),
+          GButton(icon: Icons.list, text: 'Menu'),
+          GButton(icon: Icons.person, text: 'Profile'),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+        selectedIndex: _selectedIndex,
+        onTabChange: _onItemTapped,
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
     );

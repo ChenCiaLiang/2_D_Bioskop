@@ -3,7 +3,6 @@ import 'package:tubez/screens/list.dart';
 import 'package:tubez/screens/login.dart';
 import 'package:tubez/screens/profile.dart';
 import 'package:tubez/widgets/navigation.dart';
-import 'package:tubez/controller/navigationcontroller.dart';
 import 'package:tubez/theme.dart';
 import 'package:get/get.dart';
 
@@ -48,6 +47,7 @@ class _homeScreeenState extends State<homeScreeen> {
                   height: 20,
                 ),
                 const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Now Playing',
@@ -57,9 +57,11 @@ class _homeScreeenState extends State<homeScreeen> {
                     SizedBox(
                       width: 180,
                     ),
-                    Text(
-                      'More',
-                      style: TextStyle(fontSize: 15),
+                    Expanded(
+                      child: Text(
+                        'More',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                     Icon(Icons.play_arrow_rounded)
                   ],
@@ -231,63 +233,9 @@ class _homeScreeenState extends State<homeScreeen> {
                 const SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Sementara Ke Log in',
-                    style: textButton.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationThickness: 1,
-                    ),
-                  ),
-                ),
                 const SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const profileScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Sementara Ke Profile',
-                    style: textButton.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationThickness: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ListScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Sementara Ke List',
-                    style: textButton.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationThickness: 1,
-                    ),
-                  ),
-                )
               ],
             ),
           ),

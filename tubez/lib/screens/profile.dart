@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tubez/theme.dart';
-import 'package:tubez/widgets/checkbox.dart';
-import 'package:tubez/widgets/primary_button.dart';
 
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
@@ -23,22 +20,91 @@ class _profileScreenState extends State<profileScreen> {
           icon: const Icon(FontAwesomeIcons.arrowLeftLong),
         ),
         leadingWidth: 80,
-        title: Text('My Profile', style: titleText),
+        title: const Text(
+          'My Profile',
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Color.fromARGB(255, 0, 0, 0)),
+        ),
         centerTitle: true,
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BuildButton(
-                iconImage: Image(
-                    height: 100,
-                    width: 100,
-                    image: AssetImage('images/download.png')),
-              ),
-            ],
-          )
+          const Divider(
+            thickness: 1,
+            color: Color.fromARGB(104, 178, 178, 178),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      width: 1,
+                    ),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.black,
+                    backgroundImage: AssetImage("images/download.png"),
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Agus Fefek',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Text(
+                        '+62 0812 6667 6969',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 111, 111, 111)),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Text(
+                        'agussukadudamapan@fefek.com',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Color.fromARGB(255, 111, 111, 111)),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Divider(
+            thickness: 1,
+            color: Color.fromARGB(104, 178, 178, 178),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
         ],
       ),
     );
