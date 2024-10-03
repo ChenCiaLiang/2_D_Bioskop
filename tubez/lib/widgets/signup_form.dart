@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tubez/theme.dart';
 
 class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
+
   @override
   State<SignUpForm> createState() => _SignUpFormState();
 }
@@ -25,33 +27,33 @@ class _SignUpFormState extends State<SignUpForm> {
 
   Padding buildInputForm(String hint, bool pass) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 10), 
-        child: TextFormField(
-          obscureText: pass ? _isObscure : false,
-          decoration: InputDecoration(
-            hintText: hint, 
-            hintStyle: TextStyle(color: kTextFieldColor), 
-            focusedBorder: UnderlineInputBorder(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: TextFormField(
+        obscureText: pass ? _isObscure : false,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: kTextFieldColor),
+          focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: kPrimaryColor)),
-            suffixIcon: pass  
-            ? IconButton(
-                onPressed: (){
-                  setState(() {
-                    _isObscure = !_isObscure;
-                  });
-                },
-                icon: _isObscure ? 
-                  Icon(
-                    Icons.visibility_off, 
-                    color: kTextFieldColor,
-                  ) 
-                : Icon(
-                      Icons.visibility, 
-                      color: kTextFieldColor,
-                  )) 
-            : null,
-          ),
+          suffixIcon: pass
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                  icon: _isObscure
+                      ? const Icon(
+                          Icons.visibility_off,
+                          color: kTextFieldColor,
+                        )
+                      : const Icon(
+                          Icons.visibility,
+                          color: kTextFieldColor,
+                        ))
+              : null,
         ),
-      );
+      ),
+    );
   }
 }

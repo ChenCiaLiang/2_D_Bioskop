@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/signup.dart';
 import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/login_form.dart';
 import 'package:tubez/widgets/login_options.dart';
+import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/widgets/primary_button.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,14 +18,14 @@ class LoginScreen extends StatelessWidget {
         padding: kDefaultPadding,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 120,
             ),
             Text(
               'Welcome Back',
               style: titleText,
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             Row(
@@ -32,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                   'New to this app?',
                   style: subTitle,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 GestureDetector(
@@ -54,14 +56,14 @@ class LoginScreen extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            LoginForm(),
-            SizedBox(
+            const LoginForm(),
+            const SizedBox(
               height: 20,
             ),
-            Text(
+            const Text(
               'Forgot password?',
               style: TextStyle(
                 color: kZambeziColor,
@@ -70,19 +72,30 @@ class LoginScreen extends StatelessWidget {
                 decorationThickness: 1,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            PrimaryButton(buttonText: 'Log In'),
-            SizedBox(height: 30),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const navigationBar()));
+              },
+              child: Padding(
+                padding: kDefaultPadding,
+                child: PrimaryButton(buttonText: 'Log In'),
+              ),
+            ),
+            const SizedBox(height: 30),
             Text(
               'Or log in with:',
               style: subTitle.copyWith(color: kBlackColor),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            LoginOption(),
+            const LoginOption(),
           ],
         ),
       ),

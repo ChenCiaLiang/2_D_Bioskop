@@ -8,6 +8,8 @@ import 'package:tubez/widgets/signup_form.dart';
 class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
+  SignUpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +20,7 @@ class SignUpScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 70,
               ),
               Padding(
@@ -28,7 +30,7 @@ class SignUpScreen extends StatelessWidget {
                   style: titleText,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Padding(
@@ -39,7 +41,7 @@ class SignUpScreen extends StatelessWidget {
                       'Already a Member?',
                       style: subTitle,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     GestureDetector(
@@ -67,21 +69,19 @@ class SignUpScreen extends StatelessWidget {
                 padding: kDefaultPadding,
                 child: SignUpForm(),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Padding(
+              const Padding(
                 padding: kDefaultPadding,
                 child: CheckBox('I have Agree to Terms and Conditions.'),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Padding(
                 padding: kDefaultPadding,
-                child: PrimaryButton(
-                  buttonText: 'Sign Up'
-                ),
+                child: PrimaryButton(buttonText: 'Sign Up'),
               ),
             ],
           ),
