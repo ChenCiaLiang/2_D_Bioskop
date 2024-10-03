@@ -1,0 +1,1 @@
+ C:\\Users\\lenov\\OneDrive\ -\ Universitas\ Atma\ Jaya\ Yogyakarta\\Semester\ 5\\PBP\\Tugas\ Akhir\\2_D_Bioskop\\tubez\\.dart_tool\\flutter_build\\2d55dc8fbddbe439f476c15ea17509db\\native_assets.yaml: 
