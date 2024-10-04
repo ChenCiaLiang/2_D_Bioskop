@@ -1,104 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/screens/home.dart';
-import 'package:tubez/screens/signup.dart';
-import 'package:tubez/theme.dart';
-import 'package:tubez/widgets/login_form.dart';
-import 'package:tubez/widgets/login_options.dart';
+import 'package:tubez/screens/register.dart';
+import 'package:tubez/component/form_component.dart';
 import 'package:tubez/widgets/navigation.dart';
-import 'package:tubez/widgets/primary_button.dart';
+// import 'package:tubez/screens/home.dart';
+// import 'package:tubez/theme.dart';
+// import 'package:tubez/widgets/login_options.dart';
+// import 'package:tubez/widgets/primary_button.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+
+class LoginView extends StatefulWidget {
+  final Map? data;
+
+  const LoginView({super.key, this.data});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController usernameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
+    Map? dataForm = widget.data;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: kDefaultPadding,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 120,
-            ),
-            Text(
-              'Welcome Back',
-              style: titleText,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                Text(
-                  'New to this app?',
-                  style: subTitle,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'Sign Up',
-                    style: textButton.copyWith(
-                      decoration: TextDecoration.underline,
-                      decorationThickness: 1,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const LoginForm(),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text(
-              'Forgot password?',
-              style: TextStyle(
-                color: kZambeziColor,
-                fontSize: 14,
-                decoration: TextDecoration.underline,
-                decorationThickness: 1,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const navigationBar()));
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              inputForm((p0){
+                if(p0 == null || p0.isEmpty){
+                  return "username tidak boleh kosong";
+                }
+                return null;
               },
-              child: Padding(
-                padding: kDefaultPadding,
-                child: PrimaryButton(buttonText: 'Log In'),
+                controller: usernameController,
+                hintTxt: "Username",
+                helperTxt: "Inputkan User yang telah didaftar",
+                iconData: Icons.person),
+              
+              inputForm((p0){
+                if(p0 == null || p0.isEmpty){
+                  return "password kosong";
+                }
+                return null;
+              },
+                password: true,
+                controller: passwordController,
+                hintTxt: "Password",
+                helperTxt: "Inputkan Password",
+                iconData: Icons.password),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(onPressed: () {
+                    if(_formKey.currentState!.validate()){
+                      if(dataForm!['username'] == usernameController.text && dataForm['password'] == passwordController.text){
+                        Navigator.push(
+                          context, MaterialPageRoute(
+                            builder: (_) => const navigationBar()));
+                      }else{
+                        showDialog(context: context, builder: (_)=>AlertDialog(
+                          title: const Text('Password Salah'),
+                          content: TextButton(
+                            onPressed: () => pushRegister(context), 
+                            child: const Text('Daftar Disini !!!')),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Cancel'), 
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'), 
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),);
+                      }
+                    }
+                  }, 
+                  child: const Text('Login')),
+
+                  TextButton(
+                    onPressed: () {
+                      Map<String, dynamic> formData = {};
+                      formData['username'] = usernameController.text;
+                      formData['password'] = passwordController.text;
+                      pushRegister(context);
+                    },
+                    child: const Text('Belum Punya Akun ? ')),
+                ],
               ),
-            ),
-            const SizedBox(height: 30),
-            Text(
-              'Or log in with:',
-              style: subTitle.copyWith(color: kBlackColor),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const LoginOption(),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+  void pushRegister(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterView(),),);
   }
 }

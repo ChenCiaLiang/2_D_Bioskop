@@ -139,7 +139,7 @@ class _profileScreenState extends State<profileScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                        builder: (context) => const LoginView()));
               }, 
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 17, 0),

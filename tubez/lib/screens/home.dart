@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/screens/list.dart';
-import 'package:tubez/screens/login.dart';
-import 'package:tubez/screens/profile.dart';
-import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/theme.dart';
-import 'package:get/get.dart';
+// import 'package:tubez/screens/list.dart';
+// import 'package:tubez/screens/login.dart';
+// import 'package:tubez/screens/profile.dart';
+// import 'package:tubez/widgets/navigation.dart';
+// import 'package:get/get.dart';
 
 class homeScreeen extends StatefulWidget {
   const homeScreeen({super.key});
