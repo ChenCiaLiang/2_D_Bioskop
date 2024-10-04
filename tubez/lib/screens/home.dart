@@ -55,7 +55,7 @@ class _homeScreeenState extends State<homeScreeen> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
                     SizedBox(
-                      width: 180,
+                      width: 90,
                     ),
                     Expanded(
                       child: Text(
