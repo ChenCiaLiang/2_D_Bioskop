@@ -1,50 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/register.dart';
-import 'package:tubez/component/form_component.dart';
+import 'package:tubez/theme.dart';
+import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
-// import 'package:tubez/screens/home.dart';
-// import 'package:tubez/theme.dart';
-// import 'package:tubez/widgets/login_options.dart';
-// import 'package:tubez/widgets/primary_button.dart';
+import 'package:tubez/component/form_component.dart';
 
-
-class LoginView extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   final Map? data;
 
-  const LoginView({super.key, this.data});
+  const LoginScreen({super.key, this.data});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController usernameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
     Map? dataForm = widget.data;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(
+                height: 180,
+              ),
+              Text(
+                'Welcome Back',
+                style: titleText,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: kDefaultPadding,
+                child: 
+                  Row(
+                    children: [
+                      Text(
+                        'New to this app?',
+                        style: subTitle,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Map<String, dynamic> formData = {};
+                          formData['username'] = emailController.text;
+                          formData['password'] = passwordController.text;
+                          pushRegister(context);
+                        },
+                        child: const Text(
+                          'Sign Up', 
+                          style: TextStyle(decoration: TextDecoration.underline,
+                          decorationColor: Color.fromARGB(205, 205, 144, 3), fontSize: 17, color: Color.fromARGB(205, 205, 144, 3),),
+                        )
+                      ),
+                    ],
+                  ),
+              ),
               inputForm((p0){
                 if(p0 == null || p0.isEmpty){
                   return "username tidak boleh kosong";
                 }
                 return null;
               },
-                controller: usernameController,
-                hintTxt: "Username",
-                helperTxt: "Inputkan User yang telah didaftar",
-                iconData: Icons.person),
+                controller: emailController,
+                hintTxt: "Email"),
               
-              inputForm((p0){
+              SizedBox(
+                height: 25,
+              ),
+
+              inputFormPassword((p0){
                 if(p0 == null || p0.isEmpty){
                   return "password kosong";
                 }
@@ -53,15 +88,45 @@ class _LoginViewState extends State<LoginView> {
                 password: true,
                 controller: passwordController,
                 hintTxt: "Password",
-                helperTxt: "Inputkan Password",
-                iconData: Icons.password),
+                iconData: Icons.remove_red_eye),
+
+              SizedBox(
+                height: 10,
+              ),
+
+              TextButton(
+                onPressed: () {
+                  Map<String, dynamic> formData = {};
+                  formData['username'] = emailController.text;
+                  formData['password'] = passwordController.text;
+                  pushRegister(context);
+                },
+                child: const Text(
+                  'Forgot Password', 
+                  style: TextStyle(decoration: TextDecoration.underline,
+                  decorationColor: Color.fromARGB(205, 205, 144, 3),),
+                )
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(onPressed: () {
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor), 
+                      foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                      fixedSize: MaterialStateProperty.all<Size>(Size(350, 50),),
+                      textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      
+                    ),
+                    onPressed: () {
                     if(_formKey.currentState!.validate()){
-                      if(dataForm!['username'] == usernameController.text && dataForm['password'] == passwordController.text){
+                      if(dataForm!['email'] == emailController.text && dataForm['password'] == passwordController.text){
+                         
                         Navigator.push(
                           context, MaterialPageRoute(
                             builder: (_) => const navigationBar()));
@@ -85,18 +150,20 @@ class _LoginViewState extends State<LoginView> {
                       }
                     }
                   }, 
-                  child: const Text('Login')),
-
-                  TextButton(
-                    onPressed: () {
-                      Map<String, dynamic> formData = {};
-                      formData['username'] = usernameController.text;
-                      formData['password'] = passwordController.text;
-                      pushRegister(context);
-                    },
-                    child: const Text('Belum Punya Akun ? ')),
+                  child: const Text('Log In')),
                 ],
               ),
+
+              SizedBox(
+                height: 25,
+              ),
+
+              Text('Or Log in With:', style: TextStyle(fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 15,
+              ),
+              const LoginOption(),              
+
             ],
           ),
         ),

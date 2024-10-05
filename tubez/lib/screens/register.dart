@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/login.dart';
-import 'package:tubez/theme.dart';
 import 'package:tubez/component/form_component.dart';
-// import 'package:tubez/widgets/checkbox.dart';
-// import 'package:tubez/widgets/primary_button.dart';
+import 'package:tubez/theme.dart';
+import 'package:tubez/widgets/checkbox.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -14,69 +13,109 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController dateBirthController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController notelpController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 70,
+                height: 30,
               ),
+              
               Padding(
                 padding: kDefaultPadding,
-                child: Text('Create Account', style: titleText,),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Padding(
-                padding: kDefaultPadding,
-                child: Row(
-                  children: [
-                    Text(
-                      'Already a Member?', style: subTitle,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginView()));
-                      },
-                      child: Text(
-                        'Log In', style: textButton.copyWith(
-                          decoration: TextDecoration.underline, decorationThickness: 1,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  'Create Account',
+                  style: titleText,
                 ),
               ),
-              const SizedBox(height: 10,),
+
+              SizedBox(
+                height: 50,
+              ),
+
+              Padding(
+                padding: kDefaultPadding,
+                child: 
+                  Row(
+                    children: [
+                      Text(
+                        'Already a member?',
+                        style: subTitle,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          pushLogin(context);
+                        },
+                        child: const Text(
+                          'Log In', 
+                          style: TextStyle(decoration: TextDecoration.underline,
+                          decorationColor: Color.fromARGB(205, 205, 144, 3), fontSize: 17, color: Color.fromARGB(205, 205, 144, 3),),
+                        )
+                      ),
+                    ],
+                  ),
+              ),
+
+              SizedBox(
+                height: 15,
+              ),
+
               inputForm(
                 (p0) {
                   if(p0 == null || p0.isEmpty){
-                    return 'Username tidak boleh kosong';
-                  }
-                  if(p0.toLowerCase() == 'anjing'){
-                    return 'Tidak boleh menggunakan kata kasar';
+                    return 'First Name tidak boleh kosong';
                   }
                   return null;
                 },
-                  controller: usernameController,
-                  hintTxt: "Username",
-                  helperTxt: "Ucup Surucup",
-                  iconData: Icons.person),
+                  controller: firstNameController,
+                  hintTxt: "First Name",),
               
+              SizedBox(
+                height: 15,
+              ),
+
+              inputForm(
+                (p0) {
+                  if(p0 == null || p0.isEmpty){
+                    return 'Last Name tidak boleh kosong';
+                  }
+                  return null;
+                },
+                  controller: lastNameController,
+                  hintTxt: "Last Name",),
+
+              SizedBox(
+                height: 15,
+              ),
+              
+              inputForm(
+                (p0) {
+                  if(p0 == null || p0.isEmpty){
+                    return 'Date Birth tidak boleh kosong';
+                  }
+                  return null;
+                },
+                  controller: dateBirthController,
+                  hintTxt: "Date Birth",),
+              
+              SizedBox(
+                height: 15,
+              ),
+
               inputForm(
                 ((p0) {
                   if(p0 == null || p0.isEmpty){
@@ -88,11 +127,27 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 }),
                   controller: emailController,
-                  hintTxt: "Email",
-                  helperTxt: "ucup@gmail.com",
-                  iconData: Icons.email),
+                  hintTxt: "Email",),
+
+              SizedBox(
+                height: 15,
+              ),
 
               inputForm(
+                ((p0) {
+                  if(p0 == null || p0.isEmpty){
+                    return 'Nomor HP tidak boleh kosong';
+                  }
+                  return null;
+                }),
+                  controller: phoneController,
+                  hintTxt: "phone",),
+
+              SizedBox(
+                height: 15,
+              ),
+
+              inputFormPassword(
                 ((p0) {
                   if(p0 == null || p0.isEmpty){
                     return 'Password tidak boleh kosong';
@@ -102,38 +157,72 @@ class _RegisterViewState extends State<RegisterView> {
                   }
                   return null;
                 }),
+                  password: true,
                   controller: passwordController,
                   hintTxt: "Password",
-                  helperTxt: "xxxxxxx",
-                  iconData: Icons.password,
-                  password: true),
+                  iconData: Icons.remove_red_eye),
+              
+              SizedBox(
+                height: 15,
+              ),
 
-              inputForm(
+              inputFormPassword(
                 ((p0) {
                   if(p0 == null || p0.isEmpty){
-                    return 'Nomor Telepon Tidak boleh kosong';
+                    return 'Confirm Password tidak boleh kosong';
+                  }
+                  if(passwordController.text != p0){
+                    return 'Password Tidak Sesuai';
                   }
                   return null;
                 }),
-                  controller: notelpController,
-                  hintTxt: "No Telp",
-                  helperTxt: "08123456789",
-                  iconData: Icons.phone_android),
+                password: true,
+                controller: confirmPasswordController,
+                hintTxt: "Confirm Password",
+                iconData: Icons.remove_red_eye),
+              
+              SizedBox(
+                height: 25,
+              ),
+
+              const Padding(
+                padding: kDefaultPadding,
+                child: CheckBox('I have Agree to Terms and Conditions.'),
+              ),
+
+              SizedBox(
+                height: 50,
+              ),
               
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor), 
+                  foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                  fixedSize: MaterialStateProperty.all<Size>(Size(350, 50),),
+                  textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  
+                ),
                 onPressed: () {
                   if(_formKey.currentState!.validate()){
                     Map<String,dynamic> formData = {};
-                    formData['username'] = usernameController.text;
+                    formData['email'] = emailController.text;
                     formData['password'] = passwordController.text;
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginView(data: formData ,)) );
+                    formData['phone'] = passwordController.text;
+                    formData['first name'] = passwordController.text;
+                    formData['last name'] = passwordController.text;
+                    formData['date birth'] = passwordController.text;
+                    
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen(data: formData ,)) );
                   }
                 }, 
-                child: const Text('Register'))
+                child: const Text('Sign Up'))
             ],
           ),
         ),
       ),
     );
+  }
+  void pushLogin(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen(),),);
   }
 }
