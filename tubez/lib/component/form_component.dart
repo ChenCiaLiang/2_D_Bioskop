@@ -45,6 +45,7 @@ required String hintTxt, required IconData iconData, bool password = false}) {
                       }
                     },
                     icon: Icon(
+                      
                       isObscure ? Icons.visibility_off : Icons.visibility,
                       color: kTextFieldColor,
                     ),

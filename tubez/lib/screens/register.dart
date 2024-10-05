@@ -3,6 +3,7 @@ import 'package:tubez/screens/login.dart';
 import 'package:tubez/component/form_component.dart';
 import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/checkbox.dart';
+import 'package:tubez/screens/profile.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -25,7 +26,8 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Form(
           key: _formKey,
           child: Column(
@@ -44,7 +46,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
 
               SizedBox(
-                height: 50,
+                height: 20,
               ),
 
               Padding(
@@ -191,7 +193,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
 
               SizedBox(
-                height: 50,
+                height: 20,
               ),
               
               ElevatedButton(
@@ -204,15 +206,15 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
                 onPressed: () {
                   if(_formKey.currentState!.validate()){
-                    Map<String,dynamic> formData = {};
+                    final Map<String,dynamic> formData = {};
                     formData['email'] = emailController.text;
                     formData['password'] = passwordController.text;
-                    formData['phone'] = passwordController.text;
-                    formData['first name'] = passwordController.text;
-                    formData['last name'] = passwordController.text;
-                    formData['date birth'] = passwordController.text;
+                    formData['phone'] = phoneController.text;
+                    formData['first name'] = firstNameController.text;
+                    formData['last name'] = lastNameController.text;
+                    formData['date birth'] = dateBirthController.text;
                     
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen(data: formData ,)) );
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen(data: formData,)) );
                   }
                 }, 
                 child: const Text('Sign Up'))

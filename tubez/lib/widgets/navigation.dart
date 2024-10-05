@@ -7,7 +7,8 @@ import 'package:tubez/screens/list.dart';
 import 'package:tubez/screens/profile.dart';
 
 class navigationBar extends StatefulWidget {
-  const navigationBar({super.key});
+  final Map? data;
+  const navigationBar({super.key, this.data});
 
   @override
   State<navigationBar> createState() => _navigationBarState();

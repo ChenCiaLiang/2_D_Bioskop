@@ -4,6 +4,7 @@ import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/component/form_component.dart';
+import 'package:tubez/screens/profile.dart';
 
 class LoginScreen extends StatefulWidget {
   final Map? data;
@@ -126,10 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                     if(_formKey.currentState!.validate()){
                       if(dataForm!['email'] == emailController.text && dataForm['password'] == passwordController.text){
-                         
+          
                         Navigator.push(
                           context, MaterialPageRoute(
-                            builder: (_) => const navigationBar()));
+                            builder: (_) => navigationBar(data: dataForm ,)) );
                       }else{
                         showDialog(context: context, builder: (_)=>AlertDialog(
                           title: const Text('Password Salah'),
