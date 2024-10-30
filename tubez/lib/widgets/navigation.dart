@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/list.dart';
 import 'package:tubez/screens/profile.dart';
+import 'package:tubez/screens/selectSeat.dart';
 
 class navigationBar extends StatefulWidget {
   final Map? data;
@@ -24,9 +25,9 @@ class _navigationBarState extends State<navigationBar> {
   }
 
   static const List<Widget> _widgetOptions = <Widget>[
-    homeScreeen(),
+    HomeScreen(),
     ListScreen(),
-    profileScreen(),
+    selectSeatScreen(),
   ];
 
   @override

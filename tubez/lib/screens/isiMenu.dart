@@ -9,38 +9,33 @@ class IsiMenu {
     required this.menuPromo,
   });
 
-  static IsiMenu sampleContent = IsiMenu( 
+  static IsiMenu sampleContent = IsiMenu(
     menuPromo: [
       Container(
-        width: 200,
-        height: 200,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Image.asset('images/Americano_Float.png')
-      ),
+          width: 200,
+          height: 200,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Image.asset('images/Americano_Float.png')),
       Container(
-        width: 200,
-        height: 200,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Image.asset('images/Americano_Float.png')
-      ),
+          width: 200,
+          height: 200,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Image.asset('images/Americano_Float.png')),
       Container(
-        width: 200,
-        height: 200,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Image.asset('images/Americano_Float.png')
-      ),
+          width: 200,
+          height: 200,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Image.asset('images/Americano_Float.png')),
       Container(
-        width: 200,
-        height: 200,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Image.asset('images/Americano_Float.png')
-      ),
+          width: 200,
+          height: 200,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Image.asset('images/Americano_Float.png')),
       Container(
-        width: 200,
-        height: 200,
-        color: const Color.fromARGB(255, 255, 255, 255),
-        child: Image.asset('images/Choco_Popcorn.png')
-      ),
+          width: 200,
+          height: 200,
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Image.asset('images/Choco_Popcorn.png')),
     ],
     menuBiasa: [
       Container(
@@ -55,14 +50,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -79,7 +74,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -104,14 +99,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -128,7 +123,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -153,14 +148,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -177,7 +172,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -202,14 +197,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -226,7 +221,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -251,14 +246,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -275,7 +270,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -300,14 +295,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -324,7 +319,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,
@@ -349,14 +344,14 @@ class IsiMenu {
               height: 150,
               fit: BoxFit.cover,
             ),
-            SizedBox(width: 10),
-            Expanded(
+            const SizedBox(width: 10),
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Popcorn and Beans', 
+                    'Popcorn and Beans',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -373,7 +368,7 @@ class IsiMenu {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Only Rp25.000', 
+                    'Only Rp25.000',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.red,

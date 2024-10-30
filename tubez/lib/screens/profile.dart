@@ -3,20 +3,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/screens/login.dart';
 
 class profileScreen extends StatefulWidget {
-  const profileScreen({Key? key}) : super(key: key);
+  const profileScreen({super.key});
 
   @override
   State<profileScreen> createState() => _profileScreenState();
 }
 
 class _profileScreenState extends State<profileScreen> {
-  bool _isEditing = false;
+  final bool _isEditing = false;
   String _name = 'Agus Zefanto';
   String _email = 'Agoes@gmail.com';
   String _noTelp = '0821234567890';
   String _dateBirth = '18/08/2004';
   String _password = 'Ze*****18';
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +25,8 @@ class _profileScreenState extends State<profileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(FontAwesomeIcons.arrowLeftLong, color: Color.fromARGB(205, 205, 144, 3)),
+          icon: const Icon(FontAwesomeIcons.arrowLeftLong,
+              color: Color.fromARGB(205, 205, 144, 3)),
         ),
         leadingWidth: 80,
         title: const Text(
@@ -38,7 +39,7 @@ class _profileScreenState extends State<profileScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             const Divider(
@@ -77,9 +78,9 @@ class _profileScreenState extends State<profileScreen> {
                         Text(
                           'Agus Zefanto',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27,
-                          ),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 27,
+                              color: Color.fromARGB(255, 255, 255, 255)),
                         ),
                         SizedBox(
                           height: 3,
@@ -140,16 +141,16 @@ class _profileScreenState extends State<profileScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const LoginScreen()));
-              }, 
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 17, 0),
-                minimumSize: Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text("Log Out", 
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 255, 255, 255))),
+              child: const Text("Log Out",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 255, 255, 255))),
             ),
           ],
         ),
@@ -157,20 +158,25 @@ class _profileScreenState extends State<profileScreen> {
     );
   }
 
-  Widget _buildProfileInfo(String label, String value, bool isEditing, Function(String) onChanged) {
+  Widget _buildProfileInfo(
+      String label, String value, bool isEditing, Function(String) onChanged) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 25),
+      margin: const EdgeInsets.symmetric(vertical: 25),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          Text(label,
+              style: const TextStyle(
+                  fontSize: 16, color: Color.fromARGB(255, 255, 255, 255))),
           isEditing
               ? TextField(
                   controller: TextEditingController(text: value),
                   onChanged: onChanged,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 )
-              : Text(value, style: TextStyle(fontSize: 16)),
+              : Text(value,
+                  style: const TextStyle(
+                      fontSize: 16, color: Color.fromARGB(255, 255, 255, 255))),
         ],
       ),
     );
