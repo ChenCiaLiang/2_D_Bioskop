@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/screens/login.dart';
+import 'package:tubez/service/camera.dart';
+import 'dart:io';
 
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
@@ -16,6 +18,22 @@ class _profileScreenState extends State<profileScreen> {
   String _noTelp = '0821234567890';
   String _dateBirth = '18/08/2004';
   String _password = 'Ze*****18';
+
+  File? _profileImage;
+
+  // Method to navigate to CameraView and capture an image
+  Future<void> _captureProfileImage() async {
+    final imagePath = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CameraView()),
+    );
+
+    if (imagePath != null && imagePath is String) {
+      setState(() {
+        _profileImage = File(imagePath);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +60,7 @@ class _profileScreenState extends State<profileScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            const SizedBox(height: 20),
             const Divider(
               thickness: 1,
               color: Color.fromARGB(104, 178, 178, 178),
@@ -62,10 +81,15 @@ class _profileScreenState extends State<profileScreen> {
                         width: 1,
                       ),
                     ),
-                    child: const CircleAvatar(
+                  ),
+                  GestureDetector(
+                    onTap: _captureProfileImage,
+                    child: CircleAvatar(
                       radius: 60,
-                      backgroundColor: Colors.black,
-                      backgroundImage: AssetImage("images/download.png"),
+                      backgroundImage: _profileImage != null
+                          ? FileImage(_profileImage!)
+                          : AssetImage("images/download.png") as ImageProvider,
+                      backgroundColor: Colors.grey,
                     ),
                   ),
                   const SizedBox(
