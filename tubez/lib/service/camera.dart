@@ -44,7 +44,11 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
     if (_initializeCameraFuture == null) {
+=======
+    if (_initializeCameraFuture == null || _cameraController == null) {
+>>>>>>> Stashed changes
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
@@ -93,7 +97,12 @@ class _CameraViewState extends State<CameraView> {
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
 
+<<<<<<< Updated upstream
   const DisplayPictureScreen({super.key, required this.imagePath});
+=======
+  const DisplayPictureScreen({Key? key, required this.imagePath})
+      : super(key: key);
+>>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
