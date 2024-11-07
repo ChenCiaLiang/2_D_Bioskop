@@ -34,6 +34,7 @@ flutter:
     - assets/images/elemental.jpg
     - assets/images/transformers.jpg
     - assets/images/the_boys.jpg
+    - assets/images/spiderman.jpg
 
   fonts:
     - family: Poppins
