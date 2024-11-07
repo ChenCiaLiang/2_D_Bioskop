@@ -10,14 +10,14 @@ class LoginOption extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         BuildButton(
-          iconImage: Image(
+          iconImage: const Image(
               height: 35, width: 35, image: AssetImage('images/facebook.png')),
           onPressed: () {
             Direct.launchURL('https://www.instagram.com/');
           },
         ),
         BuildButton(
-          iconImage: Image(
+          iconImage: const Image(
               height: 35, width: 35, image: AssetImage('images/gugel.png')),
           onPressed: () {
             Direct.launchURL('https://www.instagram.com/');
@@ -30,11 +30,12 @@ class LoginOption extends StatelessWidget {
 
 class BuildButton extends StatelessWidget {
   final Image iconImage;
-  BuildButton({required this.iconImage, required Null Function() onPressed});
+  const BuildButton(
+      {super.key, required this.iconImage, required Null Function() onPressed});
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       height: mediaQuery.height * 0.06,
       width: mediaQuery.width * 0.16,
       child: iconImage,

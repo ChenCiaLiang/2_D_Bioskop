@@ -3,7 +3,7 @@ import 'package:tubez/theme.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String buttonText;
-  PrimaryButton({required this.buttonText});
+  const PrimaryButton({super.key, required this.buttonText});
   @override
   Widget build(BuildContext context) {
     return Container(

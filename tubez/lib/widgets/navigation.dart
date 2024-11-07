@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
 import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/list.dart';
-import 'package:tubez/screens/profile.dart';
 import 'package:tubez/screens/selectSeat.dart';
 
 class navigationBar extends StatefulWidget {

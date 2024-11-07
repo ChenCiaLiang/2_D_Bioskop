@@ -24,14 +24,14 @@ dev_dependencies:
   mobile_scanner: ^3.2.0 # scan QR code
   path_provider: ^2.0.15  # provide path to save file
   qr_flutter: ^4.1.0 # generate qr code
+  carousel_slider: ^5.0.0
 
 flutter:
   uses-material-design: true
 
   assets: 
     - images/
-
-
+    
   fonts:
     - family: Poppins 
       fonts:
