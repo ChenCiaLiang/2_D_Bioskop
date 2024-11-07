@@ -1,10 +1,10 @@
 name: tubez
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.5 <3.0.0'
+  sdk: ">=2.19.5 <3.0.0"
 dependencies:
   flutter:
     sdk: flutter
@@ -22,7 +22,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   mobile_scanner: ^3.2.0 # scan QR code
-  path_provider: ^2.0.15  # provide path to save file
+  path_provider: ^2.0.15 # provide path to save file
   qr_flutter: ^4.1.0 # generate qr code
   carousel_slider: ^5.0.0
 
@@ -34,8 +34,9 @@ flutter:
     - assets/images/elemental.jpg
     - assets/images/transformers.jpg
     - assets/images/the_boys.jpg
+
   fonts:
-    - family: Poppins 
+    - family: Poppins
       fonts:
         - asset: fonts/Poppins-Bold.ttf
         - asset: fonts/Poppins-Light.ttf
