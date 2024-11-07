@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:tubez/screens/history.dart';
 import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/list.dart';
 import 'package:tubez/screens/profile.dart';
@@ -27,7 +28,7 @@ class _navigationBarState extends State<navigationBar> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     ListScreen(),
-    selectSeatScreen(),
+    HistoryScreen(),
   ];
 
   @override
@@ -47,7 +48,7 @@ class _navigationBarState extends State<navigationBar> {
             text: 'Home',
           ),
           GButton(icon: Icons.list, text: 'Menu'),
-          GButton(icon: Icons.person, text: 'Profile'),
+          GButton(icon: Icons.bookmark, text: 'History'),
         ],
         selectedIndex: _selectedIndex,
         onTabChange: _onItemTapped,

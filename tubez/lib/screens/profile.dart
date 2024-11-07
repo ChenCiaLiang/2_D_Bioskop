@@ -39,6 +39,7 @@ class _profileScreenState extends State<profileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(0, 35, 35, 35),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
