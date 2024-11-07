@@ -25,7 +25,7 @@ class _profileScreenState extends State<profileScreen> {
   Future<void> _captureProfileImage() async {
     final imagePath = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CameraView()),
+      MaterialPageRoute(builder: (context) => const CameraView()),
     );
 
     if (imagePath != null && imagePath is String) {
@@ -89,7 +89,8 @@ class _profileScreenState extends State<profileScreen> {
                       radius: 60,
                       backgroundImage: _profileImage != null
                           ? FileImage(_profileImage!)
-                          : AssetImage("images/download.png") as ImageProvider,
+                          : const AssetImage("assets/images/download.png")
+                              as ImageProvider,
                       backgroundColor: Colors.grey,
                     ),
                   ),

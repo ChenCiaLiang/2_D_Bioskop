@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/screens/profile.dart';
+import 'package:tubez/widgets/homeHeader.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 final themeMode = ValueNotifier(2);
+
+final List<Map<String, String>> movieList = [
+  {'image': 'assets/images/deadpool.jpg', 'title': 'Deadpool'},
+  {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
+  {'image': 'assets/images/transformers.jpg', 'title': 'Transformers'},
+  {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
+  {'image': 'assets/images/actsv.jpg', 'title': 'Spiderverse'},
+];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,13 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // List of movie images (you can adjust these paths accordingly)
-  final List<String> movies = [
-    'images/elemental.jpg',
-    'images/elemental.jpg',
-    'images/elemental.jpg',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -40,68 +42,76 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 10),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HomeHeader extends StatelessWidget {
-  const HomeHeader({
-    super.key,
-    required this.size,
-  });
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
-      child: SizedBox(
-        height: size.height / 14,
-        child: Row(
-          children: [
-            Image.asset(
-              'images/discord.png',
-              width: size.width / 10,
-              height: size.width / 10,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Container(
-                height: 36,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
-                    contentPadding: EdgeInsets.symmetric(vertical: 9),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: const Text(
+                    'Now Playing ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(
+                  width: 180,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 12),
+                  child: const Text(
+                    'see more ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: Colors.amber,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const profileScreen()),
-                );
-              },
-              child: CircleAvatar(
-                radius: size.width / 16,
-                backgroundImage: const AssetImage('images/download.png'),
+            const SizedBox(height: 16),
+            CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                height:
+                    390.0, // Set a fixed height for the carousel to avoid overflow
+                aspectRatio: 0.6, // Aspect ratio for vertical rectangles
+                enlargeCenterPage: true,
               ),
+              items: movieList.map((movie) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0)),
+                          child: Image.asset(
+                            movie['image']!,
+                            fit: BoxFit.cover,
+                            width: 250,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 8.0), // Space between image and text
+                      Text(
+                        movie['title']!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ),

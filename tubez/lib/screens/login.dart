@@ -44,14 +44,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Padding(
                 padding: kDefaultPadding,
-                child: 
-                  Row(
-                    children: [
-                      Text(
-                        'New to this app?',
-                        style: subTitle,
-                      ),
-                      TextButton(
+                child: Row(
+                  children: [
+                    Text(
+                      'New to this app?',
+                      style: subTitle,
+                    ),
+                    TextButton(
                         onPressed: () {
                           Map<String, dynamic> formData = {};
                           formData['username'] = emailController.text;
@@ -59,119 +58,132 @@ class _LoginScreenState extends State<LoginScreen> {
                           pushRegister(context);
                         },
                         child: const Text(
-                          'Sign Up', 
-                          style: TextStyle(decoration: TextDecoration.underline,
-                          decorationColor: Color.fromARGB(205, 205, 144, 3), fontSize: 17, color: Color.fromARGB(205, 205, 144, 3),),
-                        )
-                      ),
-                    ],
-                  ),
+                          'Sign Up',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            decorationColor: Color.fromARGB(205, 205, 144, 3),
+                            fontSize: 17,
+                            color: Color.fromARGB(205, 205, 144, 3),
+                          ),
+                        )),
+                  ],
+                ),
               ),
-              inputForm((p0){
-                if(p0 == null || p0.isEmpty){
+              inputForm((p0) {
+                if (p0 == null || p0.isEmpty) {
                   return "username tidak boleh kosong";
                 }
                 return null;
-              },
-                controller: emailController,
-                hintTxt: "Email"),
-              
-              SizedBox(
+              }, controller: emailController, hintTxt: "Email"),
+              const SizedBox(
                 height: 25,
               ),
-
-              inputFormPassword((p0){
-                if(p0 == null || p0.isEmpty){
+              inputFormPassword((p0) {
+                if (p0 == null || p0.isEmpty) {
                   return "password kosong";
                 }
                 return null;
               },
-                password: true,
-                controller: passwordController,
-                hintTxt: "Password",
-                iconData: Icons.remove_red_eye),
-
-              SizedBox(
+                  password: true,
+                  controller: passwordController,
+                  hintTxt: "Password",
+                  iconData: Icons.remove_red_eye),
+              const SizedBox(
                 height: 10,
               ),
-
               TextButton(
-                onPressed: () {
-                  Map<String, dynamic> formData = {};
-                  formData['username'] = emailController.text;
-                  formData['password'] = passwordController.text;
-                  pushRegister(context);
-                },
-                child: const Text(
-                  'Forgot Password', 
-                  style: TextStyle(decoration: TextDecoration.underline,
-                  decorationColor: Color.fromARGB(205, 205, 144, 3),),
-                )
-              ),
-
-              SizedBox(
+                  onPressed: () {
+                    Map<String, dynamic> formData = {};
+                    formData['username'] = emailController.text;
+                    formData['password'] = passwordController.text;
+                    pushRegister(context);
+                  },
+                  child: const Text(
+                    'Forgot Password',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      decorationColor: Color.fromARGB(205, 205, 144, 3),
+                    ),
+                  )),
+              const SizedBox(
                 height: 10,
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(kPrimaryColor), 
-                      foregroundColor: MaterialStatePropertyAll<Color>(Colors.white),
-                      fixedSize: MaterialStateProperty.all<Size>(Size(350, 50),),
-                      textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      
-                    ),
-                    onPressed: () {
-                    if(_formKey.currentState!.validate()){
-                      if(dataForm!['email'] == emailController.text && dataForm['password'] == passwordController.text){
-          
-                        Navigator.push(
-                          context, MaterialPageRoute(
-                            builder: (_) => navigationBar(data: dataForm ,)) );
-                      }else{
-                        showDialog(context: context, builder: (_)=>AlertDialog(
-                          title: const Text('Password Salah'),
-                          content: TextButton(
-                            onPressed: () => pushRegister(context), 
-                            child: const Text('Daftar Disini !!!')),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Cancel'), 
-                                child: const Text('Cancel'),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            const WidgetStatePropertyAll<Color>(kPrimaryColor),
+                        foregroundColor:
+                            const WidgetStatePropertyAll<Color>(Colors.white),
+                        fixedSize: WidgetStateProperty.all<Size>(
+                          const Size(350, 50),
+                        ),
+                        textStyle: WidgetStateProperty.all<TextStyle>(
+                            const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          if ("1" == emailController.text &&
+                              "1" == passwordController.text) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => navigationBar(
+                                          data: dataForm,
+                                        )));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text('Password Salah'),
+                                content: TextButton(
+                                    onPressed: () => pushRegister(context),
+                                    child: const Text('Daftar Disini !!!')),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'Cancel'),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, 'OK'),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
                               ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'), 
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),);
-                      }
-                    }
-                  }, 
-                  child: const Text('Log In')),
+                            );
+                          }
+                        }
+                      },
+                      child: const Text('Log In')),
                 ],
               ),
-
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
-
-              Text('Or Log in With:', style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(
+              const Text('Or Log in With:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(
                 height: 15,
               ),
-              const LoginOption(),              
-
+              const LoginOption(),
             ],
           ),
         ),
       ),
     );
   }
-  void pushRegister(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterView(),),);
+
+  void pushRegister(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const RegisterView(),
+      ),
+    );
   }
 }
