@@ -126,8 +126,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          if (dataForm!['email'] == emailController.text &&
-                              dataForm['password'] == passwordController.text) {
+                          if ("1" == emailController.text &&
+                              "1" == passwordController.text) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

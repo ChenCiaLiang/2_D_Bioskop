@@ -18,7 +18,7 @@ class HomeHeader extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-              'images/discord.png',
+              'assets/images/discord.png',
               width: size.width / 10,
               height: size.width / 10,
               fit: BoxFit.contain,
@@ -54,7 +54,7 @@ class HomeHeader extends StatelessWidget {
               },
               child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage: const AssetImage('images/download.png'),
+                backgroundImage: const AssetImage('assets/images/download.png'),
               ),
             ),
           ],

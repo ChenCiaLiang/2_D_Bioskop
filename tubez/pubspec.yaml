@@ -30,8 +30,10 @@ flutter:
   uses-material-design: true
 
   assets: 
-    - images/
-    
+    - assets/images/deadpool.jpg
+    - assets/images/elemental.jpg
+    - assets/images/transformers.jpg
+    - assets/images/the_boys.jpg
   fonts:
     - family: Poppins 
       fonts:

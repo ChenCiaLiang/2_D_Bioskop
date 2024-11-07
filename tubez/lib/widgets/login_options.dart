@@ -11,14 +11,18 @@ class LoginOption extends StatelessWidget {
       children: [
         BuildButton(
           iconImage: const Image(
-              height: 35, width: 35, image: AssetImage('images/facebook.png')),
+              height: 35,
+              width: 35,
+              image: AssetImage('assets/images/facebook.png')),
           onPressed: () {
             Direct.launchURL('https://www.instagram.com/');
           },
         ),
         BuildButton(
           iconImage: const Image(
-              height: 35, width: 35, image: AssetImage('images/gugel.png')),
+              height: 35,
+              width: 35,
+              image: AssetImage('assets/images/gugel.png')),
           onPressed: () {
             Direct.launchURL('https://www.instagram.com/');
           },

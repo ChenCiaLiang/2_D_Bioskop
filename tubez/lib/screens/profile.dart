@@ -88,7 +88,7 @@ class _profileScreenState extends State<profileScreen> {
                       radius: 60,
                       backgroundImage: _profileImage != null
                           ? FileImage(_profileImage!)
-                          : const AssetImage("images/download.png")
+                          : const AssetImage("assets/images/download.png")
                               as ImageProvider,
                       backgroundColor: Colors.grey,
                     ),
