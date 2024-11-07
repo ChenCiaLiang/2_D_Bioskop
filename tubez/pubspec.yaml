@@ -13,18 +13,24 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   cupertino_icons: ^1.0.2
   url_launcher: ^6.1.6
-
+  google_nav_bar: ^5.0.6
+  get: ^4.6.6
 
 dev_dependencies:
+  camera: ^0.10.5+2
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  mobile_scanner: ^3.2.0 # scan QR code
+  path_provider: ^2.0.15  # provide path to save file
+  qr_flutter: ^4.1.0 # generate qr code
 
 flutter:
   uses-material-design: true
 
   assets: 
     - images/
+
 
   fonts:
     - family: Poppins 
