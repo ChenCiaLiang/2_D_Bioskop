@@ -17,11 +17,15 @@ class HomeHeader extends StatelessWidget {
         height: size.height / 14,
         child: Row(
           children: [
-            Image.asset(
-              'assets/images/discord.png',
-              width: size.width / 10,
-              height: size.width / 10,
-              fit: BoxFit.contain,
+            CircleAvatar(
+              backgroundColor: const Color.fromARGB(36, 158, 158, 158),
+              radius: 20,
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: size.width / 10,
+                height: size.width / 10,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
