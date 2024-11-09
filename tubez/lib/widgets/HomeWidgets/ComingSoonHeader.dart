@@ -20,11 +20,9 @@ class ComingSoonHeader extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          width: 170,
-        ),
+        const Spacer(),
         Container(
-          padding: const EdgeInsets.only(left: 12),
+          padding: const EdgeInsets.only(right: 12),
           child: const Text(
             'see more ',
             style: TextStyle(
