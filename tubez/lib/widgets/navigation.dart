@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tubez/screens/history.dart';
 import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/list.dart';
+import 'package:tubez/screens/profile.dart';
 
 class navigationBar extends StatefulWidget {
   final Map? data;
@@ -27,6 +28,7 @@ class _navigationBarState extends State<navigationBar> {
     HomeScreen(),
     ListScreen(),
     HistoryScreen(),
+    profileScreen(),
   ];
 
   @override
