@@ -20,6 +20,12 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  bool isObscure = true;
+  bool isObscureConfirm = true;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,35 +146,75 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(
                 height: 15,
               ),
-              inputFormPassword(((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Password tidak boleh kosong';
-                }
-                if (p0.length < 5) {
-                  return 'Password minimal 5 digit';
-                }
-                return null;
-              }),
-                  password: true,
-                  controller: passwordController,
-                  hintTxt: "Password",
-                  iconData: Icons.remove_red_eye),
+              Padding(
+                padding: kDefaultPadding,
+                child: SizedBox(
+                  width: 350,
+                  child : TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if(value == null || value.isEmpty){
+                        return "Password tidak boleh kosong";
+                      }
+                      return null;
+                    },
+                    autofocus: true,
+                    controller: passwordController,
+                    obscureText: isObscure,
+                    decoration: InputDecoration(
+                      hintText: "Password",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isObscure = !isObscure;
+                          });
+                        },
+                        icon: isObscure ?
+                          Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                          color: kTextFieldColor,
+                      ),
+                    ),
+                  )
+                ),
+              ),
               const SizedBox(
                 height: 15,
               ),
-              inputFormPassword(((p0) {
-                if (p0 == null || p0.isEmpty) {
-                  return 'Confirm Password tidak boleh kosong';
-                }
-                if (passwordController.text != p0) {
-                  return 'Password Tidak Sesuai';
-                }
-                return null;
-              }),
-                  password: true,
-                  controller: confirmPasswordController,
-                  hintTxt: "Confirm Password",
-                  iconData: Icons.remove_red_eye),
+              
+              Padding(
+                padding: kDefaultPadding,
+                child: SizedBox(
+                  width: 350,
+                  child : TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    validator: (value) {
+                      if(value == null || value.isEmpty){
+                        return "Confirm Password tidak boleh kosong";
+                      }
+                      if (passwordController.text != value) {
+                        return 'Password Tidak Sesuai';
+                      }
+                      return null;
+                    },
+                    autofocus: true,
+                    controller: confirmPasswordController,
+                    obscureText: isObscureConfirm,
+                    decoration: InputDecoration(
+                      hintText: "Confirm Password",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isObscureConfirm = !isObscureConfirm;
+                          });
+                        },
+                        icon: isObscureConfirm ?
+                          Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                          color: kTextFieldColor,
+                      ),
+                    ),
+                  )
+                ),
+              ),
               const SizedBox(
                 height: 25,
               ),
