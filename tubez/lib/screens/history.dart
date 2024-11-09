@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/theme.dart';
 
-final List<String> movies = [
-  'images/spiderman.jpg',
-  'images/transformers.jpg',
-];
-
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -18,8 +13,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   // Dummy data untuk riwayat
   final List<Map<String, dynamic>> historyItems = [
     {
-      'imageUrl':
-          'https://via.placeholder.com/150', // Ganti dengan URL gambar film asli
+      'image': 'assets/images/spiderman.jpg',
       'title': 'SPIDER-MAN : INTO THE SPIDER-VERSE',
       'status': 'Completed',
       'studio': 'Studio: 1',
@@ -29,8 +23,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       'ticketCount': 1,
     },
     {
-      'imageUrl':
-          'https://via.placeholder.com/150', // Ganti dengan URL gambar film asli
+      'image': 'assets/images/transformers.jpg',
       'title': 'TRANSFORMERS: RISE OF THE BEASTS',
       'status': 'Completed',
       'studio': 'Studio: 1',
@@ -40,8 +33,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       'ticketCount': 2,
     },
     {
-      'imageUrl':
-          'https://via.placeholder.com/150', // Ganti dengan URL gambar film asli
+      'image': 'assets/images/spiderman.jpg',
       'title': 'SPIDER-MAN : INTO THE SPIDER-VERSE',
       'status': 'Completed',
       'studio': 'Studio: 1',
@@ -74,7 +66,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           itemBuilder: (context, index) {
             final item = historyItems[index];
             return buildHistoryItem(
-              imageUrl: item['imageUrl'],
+              image: item['image'],
               title: item['title'],
               status: item['status'],
               studio: item['studio'],
@@ -90,7 +82,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget buildHistoryItem({
-    required String imageUrl,
+    required String image,
     required String title,
     required String status,
     required String studio,
@@ -117,10 +109,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              imageUrl,
-              width: 60,
-              height: 90,
+            child: Image.asset(
+              image,
+              width: 80,
+              height: 120,
               fit: BoxFit.cover,
             ),
           ),
@@ -163,15 +155,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
           isReviewed
               ? OutlinedButton(
                   onPressed: () {},
-                  child:
-                      Text('Reviewed', style: TextStyle(color: Colors.white)),
+                  child: Text('Reviewed',
+                      style: TextStyle(color: Colors.white, fontSize: 11)),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.white),
                   ),
                 )
               : ElevatedButton(
                   onPressed: () {},
-                  child: Text('Give A Review'),
+                  child: Text('Give A Review', style: TextStyle(fontSize: 11)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber,
                   ),

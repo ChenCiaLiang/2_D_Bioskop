@@ -9,7 +9,7 @@ final List<Map<String, String>> movieList = [
   {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
   {'image': 'assets/images/transformers.jpg', 'title': 'Transformers'},
   {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
-  {'image': 'assets/images/actsv.jpg', 'title': 'Spiderverse'},
+  {'image': 'assets/images/spiderman.jpg', 'title': 'Spiderverse'},
 ];
 
 class HomeScreen extends StatefulWidget {

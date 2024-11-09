@@ -3,6 +3,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:tubez/screens/history.dart';
+import 'package:tubez/screens/home.dart';
+import 'package:tubez/screens/list.dart';
 
 class navigationBar extends StatefulWidget {
   final Map? data;
