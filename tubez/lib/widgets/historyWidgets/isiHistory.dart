@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/widgets/isiReview.dart';
+import 'package:tubez/widgets/historyWidgets/isiReview.dart';
 
 class IsiHistory extends StatelessWidget {
   const IsiHistory({
