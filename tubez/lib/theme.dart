@@ -19,3 +19,6 @@ TextStyle textButton = const TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w700,
 );
+TextStyle greyText = const TextStyle(
+  color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w500);
+

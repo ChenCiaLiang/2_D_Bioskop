@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/widgets/homeHeader.dart';
+import 'package:tubez/widgets/HomeWidgets/TopRated.dart';
+import 'package:tubez/widgets/HomeWidgets/TopRatedHeader.dart';
+import 'package:tubez/widgets/HomeWidgets/homeHeader.dart';
+import 'package:tubez/widgets/HomeWidgets/NowPlayingHeader.dart';
+import 'package:tubez/widgets/HomeWidgets/HomeCarousel.dart';
+import 'package:tubez/widgets/HomeWidgets/ComingSoonHeader.dart';
+import 'package:tubez/widgets/HomeWidgets/ComingSoon.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 final themeMode = ValueNotifier(2);
-
-final List<Map<String, String>> movieList = [
-  {'image': 'assets/images/deadpool.jpg', 'title': 'Deadpool'},
-  {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
-  {'image': 'assets/images/transformers.jpg', 'title': 'Transformers'},
-  {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
-  {'image': 'assets/images/spiderman.jpg', 'title': 'Spiderverse'},
-];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,78 +39,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: const Text(
-                    'Now Playing ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
+            const SizedBox(height: 20),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              height: 180,
+              width: 380,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.asset(
+                  "assets/images/venom.png",
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(
-                  width: 180,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: const Text(
-                    'see more ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: Colors.amber,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            CarouselSlider(
-              options: CarouselOptions(
-                autoPlay: true,
-                height:
-                    390.0, // Set a fixed height for the carousel to avoid overflow
-                aspectRatio: 0.6, // Aspect ratio for vertical rectangles
-                enlargeCenterPage: true,
               ),
-              items: movieList.map((movie) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0)),
-                          child: Image.asset(
-                            movie['image']!,
-                            fit: BoxFit.cover,
-                            width: 250,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                          height: 8.0), // Space between image and text
-                      Text(
-                        movie['title']!,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
             ),
+            const SizedBox(height: 20),
+            const NowPlayingHeader(),
+            const SizedBox(height: 20),
+            const HomeCarousel(),
+            const SizedBox(height: 20),
+            const ComingSoonHeader(),
+            const SizedBox(height: 20),
+            const ComingSoon(),
+            const SizedBox(height: 20),
+            const TopratedHeader(),
+            const SizedBox(height: 20),
+            const TopRated(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
