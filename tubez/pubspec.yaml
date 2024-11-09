@@ -25,17 +25,13 @@ dev_dependencies:
   path_provider: ^2.0.15 # provide path to save file
   qr_flutter: ^4.1.0 # generate qr code
   carousel_slider: ^5.0.0
+  speech_to_text: ^5.4.0
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/deadpool.jpg
-    - assets/images/elemental.jpg
-    - assets/images/transformers.jpg
-    - assets/images/the_boys.jpg
-    - assets/images/spiderman.jpg
-    - assets/images/logo.png
+    - assets/images/
 
   fonts:
     - family: Poppins
