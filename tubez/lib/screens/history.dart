@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/theme.dart';
+import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
+import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -10,13 +12,12 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  // Dummy data untuk riwayat
   final List<Map<String, dynamic>> historyItems = [
     {
       'image': 'assets/images/spiderman.jpg',
       'title': 'SPIDER-MAN : INTO THE SPIDER-VERSE',
       'status': 'Completed',
-      'studio': 'Studio: 1',
+      'studio': 1,
       'date': '07-10-2024',
       'total': 'Rp 45.000',
       'isReviewed': false,
@@ -26,7 +27,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       'image': 'assets/images/transformers.jpg',
       'title': 'TRANSFORMERS: RISE OF THE BEASTS',
       'status': 'Completed',
-      'studio': 'Studio: 1',
+      'studio': 2,
       'date': '07-10-2024',
       'total': 'Rp 90.000',
       'isReviewed': true,
@@ -36,7 +37,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       'image': 'assets/images/spiderman.jpg',
       'title': 'SPIDER-MAN : INTO THE SPIDER-VERSE',
       'status': 'Completed',
-      'studio': 'Studio: 1',
+      'studio': 3,
       'date': '07-10-2024',
       'total': 'Rp 225.000',
       'isReviewed': false,
@@ -47,42 +48,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF272726), // Warna biru sesuai gambar
-        leadingWidth: 100,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundColor: const Color.fromARGB(36, 158, 158, 158),
-                radius: 20,
-                child: Image.asset(
-                  'assets/images/logo.png', // Sesuaikan dengan path logo Anda
-                  height: 24, // Sesuaikan tinggi logo
-                ),
-              ),
-              const SizedBox(height: 4), // Jarak antara logo dan teks
-              const Text(
-                'History',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.white, // Warna putih
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: HistoryHeader(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
           itemCount: historyItems.length,
           itemBuilder: (context, index) {
             final item = historyItems[index];
-            return buildHistoryItem(
+            return IsiHistory(
               image: item['image'],
               title: item['title'],
               status: item['status'],
@@ -94,98 +67,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  Widget buildHistoryItem({
-    required String image,
-    required String title,
-    required String status,
-    required String studio,
-    required String date,
-    required String total,
-    required bool isReviewed,
-    required int ticketCount,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Color(0xFF424242),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              image,
-              width: 80,
-              height: 120,
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$title',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Status: $status',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                Text(
-                  '$studio',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                Text(
-                  'Date: $date',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Total: $total',
-                  style: TextStyle(
-                    color: Colors.amber,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          isReviewed
-              ? OutlinedButton(
-                  onPressed: () {},
-                  child: Text('Reviewed',
-                      style: TextStyle(color: Colors.white, fontSize: 11)),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.white),
-                  ),
-                )
-              : ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Give A Review', style: TextStyle(fontSize: 11)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber,
-                  ),
-                ),
-        ],
       ),
     );
   }
