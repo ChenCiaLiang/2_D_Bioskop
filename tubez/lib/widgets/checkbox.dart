@@ -32,7 +32,7 @@ class _CheckBoxState extends State<CheckBox> {
                     ? const Icon(
                         Icons.check,
                         size: 18,
-                        color: Colors.green,
+                        color: Colors.orange,
                       )
                     : null,
               ),
@@ -40,7 +40,7 @@ class _CheckBoxState extends State<CheckBox> {
             const SizedBox(
               width: 12,
             ),
-            Text(widget.text),
+            Text(widget.text, style: TextStyle(color: Colors.white),),
           ],
         )
       ],
