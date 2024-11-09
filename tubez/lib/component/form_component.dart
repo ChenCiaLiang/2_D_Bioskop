@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/theme.dart';
 
-bool isObscure = true;
-
 Padding inputForm(Function(String?) validasi, {required TextEditingController controller,
 required String hintTxt, bool password = false}) {
     return Padding(
@@ -10,6 +8,7 @@ required String hintTxt, bool password = false}) {
       child: SizedBox(
         width: 350,
         child : TextFormField(
+          style: const TextStyle(color: Colors.white),
           validator: (value) => validasi(value),
           autofocus: true,
           controller: controller,
@@ -23,34 +22,29 @@ required String hintTxt, bool password = false}) {
 }
 
 Padding inputFormPassword(Function(String?) validasi, {required TextEditingController controller,
-required String hintTxt, required IconData iconData, bool password = false}) {
+required String hintTxt, required IconData iconData, required bool password}) {
+  bool isObscure = password;
     return Padding(
       padding: kDefaultPadding,
       child: SizedBox(
         width: 350,
         child : TextFormField(
+          style: const TextStyle(color: Colors.white),
           validator: (value) => validasi(value),
           autofocus: true,
           controller: controller,
-          obscureText: password,
+          obscureText: isObscure,
           decoration: InputDecoration(
             hintText: hintTxt,
-            suffixIcon: password
-                ? IconButton(
+            suffixIcon: IconButton(
                     onPressed: () {          
-                      if(isObscure == true){
-                        isObscure = false;
-                      }else{
-                        isObscure = true;
-                      }
+                      isObscure = !password;
                     },
-                    icon: Icon(
-                      
-                      isObscure ? Icons.visibility_off : Icons.visibility,
+                    
+                    icon: isObscure ? 
+                      Icon(iconData) : const Icon(Icons.account_balance),
                       color: kTextFieldColor,
                     ),
-                  )
-                : null
           ),
         )
       ),
