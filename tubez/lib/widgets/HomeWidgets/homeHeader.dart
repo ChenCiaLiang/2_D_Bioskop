@@ -19,12 +19,10 @@ class HomeHeader extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundColor: const Color.fromARGB(36, 158, 158, 158),
-              radius: 20,
+              radius: 25,
               child: Image.asset(
-                'assets/images/logo.png',
-                width: size.width / 10,
-                height: size.width / 10,
-                fit: BoxFit.contain,
+                'assets/images/logo.png', // Sesuaikan dengan path logo Anda
+                height: 50,
               ),
             ),
             const SizedBox(width: 10),
