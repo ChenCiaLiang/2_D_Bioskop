@@ -48,16 +48,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(0, 35, 35, 35),
-        leadingWidth: 80,
-        title: const Text(
-          'History',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color.fromARGB(205, 205, 144, 3)),
+        backgroundColor: Color(0xFF272726), // Warna biru sesuai gambar
+        leadingWidth: 100,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundColor: const Color.fromARGB(36, 158, 158, 158),
+                radius: 20,
+                child: Image.asset(
+                  'assets/images/logo.png', // Sesuaikan dengan path logo Anda
+                  height: 24, // Sesuaikan tinggi logo
+                ),
+              ),
+              const SizedBox(height: 4), // Jarak antara logo dan teks
+              const Text(
+                'History',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Colors.white, // Warna putih
+                ),
+              ),
+            ],
+          ),
         ),
-        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
