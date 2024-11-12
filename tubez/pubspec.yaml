@@ -15,6 +15,7 @@ dependencies:
   url_launcher: ^6.1.6
   google_nav_bar: ^5.0.6
   get: ^4.6.6
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   camera: ^0.10.5+2
@@ -25,7 +26,6 @@ dev_dependencies:
   path_provider: ^2.0.15 # provide path to save file
   qr_flutter: ^4.1.0 # generate qr code
   carousel_slider: ^5.0.0
-  # speech_to_text: ^5.4.0
 
 flutter:
   uses-material-design: true
