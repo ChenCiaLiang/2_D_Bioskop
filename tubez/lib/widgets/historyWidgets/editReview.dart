@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-class IsiReview extends StatefulWidget {
-  const IsiReview({Key? key}) : super(key: key);
+class EditReview extends StatefulWidget {
+  const EditReview({Key? key}) : super(key: key);
 
   @override
-  _IsiReviewState createState() => _IsiReviewState();
+  _EditReviewState createState() => _EditReviewState();
 }
 
-class _IsiReviewState extends State<IsiReview> with WidgetsBindingObserver {
+class _EditReviewState extends State<EditReview> with WidgetsBindingObserver {
   final TextEditingController _reviewController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final SpeechToText _speechToText = SpeechToText();
@@ -304,11 +304,11 @@ class _IsiReviewState extends State<IsiReview> with WidgetsBindingObserver {
   }
 }
 
-void showIsiReview(BuildContext context) {
+void showEditReview(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => const IsiReview(),
+    builder: (context) => const EditReview(),
   );
 }

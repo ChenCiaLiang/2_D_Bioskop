@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/widgets/historyWidgets/editReview.dart';
 import 'package:tubez/widgets/historyWidgets/isiReview.dart';
 
 class IsiHistory extends StatelessWidget {
@@ -154,7 +155,7 @@ class IsiHistory extends StatelessWidget {
                       width: 100,
                       height: 30,
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () => showEditReview(context),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           child: Text(
