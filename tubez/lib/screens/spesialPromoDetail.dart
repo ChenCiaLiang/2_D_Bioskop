@@ -3,14 +3,14 @@ import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/MovieDescription.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 
-class moveiDetailScreen extends StatefulWidget {
-  const moveiDetailScreen({super.key});
+class spesialPromoDetailScreen extends StatefulWidget {
+  const spesialPromoDetailScreen({super.key});
 
   @override
-  State<moveiDetailScreen> createState() => _moveiDetailScreenState();
+  State<spesialPromoDetailScreen> createState() => _spesialPromoDetailScreenState();
 }
 
-class _moveiDetailScreenState extends State<moveiDetailScreen> {
+class _spesialPromoDetailScreenState extends State<spesialPromoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
