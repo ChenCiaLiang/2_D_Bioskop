@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-class SpesialPromoDetailScreen extends StatefulWidget {
+class PromoDetailScreen extends StatefulWidget {
   final String itemTitle;
   final String itemImage;
   final int itemPrice;
 
-  SpesialPromoDetailScreen({
+  PromoDetailScreen({
     required this.itemTitle,
     required this.itemImage,
     required this.itemPrice,
   });
 
   @override
-  _SpesialPromoDetailScreenState createState() => _SpesialPromoDetailScreenState();
+  _PromoDetailScreenState createState() => _PromoDetailScreenState();
 }
 
-class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
+class _PromoDetailScreenState extends State<PromoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,26 +85,22 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                       '1 member dapat klaim deals ini sebanyak 1x per hari.'),
                   _buildBulletPoint(
                       'Cek selalu masa berlaku promo.'),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Berlaku sampai dengan 2024-11-23',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 16,
+                    ),
+                  ),
                   const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Berlaku sampai dengan 2024-11-23',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        'Rp ${widget.itemPrice.toString()}',
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Rp ${widget.itemPrice.toString()}',
+                    style: TextStyle(
+                      color: Colors.amber,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

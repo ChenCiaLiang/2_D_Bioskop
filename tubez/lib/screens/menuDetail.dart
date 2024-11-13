@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 
-class SpesialPromoDetailScreen extends StatefulWidget {
+class MenuDetailScreen extends StatefulWidget {
   final String itemTitle;
   final String itemImage;
-  final int itemPrice;
 
-  SpesialPromoDetailScreen({
-    required this.itemTitle,
-    required this.itemImage,
-    required this.itemPrice,
+  MenuDetailScreen({
+    required this.itemTitle, 
+    required this.itemImage
   });
 
   @override
-  _SpesialPromoDetailScreenState createState() => _SpesialPromoDetailScreenState();
+  _MenuDetailScreenState createState() => _MenuDetailScreenState();
 }
 
-class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
+class _MenuDetailScreenState extends State<MenuDetailScreen> {
+  String selectedSize = 'Besar';
+  Map<String, int> sizePrices = {
+    'Besar': 24000,
+    'Sedang': 20000,
+    'Kecil': 15000,
+    'Extra Hemat': 10000,
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,43 +70,71 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Popcorn Original (M) + Jeruk Smoothie',
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                    'Nikmati popcorn dengan cita rasa biasa saja namun umero umo...',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Syarat dan Ketentuan:',
+                    'UKURAN',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  _buildBulletPoint(
-                      'Berlaku hanya di hari Senin hingga Jumat.'),
-                  _buildBulletPoint(
-                      'Infokan ke kasir saat ingin klaim promo ini.'),
-                  _buildBulletPoint(
-                      '1 member dapat klaim deals ini sebanyak 1x per hari.'),
-                  _buildBulletPoint(
-                      'Cek selalu masa berlaku promo.'),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: sizePrices.keys.map((size) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedSize = size;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: selectedSize == size
+                                ? Colors.amber
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: Colors.amber,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            size,
+                            style: TextStyle(
+                              color: selectedSize == size
+                                  ? Colors.black
+                                  : Colors.amber,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                   const Spacer(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Berlaku sampai dengan 2024-11-23',
+                        'UKURAN: $selectedSize',
                         style: TextStyle(
-                          color: Colors.grey[400],
+                          color: Colors.white,
                           fontSize: 16,
                         ),
                       ),
                       Text(
-                        'Rp ${widget.itemPrice.toString()}',
+                        'Rp ${sizePrices[selectedSize]!.toString()}',
                         style: TextStyle(
                           color: Colors.amber,
-                          fontSize: 24,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -108,27 +142,6 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBulletPoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '• ',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(color: Colors.grey[300], fontSize: 16),
             ),
           ),
         ],
