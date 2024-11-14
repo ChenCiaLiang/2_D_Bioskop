@@ -16,15 +16,14 @@ class MovieDescription extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.45,
+              width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height,
               child: Container(
-                margin: const EdgeInsets.only(left: 16.0),
                 child: Image.asset('assets/images/spiderman.jpg'),
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.55,
+              width: MediaQuery.of(context).size.width * 0.6,
               height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
