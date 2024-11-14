@@ -23,7 +23,7 @@ class HomeCarousel extends StatelessWidget {
           height: 370.0,
           aspectRatio: 0.6,
           enlargeCenterPage: true,
-          viewportFraction: 0.7),
+          viewportFraction: 0.65),
       items: movieList.map((movie) {
         return GestureDetector(
           onTap: () {
@@ -41,7 +41,7 @@ class HomeCarousel extends StatelessWidget {
                     child: Image.asset(
                       movie['image']!,
                       fit: BoxFit.cover,
-                      width: 250,
+                      width: 220,
                     ),
                   ),
                 ),

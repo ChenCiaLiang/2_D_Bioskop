@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ComingSoonHeader extends StatelessWidget {
-  const ComingSoonHeader({
+class PromoHeader extends StatelessWidget {
+  const PromoHeader({
     super.key,
   });
 
@@ -12,7 +12,7 @@ class ComingSoonHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.only(left: 12),
           child: const Text(
-            'Coming Soon ',
+            'Promo',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 18,
