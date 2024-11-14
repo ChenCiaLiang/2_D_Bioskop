@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/screens/login.dart';
+import 'package:tubez/screens/edit_profile.dart';
 import 'package:tubez/service/camera.dart';
 import 'dart:io';
 
@@ -14,14 +15,13 @@ class profileScreen extends StatefulWidget {
 class _profileScreenState extends State<profileScreen> {
   final bool _isEditing = false;
   String _name = 'Agus Zefanto';
-  String _email = 'Agoes@gmail.com';
+  String _email = 'agoes@gmail.com';
   String _noTelp = '0821234567890';
   String _dateBirth = '18/08/2004';
   String _password = 'Ze*****18';
 
   File? _profileImage;
 
-  // Method to navigate to CameraView and capture an image
   Future<void> _captureProfileImage() async {
     final imagePath = await Navigator.push(
       context,
@@ -62,13 +62,6 @@ class _profileScreenState extends State<profileScreen> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            const Divider(
-              thickness: 1,
-              color: Color.fromARGB(104, 178, 178, 178),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -126,13 +119,44 @@ class _profileScreenState extends State<profileScreen> {
             const SizedBox(
               height: 20,
             ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'PROFILE',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen()),
+                      );
+                    },
+                    child: const Text(
+                      'EDIT',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color.fromARGB(205, 205, 144, 3),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
             const Divider(
               thickness: 1,
               color: Color.fromARGB(104, 178, 178, 178),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             _buildProfileInfo("Username", _name, _isEditing, (value) {
               setState(() {
                 _name = value;
