@@ -15,6 +15,7 @@ dependencies:
   url_launcher: ^6.1.6
   google_nav_bar: ^5.0.6
   get: ^4.6.6
+  speech_to_text: ^7.0.0
 
 dev_dependencies:
   camera: ^0.10.5+2
@@ -30,12 +31,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/deadpool.jpg
-    - assets/images/elemental.jpg
-    - assets/images/transformers.jpg
-    - assets/images/the_boys.jpg
-    - assets/images/spiderman.jpg
-    - assets/images/logo.png
+    - assets/images/
 
   fonts:
     - family: Poppins
