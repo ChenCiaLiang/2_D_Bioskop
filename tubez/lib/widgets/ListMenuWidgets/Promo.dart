@@ -1,195 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/screens/PromoDetail.dart';
+
+final List<Map<String, dynamic>> promoList = [
+  {'image': 'assets/images/Promo.png', 'title': 'Promo1', 'price': 10000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo2', 'price': 20000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo3', 'price': 30000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo4', 'price': 40000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo5', 'price': 50000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo6', 'price': 40000},
+  {'image': 'assets/images/Promo.png', 'title': 'Promo7', 'price': 10000},
+];
 
 class Promo extends StatelessWidget {
-  const Promo({
-    super.key,
-  });
-
+  const Promo({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 12),
-      child: SingleChildScrollView(
+    return SizedBox(
+      height: 180.0,
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/elemental.jpg',
-                    width: 140,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 140,
-                  child: Text(
-                    'Elemental',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/elemental.jpg',
-                    width: 140,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 140,
-                  child: Text(
-                    'The Boys',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/elemental.jpg',
-                    width: 140,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 140,
-                  child: Text(
-                    'Accross The Spider Verse',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/elemental.jpg',
-                    width: 140,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 140,
-                  child: Text(
-                    'Transformers: Rise of The Beast',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/elemental.jpg',
-                    width: 140,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 140,
-                  child: Text(
-                    'Deadpool & Wolverine',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.white),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(left: 12),
-                  child: const Text(
-                    'Promo',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18,
-                      color: Colors.white,
+        itemCount: promoList.length,
+        itemBuilder: (context, index) {
+          final promo = promoList[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PromoDetailScreen(
+                  itemTitle: promo['title']!,
+                  itemImage: promo['image']!,
+                  itemPrice: promo['price']!,
+                )),
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.4,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.asset(
+                        promo['image']!,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: const Text(
-                    'see more ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.amber,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
