@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/screens/nowPlayingScreen.dart';
 import 'package:tubez/screens/seeMoreScreen.dart';
 
 class NowPlayingHeader extends StatelessWidget {
@@ -29,13 +28,12 @@ class NowPlayingHeader extends StatelessWidget {
             onPressed: () {
               pushSeeMore(context);
             },
-            child: const Text(
-            'see more ',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: Colors.amber,
-            )),
+            child: const Text('see more ',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.amber,
+                )),
           ),
         ),
       ],

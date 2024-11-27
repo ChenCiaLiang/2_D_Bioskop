@@ -1,120 +1,137 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
-import 'package:tubez/widgets/MovieDetailWidgets/MovieDescription.dart';
-import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 
-class spesialPromoDetailScreen extends StatefulWidget {
-  const spesialPromoDetailScreen({super.key});
+class SpesialPromoDetailScreen extends StatefulWidget {
+  final String itemTitle;
+  final String itemImage;
+  final int itemPrice;
+
+  SpesialPromoDetailScreen({
+    required this.itemTitle,
+    required this.itemImage,
+    required this.itemPrice,
+  });
 
   @override
-  State<spesialPromoDetailScreen> createState() => _spesialPromoDetailScreenState();
+  _SpesialPromoDetailScreenState createState() => _SpesialPromoDetailScreenState();
 }
 
-class _spesialPromoDetailScreenState extends State<spesialPromoDetailScreen> {
+class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Stack(
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Stack(
               children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
+                Positioned.fill(
                   child: Image.asset(
-                    'assets/images/spiderman.jpg',
-                    width: MediaQuery.of(context).size.width,
-                    height: 500,
+                    widget.itemImage,
+                    width: double.infinity,
+                    height: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
-                Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.2),
-                    ),
-                  ),
-                ),
                 Positioned(
-                  top: 200,
-                  left: 0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 35, 35, 35),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10))),
-                    child: Stack(
-                      children: [
-                        MovieDescription(),
-                        SizedBox(height: 20),
-                        Positioned(
-                          top: 240,
-                          left: 15,
-                          child: Column(
-                            children: [
-                              Container(
-                                child: const Text(
-                                  "Schedule",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          const WidgetStatePropertyAll(
-                                              Colors.transparent),
-                                      foregroundColor:
-                                          const WidgetStatePropertyAll(
-                                              Colors.white),
-                                      padding: const WidgetStatePropertyAll(
-                                          EdgeInsets.symmetric(
-                                              vertical: 14.0,
-                                              horizontal: 14.0)),
-                                      shape: WidgetStatePropertyAll(
-                                          RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        side: const BorderSide(
-                                            color: Colors.white, width: 2),
-                                      )),
-                                    ),
-                                    child: const Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text("Today",
-                                            style: TextStyle(fontSize: 12.0)),
-                                        SizedBox(height: 4),
-                                        Text("07",
-                                            style: TextStyle(fontSize: 12.0)),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                  top: 20,
+                  left: 16,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               ],
             ),
-            const BackButtonWidget(),
-          ],
-        ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              color: Color.fromARGB(36, 158, 158, 158),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.itemTitle,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Popcorn Original (M) + Jeruk Smoothie',
+                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Syarat dan Ketentuan:',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildBulletPoint(
+                      'Berlaku hanya di hari Senin hingga Jumat.'),
+                  _buildBulletPoint(
+                      'Infokan ke kasir saat ingin klaim promo ini.'),
+                  _buildBulletPoint(
+                      '1 member dapat klaim deals ini sebanyak 1x per hari.'),
+                  _buildBulletPoint(
+                      'Cek selalu masa berlaku promo.'),
+                  const Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Berlaku sampai dengan 2024-11-23',
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        'Rp ${widget.itemPrice.toString()}',
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '• ',
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: Colors.grey[300], fontSize: 16),
+            ),
+          ),
+        ],
       ),
     );
   }

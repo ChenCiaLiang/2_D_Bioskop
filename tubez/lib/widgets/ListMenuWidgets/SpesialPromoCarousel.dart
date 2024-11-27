@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubez/screens/spesialPromoDetail.dart';
 
-final List<Map<String, String>> spesialPromoList = [
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo'},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo'},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo'},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo'},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo'},
+final List<Map<String, dynamic>> spesialPromoList = [
+  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
+  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
+  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
+  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
+  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
 ];
 
 class Spesialpromocarousel extends StatelessWidget {
@@ -27,7 +27,11 @@ class Spesialpromocarousel extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => spesialPromoDetailScreen()));
+                MaterialPageRoute(builder: (context) => SpesialPromoDetailScreen(
+                  itemTitle: spesialPromo['title']!,
+                  itemImage: spesialPromo['image']!,
+                  itemPrice: spesialPromo['price']!,
+                )));
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),

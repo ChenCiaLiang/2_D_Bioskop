@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
 import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -50,20 +51,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       appBar: HistoryHeader(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(3.w),
         child: ListView.builder(
           itemCount: historyItems.length,
           itemBuilder: (context, index) {
             final item = historyItems[index];
-            return IsiHistory(
-              image: item['image'],
-              title: item['title'],
-              status: item['status'],
-              studio: item['studio'],
-              date: item['date'],
-              total: item['total'],
-              isReviewed: item['isReviewed'],
-              ticketCount: item['ticketCount'],
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 1.h),
+              child: IsiHistory(
+                image: item['image'],
+                title: item['title'],
+                status: item['status'],
+                studio: item['studio'],
+                date: item['date'],
+                total: item['total'],
+                isReviewed: item['isReviewed'],
+                ticketCount: item['ticketCount'],
+              ),
             );
           },
         ),
