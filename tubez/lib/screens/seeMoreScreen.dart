@@ -69,9 +69,9 @@ class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateM
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
-                  buttonMore("Now Playing", 0),
+                  buttonMore("Now Playing", 0), 
                   const SizedBox(width: 16),
                   buttonMore("Coming Soon", 1),
                   const SizedBox(width: 16),
