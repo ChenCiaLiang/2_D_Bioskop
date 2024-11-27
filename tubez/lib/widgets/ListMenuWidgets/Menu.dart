@@ -16,7 +16,7 @@ class _MenuState extends State<Menu> {
 
   final List<Map<String, String>> minumanList = [
     {'image': 'assets/images/Minuman.png', 'title': 'Minuman'},
-    {'image': 'assets/images/Minuman.png', 'title': 'Minuman'},
+    {'image': 'assets/images/Popcorn_and_Beans.png', 'title': 'Minuman'},
   ];
 
   @override
@@ -103,13 +103,16 @@ class _MenuState extends State<Menu> {
                 );
               },
               child: Container(
+
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[900],
                 ),
                 child: Column(
                   children: [
-                    Expanded(
+                    Container(
+                      width: 300,
+                      height: 170,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(

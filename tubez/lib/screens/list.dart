@@ -20,34 +20,36 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HomeHeader(size: size),
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.only(left: 12),
-              child: const Text(
-                "Today's Special Offer!",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HomeHeader(size: size),
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.only(left: 12),
+                child: const Text(
+                  "Today's Special Offer!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Spesialpromocarousel(),
-            const SizedBox(height: 20),
-            const PromoHeader(),
-            const SizedBox(height: 20),
-            const Promo(),
-            const SizedBox(height: 20),
-            Menu(),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 20),
+              const Spesialpromocarousel(),
+              const SizedBox(height: 20),
+              const PromoHeader(),
+              const SizedBox(height: 20),
+              const Promo(),
+              const SizedBox(height: 20),
+              Menu(),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

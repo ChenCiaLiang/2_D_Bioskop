@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:get/get.dart';
+import 'package:tubez/network/tiket_repository.dart';
 import 'package:tubez/screens/history.dart';
 import 'package:tubez/screens/home.dart';
 import 'package:tubez/screens/list.dart';
@@ -24,11 +24,11 @@ class _navigationBarState extends State<navigationBar> {
     });
   }
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    ListScreen(),
-    HistoryScreen(),
-    profileScreen(),
+  final List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(repository: TiketRepository()),
+    const ListScreen(),
+    const HistoryScreen(),
+    const profileScreen(),
   ];
 
   @override

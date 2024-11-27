@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:tubez/model/tiket.dart';
+import 'package:tubez/network/tiket_repository.dart';
 import 'package:tubez/widgets/HomeWidgets/TopRated.dart';
 import 'package:tubez/widgets/HomeWidgets/TopRatedHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/homeHeader.dart';
@@ -6,18 +10,35 @@ import 'package:tubez/widgets/HomeWidgets/NowPlayingHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/HomeCarousel.dart';
 import 'package:tubez/widgets/HomeWidgets/ComingSoonHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/ComingSoon.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 final themeMode = ValueNotifier(2);
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.repository});
+
+  final TiketRepository repository;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Tiket>? _data;
+
+  void getTiket() async {
+    final response = await widget.repository.getTiket();
+    setState() {
+      _data = response;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    log("tes");
+    getTiket();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
