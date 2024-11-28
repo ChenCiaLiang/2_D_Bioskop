@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('studios', function (Blueprint $table) {
             $table->id();
-            $table->text('jenis');
-            $table->integer('jumlah_kursi');
+            $table->string('jenis');
+            $table->integer('jumlahKursi');
             $table->double('harga');
             $table->timestamps();
         });
