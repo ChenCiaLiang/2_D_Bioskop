@@ -40,7 +40,7 @@ class selectSeatScreen extends StatefulWidget {
 
 class _selectSeatScreenState extends State<selectSeatScreen> {
   Set<SeatNumber> selectedSeats = Set();
-  Set<String> mySeats = Set(); // This will store the translated seat numbers
+  Set<String> mySeats = {}; // This will store the translated seat numbers
 
   @override
   Widget build(BuildContext context) {
@@ -76,28 +76,40 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                         margin: EdgeInsets.symmetric(horizontal: 15),
                         child: SeatLayoutWidget(
                           onSeatStateChanged: (rowI, colI, seatState) {
-                            print(
-                                "Seat tapped: ${SeatNumber(rowI: rowI, colI: colI)} - State: $seatState");
-
-                            // Translate the seat number
                             String seatString =
                                 SeatNumber(rowI: rowI, colI: colI).toString();
 
-                            // Add or remove seat from 'mySeats'
                             if (seatState == SeatState.selected) {
                               selectedSeats
                                   .add(SeatNumber(rowI: rowI, colI: colI));
-                              mySeats.add(
-                                  seatString); // Add the translated seat number to 'mySeats'
+                              mySeats.add(seatString);
                             } else {
                               selectedSeats
                                   .remove(SeatNumber(rowI: rowI, colI: colI));
-                              mySeats.remove(
-                                  seatString); // Remove the translated seat number from 'mySeats'
+                              mySeats.remove(seatString);
                             }
 
-                            // Optionally print the updated 'mySeats' list
-                            print("My selected seats: $mySeats");
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  seatState == SeatState.selected
+                                      ? "My Selected Seats: ${mySeats.join(', ')}"
+                                      : "My Selected Seats: ${mySeats.join(', ')}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 56, 55, 55),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
                           },
                           stateModel: const SeatLayoutStateModel(
                             rows: 10,
@@ -241,16 +253,13 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => selectSeatScreen()));
+                          showSlideInModal(context, mySeats);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 60, vertical: 15),
                           child: Text(
-                            'Confirm',
+                            'Continue',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -329,7 +338,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                     SizedBox(height: 20),
 
                     CircleAvatar(
-                      backgroundColor: const Color.fromARGB(36, 158, 158, 158),
+                      backgroundColor: const Color.fromARGB(0, 158, 158, 158),
                       radius: 30,
                       child: Image.asset(
                         'assets/images/logo.png',
@@ -373,4 +382,200 @@ class SeatNumber {
   String translateRowToString(int rowIndex) {
     return String.fromCharCode(65 + rowIndex); // 65 is ASCII for 'A'
   }
+}
+
+void showSlideInModal(BuildContext context, Set<String> mySeats) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // Allow height to adjust based on content
+    backgroundColor: Colors.black, // Optional: make the background transparent
+    builder: (BuildContext context) {
+      return ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        child: Container(
+          color: const Color.fromARGB(255, 35, 35, 35),
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(20),
+          child: Wrap(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: Text(
+                        "Seat Details",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Container(
+                          height: 80,
+                          width: 80,
+                          child: Image.asset('assets/images/spiderman.jpg')),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Spiderman into The Spiderverse",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              "Monday, 07 Desember 2024",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 72, 70, 70)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "- Your Tickets cannot be exchanged or refunded",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.amber),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "- Children ages 2 or above require tickets",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.amber),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 56,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 63, 62, 62),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Row(
+                        children: [
+                          Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 8.0, top: 8),
+                                child: Text(
+                                  "Number of Seats: 2",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 7.0,
+                                ),
+                                child: Text(
+                                  "My Seats: ${mySeats.join(', ')}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Total:",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          "Rp 90.000",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colors.amber),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      showSlideInModal(context, mySeats);
+                    },
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 90, vertical: 12),
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
