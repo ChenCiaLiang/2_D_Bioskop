@@ -50,20 +50,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       appBar: HistoryHeader(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(3),
         child: ListView.builder(
           itemCount: historyItems.length,
           itemBuilder: (context, index) {
             final item = historyItems[index];
-            return IsiHistory(
-              image: item['image'],
-              title: item['title'],
-              status: item['status'],
-              studio: item['studio'],
-              date: item['date'],
-              total: item['total'],
-              isReviewed: item['isReviewed'],
-              ticketCount: item['ticketCount'],
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 1),
+              child: IsiHistory(
+                image: item['image'],
+                title: item['title'],
+                status: item['status'],
+                studio: item['studio'],
+                date: item['date'],
+                total: item['total'],
+                isReviewed: item['isReviewed'],
+                ticketCount: item['ticketCount'],
+              ),
             );
           },
         ),

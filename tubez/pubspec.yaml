@@ -26,7 +26,10 @@ dev_dependencies:
   path_provider: ^2.0.15 # provide path to save file
   qr_flutter: ^4.1.0 # generate qr code
   carousel_slider: ^5.0.0
-
+  responsive_sizer: ^3.3.1
+  book_my_seat: ^1.0.1
+  flutter_svg: ^1.0.0
+  
 flutter:
   uses-material-design: true
 
