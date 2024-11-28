@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemesanan__tikets', function (Blueprint $table) {
+        Schema::create('pemesananTikets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('idStudio');
+            $table->foreign('idStudio')->references('id')->on('studios')->onDelete('cascade');
+            $table->unsignedBigInteger('idFilm');
+            $table->foreign('idFilm')->references('id')->on('films')->onDelete('cascade');
             $table->timestamps();
         });
     }

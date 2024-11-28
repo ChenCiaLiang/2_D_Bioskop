@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idFilm')->constrained()->onDelete('cascade');
-            $table->date('tanggal');
-            $table->time('jam');
+            $table->unsignedBigInteger('idStudio');
+            $table->foreign('idStudio')->references('id')->on('studios')->onDelete('cascade');
+            $table->date('tanggalTayang');
+            $table->time('jamTayang');
             $table->timestamps();
         });
     }

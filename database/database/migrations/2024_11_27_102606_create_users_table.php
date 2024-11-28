@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pelanggans', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->text('username');
-            $table->text('password');
-            $table->text('gender');
-            $table->date('tanggal_lahir');
+            $table->string('username');
+            $table->string('password');
+            $table->date('tanggalLahir');
+            $table->string('email');
+            $table->string('noTelepon');
             $table->timestamps();
         });
     }
