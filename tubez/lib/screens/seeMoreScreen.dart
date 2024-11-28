@@ -17,7 +17,6 @@ class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
   
     TextButton buttonMore(String text, int index){
       final bool isSelected = selectedIndex == index;
@@ -26,7 +25,7 @@ class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateM
           backgroundColor: isSelected ? Colors.white : Colors.transparent,
           foregroundColor: isSelected ? Colors.black : Colors.white,
           padding: EdgeInsets.symmetric(horizontal: 10),
-          fixedSize: const Size(115, 15),
+          fixedSize: const Size(100, 15),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8)), 
             side: const BorderSide(
@@ -70,8 +69,9 @@ class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateM
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center, 
                 children: [
-                  buttonMore("Now Playing", 0),
+                  buttonMore("Now Playing", 0), 
                   const SizedBox(width: 16),
                   buttonMore("Coming Soon", 1),
                   const SizedBox(width: 16),

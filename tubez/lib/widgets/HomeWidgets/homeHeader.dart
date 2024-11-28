@@ -12,7 +12,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
+      padding: const EdgeInsets.only(top: 0, left: 24, right: 24),
       child: SizedBox(
         height: size.height / 14,
         child: Row(
