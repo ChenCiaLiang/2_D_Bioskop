@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class UserController extends Controller
 {
@@ -47,32 +48,21 @@ class UserController extends Controller
         
         try{
             
-            $admins = Admin::where('email_admin', $request->email)->first();
-            if (!$admins || $request->password_admin === $admins->password_admin) {
-                
-                $users = User::where('email', $request->email)->first();
-        
-                if(!$users || !Hash::check($request->password, $users->password)){
-                    return response()->json([
-                        'message' => 'email atau password salah'
-                    ], 401);
-                }
+            $users = User::where('email', $request->email)->first();
     
-                $token = $users->createToken('Personal Access Token')->plainTextToken;
-    
-                session(['auth_token' => $token]);
-    
-                if(Auth::attempt($request->only('email', 'password'))){
-                    Auth::guard('user')->login($users);
-                    return redirect()->route('sewa.homepage')->with('success', true);
-                }
+            if(!$users || !Hash::check($request->password, $users->password)){
+                return response()->json([
+                    'message' => 'email atau password salah'
+                ], 401);
+            }
 
-            }else{
-                Auth::guard('admin')->login($admins);
-                $token = $admins->createToken('Admin Access Token')->plainTextToken;
+            $token = $users->createToken('Personal Access Token')->plainTextToken;
 
-                session(['auth_token' => $token]);
-                return redirect()->route('admin.dashboard')->with('success', 'Welcome Admin!');
+            session(['auth_token' => $token]);
+
+            if(Auth::attempt($request->only('email', 'password'))){
+                Auth::guard('web')->login($users);
+                return redirect()->route('home')->with('success', true);
             }
             
 
@@ -101,7 +91,7 @@ class UserController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('sewa.homepage')->with('success', true);
+            return redirect()->route('login')->with('success', true);
             
             
         }catch(Exception $e){
@@ -128,8 +118,11 @@ class UserController extends Controller
         try{
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::user()->idUser.',idUser|unique:admin,email_admin',
-            'alamat' => 'required',
+            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::user()->idUser,
+            'noTelepon' => 'required',
+            'tanggalLahir' => 'required',
+            'password' => 'required',
+            'confirmPW' => 'required|same:password',
         ]);
 
         $userId = Auth::user()->idUser;
@@ -149,7 +142,9 @@ class UserController extends Controller
                 $user->update([
                     'nama' => $validatedData['nama'],
                     'email' => $validatedData['email'],
-                    'alamat' => $validatedData['alamat'],
+                    'noTelepon' => $validatedData['noTelepon'],
+                    'tanggalLahir' => $validatedData['tanggalLahir'],
+                    'password' => Hash::make($validatedData['password']),
                     'foto' => 'profilePict/' . $imageName,
                 ]);
 
@@ -157,15 +152,17 @@ class UserController extends Controller
                 $user->update([
                     'nama' => $validatedData['nama'],
                     'email' => $validatedData['email'],
-                    'alamat' => $validatedData['alamat'],
+                    'noTelepon' => $validatedData['noTelepon'],
+                    'tanggalLahir' => $validatedData['tanggalLahir'],
+                    'password' => Hash::make($validatedData['password']),
                     'foto' => Auth::user()->foto,
                 ]);
             }
             
-            return redirect()->route('users.profile')->with('success', true);
+            return redirect()->route('profile')->with('success', true);
         }catch(Exception $e){
             dd($e);
-            return redirect()->back()->with('error', 'Gagal Login users.');
+            return redirect()->back()->with('error', 'Gagal Update profile.');
         }
     }
 
