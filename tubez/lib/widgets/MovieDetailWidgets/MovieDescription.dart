@@ -41,17 +41,48 @@ class MovieDescription extends StatelessWidget {
                                 color: Colors.white),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 4),
+                        Container(
+                          child: Row(
+                            children: [
+                              const Text(
+                                "Rating: ",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                "10.0",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              const SizedBox(
+                                  width:
+                                      4), // Optional: Adds some space between the rating number and the star
+                              Image.asset(
+                                'assets/images/star.png', // Replace with the actual path to your star PNG image
+                                width: 14, // Adjust the size of the star
+                                height: 14, // Adjust the size of the star
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 2),
                         Container(
                           child: const Text(
                             "Synopsis",
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         Container(
                           height: 100,
                           margin: EdgeInsets.only(right: 6),

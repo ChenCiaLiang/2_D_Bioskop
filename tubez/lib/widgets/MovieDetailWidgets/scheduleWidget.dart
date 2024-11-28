@@ -9,6 +9,7 @@ class Schedulewidget extends StatefulWidget {
 
 class _SchedulewidgetState extends State<Schedulewidget> {
   int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -16,7 +17,7 @@ class _SchedulewidgetState extends State<Schedulewidget> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(7, (index) {
+        children: List.generate(5, (index) {
           final day = now.add(Duration(days: index));
           final dayName = index == 0 ? "Today" : "Day ${index + 1}";
           final dayNumber = day.day.toString().padLeft(2, '0');
@@ -26,20 +27,20 @@ class _SchedulewidgetState extends State<Schedulewidget> {
             padding: const EdgeInsets.only(right: 10.0),
             child: ElevatedButton(
               onPressed: () {
-                setState() {
-                  selectedIndex = index;
-                }
+                setState(() {
+                  selectedIndex = index; // Update selected index
+                });
               },
               style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
+                backgroundColor: MaterialStateProperty.all(
                     isActive ? Colors.amber : Colors.transparent),
-                foregroundColor: WidgetStatePropertyAll(
+                foregroundColor: MaterialStateProperty.all(
                   isActive ? Colors.white : Colors.white,
                 ),
-                padding: WidgetStatePropertyAll(
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 4),
                 ),
-                shape: WidgetStatePropertyAll(
+                shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     side: BorderSide(
@@ -53,7 +54,7 @@ class _SchedulewidgetState extends State<Schedulewidget> {
                 children: [
                   Text(dayName, style: const TextStyle(fontSize: 12.0)),
                   const SizedBox(height: 4),
-                  Text(dayNumber, style: const TextStyle(fontSize: 12.0)),
+                  Text(dayNumber, style: const TextStyle(fontSize: 14.0)),
                 ],
               ),
             ),

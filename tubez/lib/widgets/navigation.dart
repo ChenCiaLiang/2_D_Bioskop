@@ -25,7 +25,7 @@ class _navigationBarState extends State<navigationBar> {
   }
 
   final List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(repository: TiketRepository()),
+    const HomeScreen(),
     const ListScreen(),
     const HistoryScreen(),
     const profileScreen(),

@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tikets', function (Blueprint $table) {
+        Schema::create('films', function (Blueprint $table) {
             $table->id();
+            $table->text('judul');
+            $table->text('status');
+            $table->text('durasi');
+            $table->text('genre');
+            $table->text('age_restriction');
+            $table->text('deskripsi');
+            $table->text('sinopsis');
+            $table->float('jumlah_rating');
             $table->timestamps();
         });
     }
@@ -22,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tikets');
+        Schema::dropIfExists('films');
     }
 };

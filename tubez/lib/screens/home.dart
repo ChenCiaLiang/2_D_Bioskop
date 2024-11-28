@@ -14,9 +14,9 @@ import 'package:tubez/widgets/HomeWidgets/ComingSoon.dart';
 final themeMode = ValueNotifier(2);
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.repository});
-
-  final TiketRepository repository;
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,20 +24,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Tiket>? _data;
-
-  void getTiket() async {
-    final response = await widget.repository.getTiket();
-    setState() {
-      _data = response;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    log("tes");
-    getTiket();
-  }
 
   @override
   Widget build(BuildContext context) {
