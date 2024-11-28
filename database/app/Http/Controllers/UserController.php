@@ -10,80 +10,190 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Handle user registration
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'notelp' => 'required|string',
-            'tgl_lahir' => 'required|date',
+    public function register(Request $request){
+        $request->validate([
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'tanggalLahir' => 'required|date',
+            'noTelepon' => 'required',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required',
+            'confirmPW' => 'required|same:password',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors(),
-            ], 400);
+        try{
+
+            User::create([
+                'username' => $request->firstName . ' ' . $request->lastName,
+                'tanggalLahir' => $request->tanggalLahir,
+                'noTelepon' => $request->noTelepon,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'foto' => "profilePict/profile.jpg",
+            ]);
+            
+            return view('login')->with('success', true);
+
+        }catch(Exception $e){
+            return redirect()->back()->with('error', 'Gagal Create users.');
+        }
+    }
+
+    public function login(Request $request){
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+        
+        try{
+            
+            $admins = Admin::where('email_admin', $request->email)->first();
+            if (!$admins || $request->password_admin === $admins->password_admin) {
+                
+                $users = User::where('email', $request->email)->first();
+        
+                if(!$users || !Hash::check($request->password, $users->password)){
+                    return response()->json([
+                        'message' => 'email atau password salah'
+                    ], 401);
+                }
+    
+                $token = $users->createToken('Personal Access Token')->plainTextToken;
+    
+                session(['auth_token' => $token]);
+    
+                if(Auth::attempt($request->only('email', 'password'))){
+                    Auth::guard('user')->login($users);
+                    return redirect()->route('sewa.homepage')->with('success', true);
+                }
+
+            }else{
+                Auth::guard('admin')->login($admins);
+                $token = $admins->createToken('Admin Access Token')->plainTextToken;
+
+                session(['auth_token' => $token]);
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome Admin!');
+            }
+            
+
+        }catch(Exception $e){
+            dd($e);
+            return redirect()->back()->with('error', 'Gagal Login users.');
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'notelp' => $request->notelp ?? 'N/A',
-            'tgl_lahir' => $request->tgl_lahir,
-        ]);
+    }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User registered successfully.',
-            'data' => $user,
-        ], 201);
+    public function logout(Request $request){
+        try{
+            // Check if the user is authenticated and has a current token
+            if ($request->user() && $request->user()->currentAccessToken()) {
+                // Delete the current access token
+                $request->user()->currentAccessToken()->delete();
+            } else {
+                // Optional: Delete all tokens if currentAccessToken is null
+                if ($request->user()) {
+                    $request->user()->tokens()->delete();
+                }
+            }
+
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('sewa.homepage')->with('success', true);
+            
+            
+        }catch(Exception $e){
+            dd($e);
+            return redirect()->back()->with('error', 'Gagal Logout users.');
+        }
     }
 
     /**
-     * Handle user login
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * Display a listing of the resource.
      */
-    public function login(Request $request)
+    
+    public function index()
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:8',
+        $oneUser = Auth::user();
+        return response()->json($oneUser);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request)
+    {
+        try{
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::user()->idUser.',idUser|unique:admin,email_admin',
+            'alamat' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors(),
-            ], 400);
+        $userId = Auth::user()->idUser;
+
+        $user = User::find($userId);
+
+        if(!$user){
+            return response()->json(['message' => 'User tidak ditemukan'], 403);
         }
 
-        $user = User::where('email', $request->email)->first();
+            if($request->hasFile('foto')){
+                $image = $request->foto;
+                $imageName = $image->getClientOriginalName();
+                $image->move(public_path('profilePict'), $image->getClientOriginalName());
+                
+                //Fungsi Simpan Data ke dalam Database
+                $user->update([
+                    'nama' => $validatedData['nama'],
+                    'email' => $validatedData['email'],
+                    'alamat' => $validatedData['alamat'],
+                    'foto' => 'profilePict/' . $imageName,
+                ]);
 
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            }else{
+                $user->update([
+                    'nama' => $validatedData['nama'],
+                    'email' => $validatedData['email'],
+                    'alamat' => $validatedData['alamat'],
+                    'foto' => Auth::user()->foto,
+                ]);
+            }
+            
+            return redirect()->route('users.profile')->with('success', true);
+        }catch(Exception $e){
+            dd($e);
+            return redirect()->back()->with('error', 'Gagal Login users.');
         }
-
-        // $token = $user->createToken('Personal Access Token')->plainTextToken;
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User logged in successfully.',
-            'data' => [
-                'user' => $user,
-                // 'token' => $token,
-            ],
-        ], 200);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        $userId = Auth::user()->idUser;
+
+        $user = User::find($userId);
+
+        if(!$user){
+            return response()->json(['message' => 'User tidak ditemukan atau anda tidak login'], 403);
+        }
+
+        $user->delete();
+
+        return response()->json(['message' => 'User berhasil di hapus.']);
+    }
+
+    public function profile()
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Pass the user data to the profile view
+        return view('profile', compact('user'));
+    }
+
 }
