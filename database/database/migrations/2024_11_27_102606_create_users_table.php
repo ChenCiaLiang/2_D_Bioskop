@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggalLahir');
             $table->string('email');
             $table->string('noTelepon');
+            $table->string('foto');
             $table->timestamps();
         });
     }
