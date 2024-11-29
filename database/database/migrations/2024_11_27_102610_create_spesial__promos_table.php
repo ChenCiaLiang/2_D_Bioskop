@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggalBerlaku');
             $table->double('harga');
             $table->string('ketentuan');
+            $table->string('fotoPromo');
             $table->timestamps();
         });
     }

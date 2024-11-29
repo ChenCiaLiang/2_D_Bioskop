@@ -22,6 +22,7 @@ class SpesialPromo extends Model
         'tanggalBerlaku',
         'harga',
         'ketentuan',
+        'fotoPromo',
     ];
 
     public function menu(){

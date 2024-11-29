@@ -22,6 +22,7 @@ class Menu extends Model
         'harga',
         'ukuran',
         'deskripsi',
+        'fotoMenu',
     ];
 
     public function spesialPromo(){

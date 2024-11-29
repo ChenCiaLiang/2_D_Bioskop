@@ -62,7 +62,11 @@ class UserController extends Controller
 
             if(Auth::attempt($request->only('email', 'password'))){
                 Auth::guard('web')->login($users);
-                return redirect()->route('home')->with('success', true);
+                return response()->json([ // respon ketika berhasil
+                    "status" => true,
+                    "message" => "Get Successful",
+                    "data" => $users
+                ], 200);
             }
             
 

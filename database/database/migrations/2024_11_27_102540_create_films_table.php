@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('ageRestriction');
             $table->string('sinopsis');
             $table->float('jumlahRating');
+            $table->string('fotoFilm');
             $table->timestamps();
         });
     }
