@@ -5,27 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Menu extends Model
+
+class SpesialPromo extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
-    protected $table = "menus";
+    protected $table = "spesialPromos";
 
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'idSpesialPromo',
-        'makanan',
-        'minuman',
-        'harga',
-        'ukuran',
+        'judul',
         'deskripsi',
-        'fotoMenu',
+        'tanggalBerlaku',
+        'harga',
+        'ketentuan',
+        'fotoPromo',
     ];
 
-    public function spesialPromo(){
-        return $this->belongsTo(SpesialPromo::class);
+    public function menu(){
+        return $this->hasMany(Menu::class);
     }
 }

@@ -18,6 +18,7 @@ class Transaksi extends Model
         'idPemesananTiket',
         'metodePembayaran',
         'totalHarga',
+        'kursiDipesan',
     ];
 
     public function users(){
