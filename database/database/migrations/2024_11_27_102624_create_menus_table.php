@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('minuman');
             $table->double('harga');
             $table->string('ukuran');
+            $table->string('fotoMenu');
             $table->timestamps();
         });
     }
