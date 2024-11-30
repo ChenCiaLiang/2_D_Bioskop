@@ -1,30 +1,31 @@
 import 'dart:convert';
 
 class User{
-  BigInt id;
+  BigInt? id;
   String username;
   String password;
-  DateTime tanggalLahir;
+  String tanggalLahir;
   String email;
   String noTelepon;
-  String foto;
+  String? foto;
 
   User({
-    required this.id,
+    this.id,
     required this.username,
     required this.password,
     required this.tanggalLahir,
     required this.email,
     required this.noTelepon,
-    required this.foto,
+    this.foto,
   });
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
+
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json['id'],
     username: json['username'],
     password: json['password'],
-    tanggalLahir: DateTime.parse(json['tanggalLahir']),
+    tanggalLahir: json['tanggalLahir'],
     email: json['email'],
     noTelepon: json['noTelepon'],
     foto: json['foto'],
@@ -35,7 +36,7 @@ class User{
     'id': id,
     'username': username,
     'password': password,
-    'tanggalLahir': tanggalLahir.toIso8601String(),
+    'tanggalLahir': tanggalLahir,
     'email': email,
     'noTelepon': noTelepon,
     'foto': foto,

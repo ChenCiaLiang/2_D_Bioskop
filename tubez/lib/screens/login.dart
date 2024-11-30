@@ -5,6 +5,7 @@ import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/component/form_component.dart';
 import 'package:tubez/screens/profile.dart';
+import 'package:tubez/client/UserClient.dart';
 
 class LoginScreen extends StatefulWidget {
   final Map? data;
@@ -154,24 +155,45 @@ class _LoginScreenState extends State<LoginScreen> {
                             const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if ("1" == emailController.text &&
-                              "1" == passwordController.text) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => navigationBar(
-                                          data: dataForm,
-                                        )));
-                          } else {
+                      onPressed: () async{
+                          try{
+                            bool response = await UserClient.login(emailController.text, passwordController.text);
+                              if (response) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const navigationBar()),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: const Text('Password Salah'),
+                                    content: TextButton(
+                                        onPressed: () => pushRegister(context),
+                                        child: const Text('Daftar Disini !!!')),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'OK'),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          }catch(e){
                             showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
-                                title: const Text('Password Salah'),
+                                title: const Text('Error'),
                                 content: TextButton(
                                     onPressed: () => pushRegister(context),
-                                    child: const Text('Daftar Disini !!!')),
+                                    child: const Text('Samting wong')),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () =>
@@ -187,9 +209,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           }
-                        }
+                        
                       },
-                      child: const Text('Log In')),
+                    child: const Text('Log In')),
                 ],
               ),
               const SizedBox(

@@ -8,46 +8,52 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
     public function register(Request $request){
         $request->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'tanggalLahir' => 'required|date',
+            'username' => 'required',
+            'tanggalLahir' => 'required',
             'noTelepon' => 'required',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required',
-            'confirmPW' => 'required|same:password',
         ]);
 
         try{
+            
+            $tanggalLahir = Carbon::createFromFormat('Y-m-d', $request->tanggalLahir)->toDateString();
 
             User::create([
-                'username' => $request->firstName . ' ' . $request->lastName,
-                'tanggalLahir' => $request->tanggalLahir,
+                'username' => $request->username,
+                'tanggalLahir' => $tanggalLahir,
                 'noTelepon' => $request->noTelepon,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'foto' => "profilePict/profile.jpg",
             ]);
             
-            return view('login')->with('success', true);
+            return response()->json([ // respon ketika berhasil
+                "status" => true,
+                "message" => "Register Successful",
+            ], 200);
 
         }catch(Exception $e){
-            return redirect()->back()->with('error', 'Gagal Create users.');
+            return response()->json([ // respon ketika berhasil
+                "status" => false,
+                "message" => "Register Failed",
+            ], 401);
         }
     }
 
     public function login(Request $request){
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
         
         try{
-            
             $users = User::where('email', $request->email)->first();
     
             if(!$users || !Hash::check($request->password, $users->password)){
@@ -56,23 +62,20 @@ class UserController extends Controller
                 ], 401);
             }
 
+            
             $token = $users->createToken('Personal Access Token')->plainTextToken;
 
-            session(['auth_token' => $token]);
-
-            if(Auth::attempt($request->only('email', 'password'))){
-                Auth::guard('web')->login($users);
-                return response()->json([ // respon ketika berhasil
-                    "status" => true,
-                    "message" => "Get Successful",
-                    "data" => $users
-                ], 200);
-            }
+            return response()->json([ // respon ketika berhasil
+                "status" => true,
+                "data" => $users,
+                'token' => $token
+            ], 200);
             
-
         }catch(Exception $e){
-            dd($e);
-            return redirect()->back()->with('error', 'Gagal Login users.');
+            return response()->json([ // respon ketika gagal
+                "status" => false,
+                "message" => $e,
+            ], 401);
         }
 
     }
@@ -90,17 +93,16 @@ class UserController extends Controller
                 }
             }
 
-            Auth::logout();
-
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return redirect()->route('login')->with('success', true);
+            return response()-> json([
+                'message' => 'Logout Successful'
+            ], 200);
             
             
         }catch(Exception $e){
-            dd($e);
-            return redirect()->back()->with('error', 'Gagal Logout users.');
+            return response()->json([ // respon ketika gagal
+                "status" => false,
+                "message" => $e,
+            ], 401);
         }
     }
 

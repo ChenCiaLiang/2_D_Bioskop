@@ -18,6 +18,8 @@ dependencies:
   speech_to_text: ^7.0.0
   http: ^0.13.6
   flutter_riverpod: ^2.6.1
+  shared_preferences: ^2.0.15
+  intl: ^0.18.0
 
 dev_dependencies:
   camera: ^0.10.5+2

@@ -9,6 +9,9 @@ import 'package:tubez/widgets/HomeWidgets/NowPlayingHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/HomeCarousel.dart';
 import 'package:tubez/widgets/HomeWidgets/ComingSoonHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/ComingSoon.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubez/client/UserClient.dart';
+
 
 final themeMode = ValueNotifier(2);
 
@@ -23,6 +26,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Tiket>? _data;
+
+  Future<void> ambilToken() async {
+    UserClient userClient = UserClient();
+    String? token = await userClient.getToken();
+
+    if (token == null) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
