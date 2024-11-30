@@ -27,7 +27,7 @@ class _navigationBarState extends State<navigationBar> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const ListScreen(),
-    const HistoryScreen(),
+    HistoryScreen(),
     const profileScreen(),
   ];
 
