@@ -2,6 +2,7 @@ import 'package:tubez/entity/User.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
@@ -15,41 +16,42 @@ class UserClient {
   // static final String endpoint = '/GD_API_1697/public/api/user';
 
   // mengambil semua data user dari API
-  static Future<List<User>> fetchAll() async{
-    try{
-      var response = await get(Uri.http(url, endpoint));
+  // static Future<List<User>> fetchAll() async{
+  //   try{
+  //     var response = await get(Uri.http(url, endpoint));
 
-      if(response.statusCode != 200) throw Exception(response.reasonPhrase);
+  //     if(response.statusCode != 200) throw Exception(response.reasonPhrase);
 
-      //mengambil bagian data dari response body
-      Iterable list = json.decode(response.body)['data'];
+  //     //mengambil bagian data dari response body
+  //     Iterable list = json.decode(response.body)['data'];
 
-      // list.map untuk membuat list objek User berdasarkan tiap elemen dari list
-      return list.map((e) => User.fromJson(e)).toList();
-    }catch(e){
-      return Future.error(e.toString());
-    }
-  }
+  //     // list.map untuk membuat list objek User berdasarkan tiap elemen dari list
+  //     return list.map((e) => User.fromJson(e)).toList();
+  //   }catch(e){
+  //     return Future.error(e.toString());
+  //   }
+  // }
 
-  // Mengambil data User dari API sesuai ID
-  static Future<User> find(id) async {
-    try{
-      var response = await get(Uri.http(url, '$endpoint/$id'));
+  // // Mengambil data User dari API sesuai ID
+  // static Future<User> find(id) async {
+  //   try{
+  //     var response = await get(Uri.http(url, '$endpoint/$id'));
 
-      if(response.statusCode != 200) throw Exception(response.reasonPhrase);
+  //     if(response.statusCode != 200) throw Exception(response.reasonPhrase);
 
-      return User.fromJson(json.decode(response.body)['data']);
-    }catch (e){
-      return Future.error(e.toString());
-    }
-  }
+  //     return User.fromJson(json.decode(response.body)['data']);
+  //   }catch (e){
+  //     return Future.error(e.toString());
+  //   }
+  // }
 
   // Membuat data User baru
   static Future<Response> register(User user) async{
     try{
-      var response = await post(Uri.http(url, '$endpoint/register'),
+      var response = await post(Uri.http(url, '$endpoint/register'), // pergi ke /api/register
           headers: {"Content-Type": "application/json"},
           body: user.toRawJson());
+          // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -61,19 +63,42 @@ class UserClient {
 
   // Login
 
-  static Future<Map<String, dynamic>> login(String email, String password) async{
+  static Future<bool> login(String email, String password) async{
     try{
       var response = await post(Uri.http(url, '$endpoint/login'),
           headers: {"Content-Type": "application/json"},
           body: json.encode({"email": email, "password": password}));
+          // masukin emiail dan password yang sudah diinput ke dalam body untuk dibawa ke API login
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
       Map<String, dynamic> data = json.decode(response.body);
-      return data;
+      // data dari response body di decode ke dalam bentuk json dan disimpan di variabel data
+
+
+      if(data['status'] == true){
+        // di cek kalau status nya true maka akan diambil token nya, status itu dari controller login di laravel
+        String token = data['token'];
+
+        // token disimpan di shared preferences biar bisa diambil dari manapun
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('auth_token', token);
+        // nama token di shared preferences nya auth_token
+
+        return true;
+
+      } else {
+        return false;
+      }
+      
     }catch(e){
       return Future.error(e.toString());
     }
+  }
+
+  Future<String?> getToken() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('auth_token');
   }
 
   // Mengubah data user sesuai ID
@@ -97,6 +122,24 @@ class UserClient {
       var response = await delete(Uri.http(url, '$endpoint/$id'));
 
       if(response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+      return response;
+    }catch(e){
+      return Future.error(e.toString());
+    }
+  }
+
+  static Future<Response> logout() async{
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+
+      var response = await post(Uri.http(url, '$endpoint/logout'),
+          headers: {"Content-Type": "application/json", "Authorization": "Bearer $token"});
+
+      if(response.statusCode != 200) throw Exception(response.reasonPhrase);
+
+      prefs.remove('auth_token');
 
       return response;
     }catch(e){

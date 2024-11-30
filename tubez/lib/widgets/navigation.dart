@@ -17,6 +17,7 @@ class navigationBar extends StatefulWidget {
 
 class _navigationBarState extends State<navigationBar> {
   int _selectedIndex = 0;
+  
 
   void _onItemTapped(int index) {
     setState(() {
