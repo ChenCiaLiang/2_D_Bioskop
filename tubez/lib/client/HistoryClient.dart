@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:tubez/entity/History.dart';
-import 'package:tubez/widgets/historyWidgets/isiHistory.dart'; // Mengimpor model history untuk memetakan data
+import 'package:tubez/entity/History.dart'; // Mengimpor model history untuk memetakan data
 
 class HistoryClient {
   final String apiUrl =

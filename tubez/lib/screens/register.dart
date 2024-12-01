@@ -34,7 +34,7 @@ class _RegisterViewState extends State<RegisterView> {
     try {
       // Split the input date
       List<String> parts = input.split('/');
-      
+
       if (parts.length == 3) {
         // Return the formatted date in yyyy-MM-dd format
         return '${parts[2]}-${parts[1]}-${parts[0]}';
@@ -172,71 +172,70 @@ class _RegisterViewState extends State<RegisterView> {
               Padding(
                 padding: kDefaultPadding,
                 child: SizedBox(
-                  width: 350,
-                  child : TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if(value == null || value.isEmpty){
-                        return "Password tidak boleh kosong";
-                      }
-                      return null;
-                    },
-                    autofocus: true,
-                    controller: passwordController,
-                    obscureText: isObscure,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
-                        icon: isObscure ?
-                          Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    width: 350,
+                    child: TextFormField(
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password tidak boleh kosong";
+                        }
+                        return null;
+                      },
+                      autofocus: true,
+                      controller: passwordController,
+                      obscureText: isObscure,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isObscure = !isObscure;
+                            });
+                          },
+                          icon: isObscure
+                              ? Icon(Icons.visibility_off)
+                              : Icon(Icons.visibility),
                           color: kTextFieldColor,
+                        ),
                       ),
-                    ),
-                  )
-                ),
+                    )),
               ),
               const SizedBox(
                 height: 15,
               ),
-              
               Padding(
                 padding: kDefaultPadding,
                 child: SizedBox(
-                  width: 350,
-                  child : TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if(value == null || value.isEmpty){
-                        return "Confirm Password tidak boleh kosong";
-                      }
-                      if (passwordController.text != value) {
-                        return 'Password Tidak Sesuai';
-                      }
-                      return null;
-                    },
-                    autofocus: true,
-                    controller: confirmPasswordController,
-                    obscureText: isObscureConfirm,
-                    decoration: InputDecoration(
-                      hintText: "Confirm Password",
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscureConfirm = !isObscureConfirm;
-                          });
-                        },
-                        icon: isObscureConfirm ?
-                          Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    width: 350,
+                    child: TextFormField(
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Confirm Password tidak boleh kosong";
+                        }
+                        if (passwordController.text != value) {
+                          return 'Password Tidak Sesuai';
+                        }
+                        return null;
+                      },
+                      autofocus: true,
+                      controller: confirmPasswordController,
+                      obscureText: isObscureConfirm,
+                      decoration: InputDecoration(
+                        hintText: "Confirm Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isObscureConfirm = !isObscureConfirm;
+                            });
+                          },
+                          icon: isObscureConfirm
+                              ? Icon(Icons.visibility_off)
+                              : Icon(Icons.visibility),
                           color: kTextFieldColor,
+                        ),
                       ),
-                    ),
-                  )
-                ),
+                    )),
               ),
               const SizedBox(
                 height: 25,
@@ -264,12 +263,15 @@ class _RegisterViewState extends State<RegisterView> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       // buat tanggalLahir yang awalnya dd/mm/yyyy jadi yyyy-mm-dd
-                      DateTime tanggalLahir = parseDate(dateBirthController.text);
+                      DateTime tanggalLahir =
+                          parseDate(dateBirthController.text);
                       DateFormat formatter = DateFormat('yyyy-MM-dd');
                       String formatted = formatter.format(tanggalLahir);
 
                       User newUser = User(
-                        username: firstNameController.text + " " + lastNameController.text,
+                        username: firstNameController.text +
+                            " " +
+                            lastNameController.text,
                         password: passwordController.text,
                         tanggalLahir: formatted,
                         email: emailController.text,
@@ -281,16 +283,19 @@ class _RegisterViewState extends State<RegisterView> {
                         // ngelakuin register lalu response nya disimpan di variabel response
                         var response = await UserClient.register(newUser);
                         // jika status code nya 200 atau berhasil maka akan di push ke halaman login
-                          if (response.statusCode == 200) {                       
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const LoginScreen()),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Registration failed: ${response.body}')),
-                            );
-                          }
+                        if (response.statusCode == 200) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const LoginScreen()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Registration failed: ${response.body}')),
+                          );
+                        }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Error Nya: $e')),
