@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwals', function (Blueprint $table) {
+        Schema::create('jadwalTayangs', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggalTayang');
-            $table->time('jamTayang');
+            $table->unsignedBigInteger('idStudio');
+            $table->foreign('idStudio')->references('id')->on('studios')->onDelete('cascade');
+            $table->unsignedBigInteger('idJadwal');
+            $table->foreign('idJadwal')->references('id')->on('jadwals')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwals');
+        Schema::dropIfExists('jadwalTayangs');
     }
 };

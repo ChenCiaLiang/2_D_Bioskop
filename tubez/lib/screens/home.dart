@@ -11,7 +11,8 @@ import 'package:tubez/widgets/HomeWidgets/ComingSoonHeader.dart';
 import 'package:tubez/widgets/HomeWidgets/ComingSoon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/client/UserClient.dart';
-
+import 'dart:convert';
+import 'package:tubez/entity/User.dart';
 
 final themeMode = ValueNotifier(2);
 
@@ -26,14 +27,39 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Tiket>? _data;
+  int? userId;
+  User user = User(email: '', id: 0, username: '', password: '', noTelepon: '', tanggalLahir: '', foto: '');
 
   Future<void> ambilToken() async {
     UserClient userClient = UserClient();
-    String? token = await userClient.getToken();
+    String? token = await userClient.getToken();  
 
     if (token == null) {
       Navigator.pushReplacementNamed(context, '/login');
+    }else{
+        final response = await userClient.dataUser(token);
+
+        if (response.statusCode == 200) {
+          // Mengambil data dari response body
+          var data = json.decode(response.body);
+          user = User.fromJson(data['data']);
+
+          setState(() {
+            userId = user.id; // Menyimpan userId di state
+          });
+
+          print('User ID: $userId');
+          print('Nama User: ${user.username}');
+        } else {
+          print('Failed to load user data');
+        }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
   }
 
   @override
@@ -43,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            HomeHeader(size: size),
+            HomeHeader(size: size, user: user),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -52,8 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.only(left: 12),
-                      child: const Text(
-                        'Welcome, Zefanto ',
+                      child: Text(
+                        'Welcome, ${user.username}',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
