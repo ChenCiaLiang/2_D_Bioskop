@@ -21,11 +21,7 @@ class Studio extends Model
         'harga',
     ];
 
-    public function pemesananTiket(){
-        return $this->hasMany(PemesananTiket::class);
-    }
-
-    public function jadwal(){
-        return $this->hasMany(Jadwal::class);
+    public function JadwalTayang(){
+        return $this->hasMany(JadwalTayang::class);
     }
 }

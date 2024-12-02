@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class User{
-  BigInt? id;
+  int? id;
   String username;
   String password;
   String tanggalLahir;
