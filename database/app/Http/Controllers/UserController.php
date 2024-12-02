@@ -12,7 +12,8 @@ use Carbon\Carbon;
 
 class UserController extends Controller
 {
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         $request->validate([
             'username' => 'required',
             'tanggalLahir' => 'required',
@@ -21,8 +22,8 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        try{
-            
+        try {
+
             $tanggalLahir = Carbon::createFromFormat('Y-m-d', $request->tanggalLahir)->toDateString();
 
             User::create([
@@ -33,13 +34,13 @@ class UserController extends Controller
                 'password' => Hash::make($request->password),
                 'foto' => "profilePict/profile.jpg",
             ]);
-            
+
             return response()->json([ // respon ketika berhasil
                 "status" => true,
                 "message" => "Register Successful",
             ], 200);
 
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json([ // respon ketika berhasil
                 "status" => false,
                 "message" => "Register Failed",
@@ -47,22 +48,23 @@ class UserController extends Controller
         }
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        
-        try{
+
+        try {
             $users = User::where('email', $request->email)->first();
-    
-            if(!$users || !Hash::check($request->password, $users->password)){
+
+            if (!$users || !Hash::check($request->password, $users->password)) {
                 return response()->json([
                     'message' => 'email atau password salah'
                 ], 401);
             }
 
-            
+
             $token = $users->createToken('Personal Access Token')->plainTextToken;
 
             return response()->json([ // respon ketika berhasil
@@ -70,8 +72,8 @@ class UserController extends Controller
                 "data" => $users,
                 'token' => $token
             ], 200);
-            
-        }catch(Exception $e){
+
+        } catch (Exception $e) {
             return response()->json([ // respon ketika gagal
                 "status" => false,
                 "message" => $e,
@@ -80,8 +82,9 @@ class UserController extends Controller
 
     }
 
-    public function logout(Request $request){
-        try{
+    public function logout(Request $request)
+    {
+        try {
             // Check if the user is authenticated and has a current token
             if ($request->user() && $request->user()->currentAccessToken()) {
                 // Delete the current access token
@@ -93,12 +96,12 @@ class UserController extends Controller
                 }
             }
 
-            return response()-> json([
+            return response()->json([
                 'message' => 'Logout Successful'
             ], 200);
-            
-            
-        }catch(Exception $e){
+
+
+        } catch (Exception $e) {
             return response()->json([ // respon ketika gagal
                 "status" => false,
                 "message" => $e,
@@ -109,11 +112,15 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
+
     public function index()
     {
         $oneUser = Auth::user();
-        return response()->json($oneUser);
+        return response()->json([
+            "status" => true,
+            "message" => 'berhasil',
+            "data" => $oneUser,
+        ], 200);
     }
 
     /**
@@ -121,29 +128,29 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        try{
-        $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,'.Auth::user()->idUser,
-            'noTelepon' => 'required',
-            'tanggalLahir' => 'required',
-            'password' => 'required',
-            'confirmPW' => 'required|same:password',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'nama' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->idUser,
+                'noTelepon' => 'required',
+                'tanggalLahir' => 'required',
+                'password' => 'required',
+                'confirmPW' => 'required|same:password',
+            ]);
 
-        $userId = Auth::user()->idUser;
+            $userId = Auth::user()->idUser;
 
-        $user = User::find($userId);
+            $user = User::find($userId);
 
-        if(!$user){
-            return response()->json(['message' => 'User tidak ditemukan'], 403);
-        }
+            if (!$user) {
+                return response()->json(['message' => 'User tidak ditemukan'], 403);
+            }
 
-            if($request->hasFile('foto')){
+            if ($request->hasFile('foto')) {
                 $image = $request->foto;
                 $imageName = $image->getClientOriginalName();
                 $image->move(public_path('profilePict'), $image->getClientOriginalName());
-                
+
                 //Fungsi Simpan Data ke dalam Database
                 $user->update([
                     'nama' => $validatedData['nama'],
@@ -154,7 +161,7 @@ class UserController extends Controller
                     'foto' => 'profilePict/' . $imageName,
                 ]);
 
-            }else{
+            } else {
                 $user->update([
                     'nama' => $validatedData['nama'],
                     'email' => $validatedData['email'],
@@ -164,9 +171,9 @@ class UserController extends Controller
                     'foto' => Auth::user()->foto,
                 ]);
             }
-            
+
             return redirect()->route('profile')->with('success', true);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             dd($e);
             return redirect()->back()->with('error', 'Gagal Update profile.');
         }
@@ -181,7 +188,7 @@ class UserController extends Controller
 
         $user = User::find($userId);
 
-        if(!$user){
+        if (!$user) {
             return response()->json(['message' => 'User tidak ditemukan atau anda tidak login'], 403);
         }
 
