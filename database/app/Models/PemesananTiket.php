@@ -16,15 +16,15 @@ class PemesananTiket extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'idStudio',
+        'idJadwalTayang',
         'idFilm',
     ];
 
-    public function studio(){
-        return $this->belongsTo(Studio::class);
-    }
-
     public function film(){
         return $this->belongsTo(Film::class);
+    }
+
+    public function jadwalTayang(){
+        return $this->belongsTo(JadwalTayang::class);
     }
 }

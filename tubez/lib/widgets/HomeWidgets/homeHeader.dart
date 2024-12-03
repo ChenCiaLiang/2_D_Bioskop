@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/profile.dart';
+import 'package:tubez/client/UserClient.dart';
+import 'dart:convert';
+import 'package:tubez/entity/User.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
     super.key,
     required this.size,
+    required this.user,
   });
 
   final Size size;
+  final User user;
 
   @override
   Widget build(BuildContext context) {

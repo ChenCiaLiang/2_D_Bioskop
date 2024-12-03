@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('spesialPromos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('idSpesialPromo');
-            $table->foreign('idSpesialPromo')->references('id')->on('spesialpromos')->onDelete('cascade');
-            $table->string('makanan');
-            $table->string('minuman');
+            $table->string('judul');
+            $table->string('deskripsi');
+            $table->date('tanggalBerlaku');
             $table->double('harga');
-            $table->string('ukuran');
-            $table->string('fotoMenu');
+            $table->string('ketentuan');
+            $table->string('fotoPromo');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('spesial__promos');
     }
 };

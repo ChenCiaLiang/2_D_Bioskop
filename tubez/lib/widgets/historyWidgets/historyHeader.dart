@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class HistoryHeader extends StatelessWidget implements PreferredSizeWidget {
-  const HistoryHeader({Key? key}) : super(key: key);
+  @override
+  final Size preferredSize;
+
+  HistoryHeader({Key? key})
+      : preferredSize = Size.fromHeight(110.0),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,4 @@ class HistoryHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(110.0);
 }
