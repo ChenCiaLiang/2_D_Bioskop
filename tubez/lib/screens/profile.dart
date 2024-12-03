@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/screens/login.dart';
 import 'package:tubez/screens/edit_profile.dart';
-import 'package:tubez/service/camera.dart';
 import 'dart:io';
 
 class profileScreen extends StatefulWidget {
@@ -13,7 +12,7 @@ class profileScreen extends StatefulWidget {
 }
 
 class _profileScreenState extends State<profileScreen> {
-  final bool _isEditing = false;
+  // final bool _isEditing = false;
   String _name = 'Agus Zefanto';
   String _email = 'agoes@gmail.com';
   String _noTelp = '0821234567890';
@@ -22,17 +21,14 @@ class _profileScreenState extends State<profileScreen> {
 
   File? _profileImage;
 
-  Future<void> _captureProfileImage() async {
-    final imagePath = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CameraView()),
-    );
-
-    if (imagePath != null && imagePath is String) {
-      setState(() {
-        _profileImage = File(imagePath);
-      });
-    }
+  void updateProfile(Map<String, String> updatedData) {
+    setState(() {
+      _name = updatedData['username']!;
+      _email = updatedData['email']!;
+      _noTelp = updatedData['noTelp']!;
+      _dateBirth = updatedData['dateBirth']!;
+      _password = updatedData['password']!;
+    });
   }
 
   @override
@@ -44,16 +40,37 @@ class _profileScreenState extends State<profileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(FontAwesomeIcons.arrowLeftLong,
-              color: Color.fromARGB(205, 205, 144, 3)),
+          icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
         ),
         leadingWidth: 80,
-        title: const Text(
-          'My Profile',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color.fromARGB(205, 205, 144, 3)),
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Expanded(
+                child: Text(
+                  'My Profile',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color.fromARGB(205, 205, 144, 3),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              CircleAvatar(
+                backgroundColor: const Color.fromARGB(36, 158, 158, 158),
+                radius: 25,
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    height: 60,
+                    width: 60,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
         centerTitle: true,
       ),
@@ -77,7 +94,6 @@ class _profileScreenState extends State<profileScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: _captureProfileImage,
                     child: CircleAvatar(
                       radius: 60,
                       backgroundImage: _profileImage != null
@@ -87,25 +103,24 @@ class _profileScreenState extends State<profileScreen> {
                       backgroundColor: Colors.grey,
                     ),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  const Expanded(
+                  const SizedBox(width: 20),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Agus Zefanto',
+                          _name,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 27,
-                              color: Color.fromARGB(255, 255, 255, 255)),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 27,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
                         ),
                         SizedBox(
                           height: 3,
                         ),
                         Text(
-                          '+62 0812 6667 6969',
+                          _noTelp,
                           style: TextStyle(
                               fontSize: 16,
                               color: Color.fromARGB(255, 111, 111, 111)),
@@ -116,10 +131,7 @@ class _profileScreenState extends State<profileScreen> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -133,12 +145,23 @@ class _profileScreenState extends State<profileScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      final updatedData = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen()),
+                          builder: (context) => EditProfileScreen(
+                            username: _name,
+                            email: _email,
+                            noTelp: _noTelp,
+                            dateBirth: _dateBirth,
+                            password: _password,
+                          ),
+                        ),
                       );
+
+                      if (updatedData != null) {
+                        updateProfile(updatedData);
+                      }
                     },
                     child: const Text(
                       'EDIT',
@@ -157,31 +180,11 @@ class _profileScreenState extends State<profileScreen> {
               color: Color.fromARGB(104, 178, 178, 178),
             ),
             const SizedBox(height: 20),
-            _buildProfileInfo("Username", _name, _isEditing, (value) {
-              setState(() {
-                _name = value;
-              });
-            }),
-            _buildProfileInfo("Email", _email, _isEditing, (value) {
-              setState(() {
-                _email = value;
-              });
-            }),
-            _buildProfileInfo("Nomor Telepon", _noTelp, _isEditing, (value) {
-              setState(() {
-                _noTelp = value;
-              });
-            }),
-            _buildProfileInfo("Tanggal Lahir", _dateBirth, _isEditing, (value) {
-              setState(() {
-                _dateBirth = value;
-              });
-            }),
-            _buildProfileInfo("Password", _password, _isEditing, (value) {
-              setState(() {
-                _password = value;
-              });
-            }),
+            _buildProfileInfo("Username", _name),
+            _buildProfileInfo("Email", _email),
+            _buildProfileInfo("Nomor Telepon", _noTelp),
+            _buildProfileInfo("Tanggal Lahir", _dateBirth),
+            _buildProfileInfo("Password", _password),
             const SizedBox(
               height: 20,
             ),
@@ -208,25 +211,26 @@ class _profileScreenState extends State<profileScreen> {
     );
   }
 
-  Widget _buildProfileInfo(
-      String label, String value, bool isEditing, Function(String) onChanged) {
+  Widget _buildProfileInfo(String label, String value) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 25),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 16, color: Color.fromARGB(255, 255, 255, 255))),
-          isEditing
-              ? TextField(
-                  controller: TextEditingController(text: value),
-                  onChanged: onChanged,
-                  style: const TextStyle(fontSize: 16),
-                )
-              : Text(value,
-                  style: const TextStyle(
-                      fontSize: 16, color: Color.fromARGB(255, 255, 255, 255))),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+          ),
         ],
       ),
     );

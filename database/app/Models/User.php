@@ -20,7 +20,8 @@ class User extends Model
         'password',
         'tanggalLahir',
         'email',
-        'noTelepon'
+        'noTelepon',
+        'foto',
     ];
 
     public function transaksi(){
