@@ -1,9 +1,15 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/model/transaksi.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
+import 'package:tubez/screens/payment.dart';
 
 class TrapeziumPainter extends CustomPainter {
   @override
@@ -41,6 +47,49 @@ class selectSeatScreen extends StatefulWidget {
 class _selectSeatScreenState extends State<selectSeatScreen> {
   Set<SeatNumber> selectedSeats = Set();
   Set<String> mySeats = {}; // This will store the translated seat numbers
+  late Future<List<Transaksi>> futureTransaksi;
+  final int rows = 10;
+  final int cols = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    futureTransaksi = TransaksiClient
+        .getAllKursi(); // Fetch data when the widget is initialized
+  }
+
+  List<List<SeatState>> generateSeatLayout(List<Transaksi> transaksiList) {
+    // Collect all reserved seats
+    List<String> reservedSeats =
+        transaksiList.expand((transaksi) => transaksi.kursiDipesan).toList();
+
+    // Initialize the seat layout with unselected seats
+    List<List<SeatState>> seatLayout = List.generate(
+      rows,
+      (rowIndex) => List.generate(
+        cols,
+        (colIndex) => SeatState.unselected,
+      ),
+    );
+
+    // Map reserved seats to their indices and mark them as sold
+    for (String seat in reservedSeats) {
+      String rowLetter = seat[0].toLowerCase(); // Get the row letter
+      int rowIndex =
+          rowLetter.codeUnitAt(0) - 'a'.codeUnitAt(0); // Convert to row index
+      int colIndex =
+          int.parse(seat.substring(1)) - 1; // Get column index (zero-based)
+
+      if (rowIndex >= 0 &&
+          rowIndex < rows &&
+          colIndex >= 0 &&
+          colIndex < cols) {
+        seatLayout[rowIndex][colIndex] = SeatState.sold;
+      }
+    }
+
+    return seatLayout;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,177 +123,76 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 15),
-                        child: SeatLayoutWidget(
-                          onSeatStateChanged: (rowI, colI, seatState) {
-                            String seatString =
-                                SeatNumber(rowI: rowI, colI: colI).toString();
+                        child: FutureBuilder(
+                            future: futureTransaksi,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text("Error: ${snapshot.error}"));
+                              } else if (snapshot.hasData) {
+                                List<List<SeatState>> currentSeatsState =
+                                    generateSeatLayout(snapshot.data!);
+                                return SeatLayoutWidget(
+                                  onSeatStateChanged: (rowI, colI, seatState) {
+                                    String seatString =
+                                        SeatNumber(rowI: rowI, colI: colI)
+                                            .toString();
 
-                            if (seatState == SeatState.selected) {
-                              selectedSeats
-                                  .add(SeatNumber(rowI: rowI, colI: colI));
-                              mySeats.add(seatString);
-                            } else {
-                              selectedSeats
-                                  .remove(SeatNumber(rowI: rowI, colI: colI));
-                              mySeats.remove(seatString);
-                            }
-
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  seatState == SeatState.selected
-                                      ? "My Selected Seats: ${mySeats.join(', ')}"
-                                      : "My Selected Seats: ${mySeats.join(', ')}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
+                                    if (seatState == SeatState.selected) {
+                                      selectedSeats.add(
+                                          SeatNumber(rowI: rowI, colI: colI));
+                                      mySeats.add(seatString);
+                                    } else {
+                                      selectedSeats.remove(
+                                          SeatNumber(rowI: rowI, colI: colI));
+                                      mySeats.remove(seatString);
+                                    }
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          seatState == SeatState.selected
+                                              ? "My Selected Seats: ${mySeats.join(', ')}"
+                                              : "My Selected Seats: ${mySeats.join(', ')}",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 56, 55, 55),
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        duration: Duration(seconds: 3),
+                                      ),
+                                    );
+                                  },
+                                  stateModel: SeatLayoutStateModel(
+                                    rows: rows,
+                                    cols: cols,
+                                    seatSvgSize: 35,
+                                    pathUnSelectedSeat:
+                                        'assets/images/availableSeat.svg',
+                                    pathSelectedSeat:
+                                        'assets/images/selectedSeat.svg',
+                                    pathSoldSeat: 'assets/images/soldSeat.svg',
+                                    pathDisabledSeat:
+                                        'assets/images/soldSeat.svg',
+                                    currentSeatsState: currentSeatsState,
                                   ),
-                                ),
-                                backgroundColor:
-                                    const Color.fromARGB(255, 56, 55, 55),
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                duration: Duration(seconds: 3),
-                              ),
-                            );
-                          },
-                          stateModel: const SeatLayoutStateModel(
-                            rows: 10,
-                            cols: 10,
-                            seatSvgSize: 35,
-                            pathUnSelectedSeat:
-                                'assets/images/availableSeat.svg',
-                            pathSelectedSeat: 'assets/images/selectedSeat.svg',
-                            pathSoldSeat: 'assets/images/soldSeat.svg',
-                            pathDisabledSeat: 'assets/images/soldSeat.svg',
-                            currentSeatsState: [
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              [
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.sold,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                                SeatState.unselected,
-                              ],
-                              // Add more seat states as needed
-                            ],
-                          ),
-                        ),
+                                );
+                              } else {
+                                return Center(child: Text("No data available"));
+                              }
+                            }),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -490,8 +438,9 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                       width: MediaQuery.of(context).size.width,
                       height: 56,
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 63, 62, 62),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                        color: const Color.fromARGB(255, 63, 62, 62),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
                       child: Row(
                         children: [
                           Column(
@@ -499,23 +448,23 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                               const Padding(
                                 padding: EdgeInsets.only(left: 8.0, top: 8),
                                 child: Text(
-                                  "Number of Seats: 2",
+                                  "Number of Seats: 2", // This number can be dynamic if needed
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.white),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
-                                  left: 7.0,
-                                ),
+                                padding: const EdgeInsets.only(left: 7.0),
                                 child: Text(
                                   "My Seats: ${mySeats.join(', ')}",
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.white),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ],
@@ -549,8 +498,63 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      showSlideInModal(context, mySeats);
+                    onPressed: () async {
+                      try {
+                        var response = await TransaksiClient.createTransaksi(
+                            5,
+                            "Credit Card",
+                            (45 * mySeats.length).toDouble(),
+                            mySeats.toList());
+
+                        if (response.statusCode == 200) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => paymentScreenState()));
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Password Salah'),
+                              content: TextButton(
+                                  onPressed: () => {},
+                                  child: const Text('Daftar Disini !!!')),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Error'),
+                            content: TextButton(
+                                onPressed: () => {},
+                                child: const Text('Samting wong')),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                     child: const Padding(
                       padding:
