@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-
+    use HasFactory;
     public $timestamps = false;
 
     protected $table = "transaksis";
@@ -14,22 +15,25 @@ class Transaksi extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'idPelanggan',
+        'idUser',
         'idPemesananTiket',
         'metodePembayaran',
         'totalHarga',
         'kursiDipesan',
     ];
 
-    public function users(){
+    public function users()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function pemesananTiket(){
+    public function pemesananTiket()
+    {
         return $this->belongsTo(PemesananTiket::class);
     }
-    
-    public function history(){
+
+    public function history()
+    {
         return $this->hasOne(History::class);
     }
 
