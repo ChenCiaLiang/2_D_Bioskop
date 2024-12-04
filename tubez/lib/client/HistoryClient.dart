@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/entity/History.dart'; // Mengimpor model history untuk memetakan data
 
 class HistoryClient {
@@ -9,16 +10,34 @@ class HistoryClient {
   // Fungsi untuk mengambil data history dari API
   Future<List<History>> fetchHistory(int userId) async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
       final response = await http.get(
         Uri.parse('$apiUrl/$userId'), // Kirim userId ke API endpoint
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
       );
 
       if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body); // Parsing data JSON
-        return data
-            .map((item) => History.fromJson(item))
-            .toList(); // Convert JSON ke List<History>
+        var data = json.decode(response.body);
+        List<History> historyList = [];
+
+        if (data.isNotEmpty) {
+          // Jika data tidak kosong, lakukan pemetaan
+          for (var item in data) {
+            historyList.add(History.fromJson(
+                item)); // Memetakan JSON ke dalam model History
+          }
+        }
+
+        return historyList;
+      } else if (response.statusCode == 404) {
+        // Jika status code 404, kembalikan list kosong tanpa error
+        print('No data found for this user.');
+        return [];
       } else {
         throw Exception('Failed to load history');
       }

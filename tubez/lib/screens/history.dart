@@ -34,8 +34,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         setState(() {
           userId = dataUser['id']; // Menyimpan userId di state
         });
-
-        print('User ID: $userId');
       } else {
         print('Failed to load user data');
       }
@@ -68,9 +66,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator()); // Menunggu data
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+                child: Text(
+              'Error: ${snapshot.error}',
+              style: TextStyle(color: Colors.white),
+            ));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No history found'));
+            return Center(
+                child: Text(
+              'No History Found',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ));
           } else {
             List<History> historyList = snapshot.data!;
 

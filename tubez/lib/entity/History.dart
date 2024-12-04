@@ -14,12 +14,14 @@ class History {
   });
 
   factory History.fromRawJson(String str) => History.fromJson(json.decode(str));
-  factory History.fromJson(Map<String, dynamic> json) => History(
-        id: json['id'],
-        idTransaksi: json['idTransaksi'],
-        idReview: json['idReview'],
-        status: json['status'],
-      );
+  factory History.fromJson(Map<String, dynamic> json) {
+    return History(
+      id: json['id'],
+      idTransaksi: json['idTransaksi'],
+      idReview: json['idReview'],
+      status: json['status'],
+    );
+  }
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {

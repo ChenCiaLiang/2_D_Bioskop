@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\Transaksi;
+use App\Models\History;
 
 class HistoryController extends Controller
 {
@@ -26,7 +26,7 @@ class HistoryController extends Controller
             }
 
             // Mengambil transaksi yang terkait dengan user_id dan join ke tabel history
-            $history = Transaksi::join('users', 'transaksi.idUser', '=', 'users.id')
+            $history = History::join('users', 'transaksi.idUser', '=', 'users.id')
                 ->join('histories', 'transaksi.id', '=', 'history.idTransaksi')
                 ->where('transaksi.idUser', $userId)
                 ->get(['histories.*']);  // Ambil hanya kolom-kolom dari tabel history
