@@ -61,7 +61,7 @@ class HomeHeader extends StatelessWidget {
               },
               child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage: const AssetImage('assets/images/download.png'),
+                backgroundImage: NetworkImage('http://10.0.2.2:8000/storage/profilepict/profile.jpg'),
               ),
             ),
           ],
