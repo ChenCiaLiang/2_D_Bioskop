@@ -16,6 +16,10 @@ dependencies:
   google_nav_bar: ^5.0.6
   get: ^4.6.6
   speech_to_text: ^7.0.0
+  http: ^0.13.6
+  flutter_riverpod: ^2.6.1
+  shared_preferences: ^2.0.15
+  intl: ^0.18.0
 
 dev_dependencies:
   camera: ^0.10.5+2
@@ -30,7 +34,7 @@ dev_dependencies:
   book_my_seat: ^1.0.1
   flutter_svg: ^1.0.0
   image_picker: ^1.1.2
-  
+
 flutter:
   uses-material-design: true
 

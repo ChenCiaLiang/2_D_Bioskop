@@ -5,23 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Studio extends Model
+
+class SpesialPromo extends Model
 {
     use HasFactory;
 
     public $timestamps = false;
 
-    protected $table = "studios";
+    protected $table = "spesialPromos";
 
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'jenis',
-        'jumlahKursi',
+        'judul',
+        'deskripsi',
+        'tanggalBerlaku',
         'harga',
+        'ketentuan',
+        'fotoPromo',
     ];
 
-    public function JadwalTayang(){
-        return $this->hasMany(JadwalTayang::class);
+    public function menu(){
+        return $this->hasMany(Menu::class);
     }
 }

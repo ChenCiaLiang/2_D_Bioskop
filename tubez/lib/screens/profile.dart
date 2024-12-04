@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/screens/login.dart';
 import 'package:tubez/screens/edit_profile.dart';
 import 'dart:io';
+import 'package:tubez/client/UserClient.dart';
 
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
@@ -189,11 +191,20 @@ class _profileScreenState extends State<profileScreen> {
               height: 20,
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+              onPressed: () async {
+                try{
+                  // ngelakuin logout lalu response nya disimpan di variabel response
+                  var response = await UserClient.logout();
+                  // jika status code nya 200 atau berhasil maka akan di push ke halaman login
+                  if(response.statusCode == 200){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
+                  }
+                }catch(e){
+                  print(e);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 17, 0),

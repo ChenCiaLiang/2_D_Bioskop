@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/network/tiket_repository.dart';
 import 'package:tubez/screens/history.dart';
 import 'package:tubez/screens/home.dart';
@@ -27,7 +28,7 @@ class _navigationBarState extends State<navigationBar> {
   final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const ListScreen(),
-    const HistoryScreen(),
+    HistoryScreen(),
     const profileScreen(),
   ];
 

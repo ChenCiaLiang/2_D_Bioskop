@@ -24,6 +24,7 @@ class Film extends Model
         'deskripsi',
         'sinopsis',
         'jumlahRating',
+        'fotoFilm',
     ];
 
     public function review(){

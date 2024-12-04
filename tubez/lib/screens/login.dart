@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/screens/register.dart';
 import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/component/form_component.dart';
 import 'package:tubez/screens/profile.dart';
+import 'package:tubez/client/UserClient.dart';
 
 class LoginScreen extends StatefulWidget {
   final Map? data;
@@ -28,8 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     Map? dataForm = widget.data;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -82,41 +82,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
                 return null;
               }, controller: emailController, hintTxt: "Email"),
-
               const SizedBox(
                 height: 25,
               ),
-              
               Padding(
                 padding: kDefaultPadding,
                 child: SizedBox(
-                  width: 350,
-                  child : TextFormField(
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if(value == null || value.isEmpty){
-                        return "Password tidak boleh kosong";
-                      }
-                      return null;
-                    },
-                    autofocus: true,
-                    controller: passwordController,
-                    obscureText: isObscure,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
-                        icon: isObscure ?
-                          Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    width: 350,
+                    child: TextFormField(
+                      style: const TextStyle(color: Colors.white),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Password tidak boleh kosong";
+                        }
+                        return null;
+                      },
+                      autofocus: true,
+                      controller: passwordController,
+                      obscureText: isObscure,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isObscure = !isObscure;
+                            });
+                          },
+                          icon: isObscure
+                              ? Icon(Icons.visibility_off)
+                              : Icon(Icons.visibility),
                           color: kTextFieldColor,
+                        ),
                       ),
-                    ),
-                  )
-                ),
+                    )),
               ),
               const SizedBox(
                 height: 10,
@@ -154,16 +152,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if ("1" == emailController.text &&
-                              "1" == passwordController.text) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => navigationBar(
-                                          data: dataForm,
-                                        )));
+                      onPressed: () async {
+                        try {
+                          bool response = await UserClient.login(
+                              emailController.text, passwordController.text);
+
+                          if (response) {
+                            final response2 =
+                                await TransaksiClient.getAllKursi();
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const navigationBar()),
+                            );
                           } else {
                             showDialog(
                               context: context,
@@ -187,6 +189,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           }
+                        } catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const Text('Error'),
+                              content: TextButton(
+                                  onPressed: () => pushRegister(context),
+                                  child: const Text('Samting wong')),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Cancel'),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'OK'),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
                         }
                       },
                       child: const Text('Log In')),

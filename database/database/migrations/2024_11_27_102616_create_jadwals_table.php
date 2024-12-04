@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('idStudio');
-            $table->foreign('idStudio')->references('id')->on('studios')->onDelete('cascade');
             $table->date('tanggalTayang');
             $table->time('jamTayang');
             $table->timestamps();

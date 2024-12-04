@@ -16,11 +16,16 @@ class Menu extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
+        'idSpesialPromo',
         'makanan',
         'minuman',
         'harga',
         'ukuran',
-        'spesial',
-        'promo',
+        'deskripsi',
+        'fotoMenu',
     ];
+
+    public function spesialPromo(){
+        return $this->belongsTo(SpesialPromo::class);
+    }
 }
