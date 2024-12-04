@@ -6,9 +6,12 @@ import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/scheduleWidget.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/timeWidget.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/cinemaTypeWidget.dart';
+import 'package:tubez/entity/Film.dart';
 
 class moveiDetailScreen extends StatefulWidget {
-  const moveiDetailScreen({super.key});
+  const moveiDetailScreen({super.key, required this.movie});
+
+  final Film movie;
 
   @override
   State<moveiDetailScreen> createState() => _moveiDetailScreenState();
@@ -17,6 +20,7 @@ class moveiDetailScreen extends StatefulWidget {
 class _moveiDetailScreenState extends State<moveiDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final Film movie = widget.movie;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -24,8 +28,8 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
             Positioned(
               top: 0,
               left: 0,
-              child: Image.asset(
-                'assets/images/spiderman.jpg',
+              child: Image.network(
+                'http://10.0.2.2:8000${movie.fotoFilm!}',
                 width: MediaQuery.of(context).size.width,
                 height: 500,
                 fit: BoxFit.cover,
@@ -54,7 +58,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                 ),
                 child: Stack(
                   children: [
-                    const MovieDescription(),
+                    MovieDescription(movie: movie),
                     const SizedBox(height: 20),
                     Positioned(
                       top: 240,
@@ -76,7 +80,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                                     border: Border.all(color: Colors.white),
                                   ),
                                   child: Text(
-                                    "${index + 1}h18m",
+                                    "${movie.genre}",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 10,

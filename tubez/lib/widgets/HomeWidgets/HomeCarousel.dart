@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubez/screens/movieDetail.dart';
-
-final List<Map<String, String>> movieList = [
-  {'image': 'assets/images/deadpool.jpg', 'title': 'Deadpool'},
-  {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
-  {'image': 'assets/images/transformers.jpg', 'title': 'Transformers'},
-  {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
-  {'image': 'assets/images/spiderman.jpg', 'title': 'Spiderverse'},
-];
+import 'package:tubez/entity/Film.dart';
 
 class HomeCarousel extends StatelessWidget {
   const HomeCarousel({
     super.key,
+    required this.filmList,
   });
+
+  final List<Film> filmList;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +20,11 @@ class HomeCarousel extends StatelessWidget {
           aspectRatio: 0.6,
           enlargeCenterPage: true,
           viewportFraction: 0.65),
-      items: movieList.map((movie) {
+      items: filmList.map((movie) {
         return GestureDetector(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => moveiDetailScreen()));
+                MaterialPageRoute(builder: (context) => moveiDetailScreen(movie: movie,)));
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -38,8 +34,8 @@ class HomeCarousel extends StatelessWidget {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.asset(
-                      movie['image']!,
+                    child: Image.network(
+                      'http://10.0.2.2:8000${movie.fotoFilm!}',
                       fit: BoxFit.cover,
                       width: 220,
                     ),
@@ -47,7 +43,7 @@ class HomeCarousel extends StatelessWidget {
                 ),
                 const SizedBox(height: 8.0), // Space between image and text
                 Text(
-                  movie['title']!,
+                  movie.judul!,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

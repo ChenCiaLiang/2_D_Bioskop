@@ -36,7 +36,7 @@ class _nowPlayingScreenState extends State<nowPlayingScreen>
     return GestureDetector(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => moveiDetailScreen()));
+            MaterialPageRoute(builder: (context) => moveiDetailScreen(movie: null!,)));
       },
       child: Padding(
         padding: const EdgeInsets.all(0.0),
