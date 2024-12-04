@@ -129,53 +129,36 @@ class UserController extends Controller
     public function update(Request $request)
     {
         try {
+            // Validasi data yang diterima
             $validatedData = $request->validate([
-                'nama' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->idUser,
+                'username' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id,
                 'noTelepon' => 'required',
                 'tanggalLahir' => 'required',
-                'password' => 'required',
-                'confirmPW' => 'required|same:password',
+                'password' => 'nullable',
+                'confirmPW' => 'nullable|same:password',
             ]);
 
-            $userId = Auth::user()->idUser;
+            // Mendapatkan ID pengguna yang sedang login
+            $userId = Auth::user()->id;
 
-            $user = User::find($userId);
+            // Menemukan pengguna yang akan diupdate
+            $user = User::findOrFail($userId);
 
-            if (!$user) {
-                return response()->json(['message' => 'User tidak ditemukan'], 403);
-            }
+            // Update profil pengguna
+            $user->update([
+                'username' => $validatedData['username'],
+                'email' => $validatedData['email'],
+                'noTelepon' => $validatedData['noTelepon'],
+                'tanggalLahir' => $validatedData['tanggalLahir'],
+                'password' => Hash::make($validatedData['password']),
+            ]);
 
-            if ($request->hasFile('foto')) {
-                $image = $request->foto;
-                $imageName = $image->getClientOriginalName();
-                $image->move(public_path('profilePict'), $image->getClientOriginalName());
+            return response()->json(['message' => 'User updated successfully'], 200);
 
-                //Fungsi Simpan Data ke dalam Database
-                $user->update([
-                    'nama' => $validatedData['nama'],
-                    'email' => $validatedData['email'],
-                    'noTelepon' => $validatedData['noTelepon'],
-                    'tanggalLahir' => $validatedData['tanggalLahir'],
-                    'password' => Hash::make($validatedData['password']),
-                    'foto' => 'profilePict/' . $imageName,
-                ]);
-
-            } else {
-                $user->update([
-                    'nama' => $validatedData['nama'],
-                    'email' => $validatedData['email'],
-                    'noTelepon' => $validatedData['noTelepon'],
-                    'tanggalLahir' => $validatedData['tanggalLahir'],
-                    'password' => Hash::make($validatedData['password']),
-                    'foto' => Auth::user()->foto,
-                ]);
-            }
-
-            return redirect()->route('profile')->with('success', true);
-        } catch (Exception $e) {
-            dd($e);
-            return redirect()->back()->with('error', 'Gagal Update profile.');
+        } catch (\Exception $e) {
+            // Jika ada error, tangkap dan log pesan errornya
+            return response()->json(['message' => 'Failed to update profile: ' . $e->getMessage()], 500);
         }
     }
 

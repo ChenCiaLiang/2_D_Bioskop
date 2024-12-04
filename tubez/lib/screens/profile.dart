@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/client/UserClient.dart';
-import 'package:tubez/screens/login.dart';
 import 'package:tubez/screens/edit_profile.dart';
-import 'dart:io';
-import 'package:tubez/client/UserClient.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:tubez/screens/login.dart';
 
 class profileScreen extends StatefulWidget {
   const profileScreen({super.key});
@@ -14,30 +15,55 @@ class profileScreen extends StatefulWidget {
 }
 
 class _profileScreenState extends State<profileScreen> {
-  // final bool _isEditing = false;
-  String _name = 'Agus Zefanto';
-  String _email = 'agoes@gmail.com';
-  String _noTelp = '0821234567890';
-  String _dateBirth = '18/08/2004';
-  String _password = 'Ze*****18';
+  bool _isLoading = true; // Track loading state for fetching data
+  String? _name;
+  String? _email;
+  String? _noTelp;
+  String? _dateBirth;
+  String? _password;
+  String? _profileImage;
 
-  File? _profileImage;
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
 
-  void updateProfile(Map<String, String> updatedData) {
-    setState(() {
-      _name = updatedData['username']!;
-      _email = updatedData['email']!;
-      _noTelp = updatedData['noTelp']!;
-      _dateBirth = updatedData['dateBirth']!;
-      _password = updatedData['password']!;
-    });
+  // Method to load the user profile
+  Future<void> _loadUserProfile() async {
+    UserClient userClient = UserClient();
+    String? token = await userClient.getToken(); // Getting the token
+
+    if (token != null) {
+      // Fetch user data using the API
+      final response = await userClient.dataUser(token);
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        var dataUser = data['data'];
+
+        setState(() {
+          _name = dataUser['username'];
+          _email = dataUser['email'];
+          _noTelp = dataUser['noTelepon'];
+          _dateBirth = dataUser['tanggalLahir'];
+          _password = dataUser['password'];
+          _profileImage = dataUser['foto'] ??
+              "assets/images/download.png"; // Fallback image if no profile picture
+          _isLoading = false; // Data has been loaded
+        });
+      } else {
+        print("Failed to load user data");
+      }
+    } else {
+      print("Token is null");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(0, 35, 35, 35),
+        backgroundColor: const Color.fromARGB(0, 35, 35, 35),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -76,149 +102,158 @@ class _profileScreenState extends State<profileScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage: _profileImage != null
-                          ? FileImage(_profileImage!)
-                          : const AssetImage("assets/images/download.png")
-                              as ImageProvider,
-                      backgroundColor: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          _name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 27,
-                            color: Color.fromARGB(255, 255, 255, 255),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              width: 1,
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          height: 3,
+                        GestureDetector(
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(_profileImage!),
+                            backgroundColor: Colors.grey,
+                          ),
                         ),
-                        Text(
-                          _noTelp,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 111, 111, 111)),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _name!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 27,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text(
+                                _noTelp!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 111, 111, 111),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'PROFILE',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () async {
-                      final updatedData = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfileScreen(
-                            username: _name,
-                            email: _email,
-                            noTelp: _noTelp,
-                            dateBirth: _dateBirth,
-                            password: _password,
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'PROFILE',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 255, 255, 255),
                           ),
                         ),
-                      );
+                        GestureDetector(
+                          onTap: () async {
+                            final updatedData = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProfileScreen(
+                                  username: _name!,
+                                  email: _email!,
+                                  noTelp: _noTelp!,
+                                  dateBirth: _dateBirth!,
+                                  password: _password!,
+                                ),
+                              ),
+                            );
 
-                      if (updatedData != null) {
-                        updateProfile(updatedData);
+                            if (updatedData != null) {
+                              setState(() {
+                                _name = updatedData['username'];
+                                _email = updatedData['email'];
+                                _noTelp = updatedData['noTelp'];
+                                _dateBirth = updatedData['dateBirth'];
+                                _password = updatedData['password'];
+                              });
+                            }
+                          },
+                          child: const Text(
+                            'EDIT',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromARGB(205, 205, 144, 3),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const Divider(
+                    thickness: 1,
+                    color: Color.fromARGB(104, 178, 178, 178),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildProfileInfo("Username", _name!),
+                  _buildProfileInfo("Email", _email!),
+                  _buildProfileInfo("Nomor Telepon", _noTelp!),
+                  _buildProfileInfo("Tanggal Lahir", _dateBirth!),
+                  _buildProfileInfo("Password", '******'),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        var response = await UserClient.logout();
+                        if (response.statusCode == 200) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                        print(e);
                       }
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 17, 0),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
                     child: const Text(
-                      'EDIT',
+                      "Log Out",
                       style: TextStyle(
                         fontSize: 20,
-                        color: Color.fromARGB(205, 205, 144, 3),
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 15),
-            const Divider(
-              thickness: 1,
-              color: Color.fromARGB(104, 178, 178, 178),
-            ),
-            const SizedBox(height: 20),
-            _buildProfileInfo("Username", _name),
-            _buildProfileInfo("Email", _email),
-            _buildProfileInfo("Nomor Telepon", _noTelp),
-            _buildProfileInfo("Tanggal Lahir", _dateBirth),
-            _buildProfileInfo("Password", _password),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try{
-                  // ngelakuin logout lalu response nya disimpan di variabel response
-                  var response = await UserClient.logout();
-                  // jika status code nya 200 atau berhasil maka akan di push ke halaman login
-                  if(response.statusCode == 200){
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()));
-                  }
-                }catch(e){
-                  print(e);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 255, 17, 0),
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: const Text("Log Out",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 255, 255, 255))),
-            ),
-          ],
-        ),
-      ),
     );
   }
 

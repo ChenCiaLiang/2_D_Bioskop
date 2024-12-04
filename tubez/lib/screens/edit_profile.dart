@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tubez/service/camera.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tubez/client/UserClient.dart';
+import 'dart:io';
+
+import 'package:tubez/entity/User.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String username;
@@ -82,6 +84,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _updateProfile() async {
+    // Send updated profile data to backend
+    try {
+      var updatedData = {
+        'username': controllerUsername.text,
+        'email': controllerEmail.text,
+        'noTelp': controllerTelp.text,
+        'dateBirth': controllerDateBirth.text,
+        'password': controllerPassword.text,
+      };
+
+      User user = User(
+        username: controllerUsername.text,
+        email: controllerEmail.text,
+        noTelepon: controllerTelp.text,
+        tanggalLahir: controllerDateBirth.text,
+        password: controllerPassword.text,
+      );
+
+      var response = await UserClient.update(user);
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile updated successfully!")),
+        );
+        Navigator.pop(context, updatedData);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update profile")),
+        );
+      }
+    } catch (e) {
+      print("Error updating profile: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error updating profile")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +133,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         leadingWidth: 80,
         title: Row(
-          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Expanded(
               child: Text(
@@ -141,7 +180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    onTap: _chooseProfileImage, // Use the new function here
+                    onTap: _chooseProfileImage,
                     child: CircleAvatar(
                       radius: 15,
                       backgroundColor: const Color.fromARGB(205, 205, 144, 3),
@@ -184,19 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return;
                 }
 
-                String updatedUsername = controllerUsername.text;
-                String updatedEmail = controllerEmail.text;
-                String updatedNoTelp = controllerTelp.text;
-                String updatedDateBirth = controllerDateBirth.text;
-                String updatedPassword = controllerPassword.text;
-
-                Navigator.pop(context, {
-                  'username': updatedUsername,
-                  'Email': updatedEmail,
-                  'noTelp': updatedNoTelp,
-                  'dateBirth': updatedDateBirth,
-                  'password': updatedPassword,
-                });
+                _updateProfile();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

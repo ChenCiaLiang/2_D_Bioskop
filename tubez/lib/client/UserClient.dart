@@ -80,7 +80,6 @@ class UserClient {
         // di cek kalau status nya true maka akan diambil token nya, status itu dari controller login di laravel
         String token = data['token'];
 
-
         // token disimpan di shared preferences biar bisa diambil dari manapun
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('auth_token', token);
@@ -106,18 +105,45 @@ class UserClient {
     return prefs.getString('userId');
   }
 
-  // Mengubah data user sesuai ID
+  // Method untuk update user profile
   static Future<Response> update(User user) async {
     try {
-      var response = await put(Uri.http(url, '$endpoint/${user.id}'),
-          headers: {"Content-Type": "application/json"},
-          body: user.toRawJson());
+      // Mendapatkan token
+      final String? token = await UserClient().getToken();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+      // Ambil userId sebagai string dari SharedPreferences dan coba untuk mengonversinya ke int
+      String? userIdString = prefs.getString('userId');
+      int userId = userIdString != null
+          ? int.tryParse(userIdString) ?? 0
+          : 0; // Handling jika userId null atau tidak dapat dikonversi
 
-      return response;
+      if (token != null) {
+        // Mengirim permintaan PUT ke server
+        final response = await put(
+          Uri.http(
+              url, '$endpoint/update/$userId'), // Menambahkan user id dalam URL
+          headers: {
+            'Authorization':
+                'Bearer $token', // Menambahkan token di header untuk otentikasi
+            'Content-Type': 'application/json',
+          },
+          body: json
+              .encode(user.toJson()), // Mengirim data user dalam bentuk JSON
+        );
+
+        print(
+            'User ID: $userId'); // Debugging: Menampilkan userId yang digunakan
+        if (response.statusCode == 200) {
+          return response; // Kembalikan response jika berhasil
+        } else {
+          throw Exception('Failed to update profile: ${response.statusCode}');
+        }
+      } else {
+        throw Exception('Token is missing');
+      }
     } catch (e) {
-      return Future.error(e.toString());
+      return Future.error(e.toString()); // Menangani error jika ada
     }
   }
 
