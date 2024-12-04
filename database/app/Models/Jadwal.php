@@ -16,12 +16,11 @@ class Jadwal extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'idStudio',
         'tanggalTayang',
         'jamTayang',
     ];
 
-    public function studio(){
-        return $this->belongsTo(Studio::class);
+    public function JadwalTayang(){
+        return $this->hasMany(JadwalTayang::class);
     }
 }

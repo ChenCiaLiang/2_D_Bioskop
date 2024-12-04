@@ -80,10 +80,12 @@ class UserClient {
         // di cek kalau status nya true maka akan diambil token nya, status itu dari controller login di laravel
         String token = data['token'];
 
+
         // token disimpan di shared preferences biar bisa diambil dari manapun
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('auth_token', token);
         // nama token di shared preferences nya auth_token
+        prefs.setString('userId', data['data']['id'].toString());
 
         return true;
       } else {
@@ -97,6 +99,11 @@ class UserClient {
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('auth_token');
+  }
+
+  Future<String?> getId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userId');
   }
 
   // Mengubah data user sesuai ID
@@ -140,6 +147,7 @@ class UserClient {
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
       prefs.remove('auth_token');
+      prefs.remove('userId');
 
       return response;
     } catch (e) {
