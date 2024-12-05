@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/widgets/HomeWidgets/homeHeader.dart';
 
 final List<Map<String, String>> movieList = [
   {
@@ -42,7 +41,8 @@ class _comingSoonScreenState extends State<comingSoonScreen>
           crossAxisCount: 2, // Jumlah gambar yang tampil per gambar poster itu
           mainAxisSpacing: 13,
           crossAxisSpacing: 8,
-          childAspectRatio: 0.5, // Untuk ngatur jarak antar gambar yang sebagai child
+          childAspectRatio:
+              0.5, // Untuk ngatur jarak antar gambar yang sebagai child
         ),
         itemCount: movieList.length,
         itemBuilder: (context, index) {
@@ -68,24 +68,23 @@ class _comingSoonScreenState extends State<comingSoonScreen>
                   ),
                 ),
                 // Movie title text
-                
+
                 const SizedBox(height: 10),
                 Expanded(
-                  flex: 1,
-                  child: Column(
+                    flex: 1,
+                    child: Column(
                       children: [
                         Text(
-                        movie["title"]!,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          movie["title"]!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                )
+                      ],
+                    ))
               ],
             ),
           );

@@ -510,7 +510,9 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => paymentScreenState()));
+                                  builder: (context) => paymentScreenState(
+                                        mySeats: mySeats,
+                                      )));
                         } else {
                           showDialog(
                             context: context,
