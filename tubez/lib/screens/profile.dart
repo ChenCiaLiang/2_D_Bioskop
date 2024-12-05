@@ -183,6 +183,7 @@ class _profileScreenState extends State<profileScreen> {
                                   noTelp: _noTelp!,
                                   dateBirth: _dateBirth!,
                                   password: _password!,
+                                  currentPhoto: _profileImage!,
                                 ),
                               ),
                             );
@@ -225,14 +226,14 @@ class _profileScreenState extends State<profileScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       try {
+                        // ngelakuin logout lalu response nya disimpan di variabel response
                         var response = await UserClient.logout();
+                        // jika status code nya 200 atau berhasil maka akan di push ke halaman login
                         if (response.statusCode == 200) {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
                         }
                       } catch (e) {
                         print(e);
@@ -242,14 +243,11 @@ class _profileScreenState extends State<profileScreen> {
                       backgroundColor: const Color.fromARGB(255, 255, 17, 0),
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    child: const Text(
-                      "Log Out",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                    ),
+                    child: const Text("Log Out",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 255, 255, 255))),
                   ),
                 ],
               ),

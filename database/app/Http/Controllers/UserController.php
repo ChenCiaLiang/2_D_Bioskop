@@ -58,7 +58,7 @@ class UserController extends Controller
         try {
             $users = User::where('email', $request->email)->first();
 
-            if (!$users || !Hash::check($request->password, $users->password)) {
+            if (!$users && !Hash::check($request->password, $users->password)) {
                 return response()->json([
                     'message' => 'email atau password salah'
                 ], 401);
@@ -137,6 +137,7 @@ class UserController extends Controller
                 'tanggalLahir' => 'required',
                 'password' => 'nullable',
                 'confirmPW' => 'nullable|same:password',
+                'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
             // Mendapatkan ID pengguna yang sedang login
@@ -144,6 +145,20 @@ class UserController extends Controller
 
             // Menemukan pengguna yang akan diupdate
             $user = User::findOrFail($userId);
+
+            if ($request->hasFile('foto')) {
+                if ($user->foto && file_exists(public_path($user->foto))) {
+                    unlink(public_path($user->foto));
+                }
+
+                // Simpan foto baru
+                $file = $request->file('foto');
+                $fileName = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $fileName);
+
+                // Update path foto di database
+                $user->foto = 'profilePict/' . $fileName;
+            }
 
             // Update profil pengguna
             $user->update([

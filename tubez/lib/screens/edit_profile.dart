@@ -12,6 +12,7 @@ class EditProfileScreen extends StatefulWidget {
   final String noTelp;
   final String dateBirth;
   final String password;
+  final String currentPhoto;
 
   const EditProfileScreen({
     super.key,
@@ -20,6 +21,7 @@ class EditProfileScreen extends StatefulWidget {
     required this.noTelp,
     required this.dateBirth,
     required this.password,
+    required this.currentPhoto,
   });
 
   @override
@@ -103,7 +105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         password: controllerPassword.text,
       );
 
-      var response = await UserClient.update(user);
+      var response = await UserClient.update(user, profileImage: _profileImage);
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile updated successfully!")),
@@ -172,8 +174,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   radius: 50,
                   backgroundImage: _profileImage != null
                       ? FileImage(_profileImage!)
-                      : const AssetImage("assets/images/download.png")
-                          as ImageProvider,
+                      : widget.currentPhoto.isNotEmpty
+                          ? NetworkImage(widget.currentPhoto) as ImageProvider
+                          : const AssetImage("assets/images/download.png")
+                              as ImageProvider,
                   backgroundColor: Colors.grey,
                 ),
                 Positioned(
