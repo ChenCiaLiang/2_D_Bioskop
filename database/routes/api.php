@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\MenuController;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -23,4 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/kursi/all', [TransaksiController::class, 'getAll']);
 
     Route::post('/transaksi', [TransaksiController::class, 'store']);
+
+    Route::get('/menu/get', [MenuController::class, 'fetchAll']);
+    Route::get('/spesialPromo/get', [MenuController::class, 'fetchAll']);
 });

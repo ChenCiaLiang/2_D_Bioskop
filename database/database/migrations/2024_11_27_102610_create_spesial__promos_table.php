@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('spesialPromos', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
+            $table->string('status');
             $table->string('deskripsi');
             $table->date('tanggalBerlaku');
             $table->double('harga');
