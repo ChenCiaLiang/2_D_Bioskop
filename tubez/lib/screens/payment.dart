@@ -4,12 +4,13 @@ import 'package:tubez/screens/selectPayment.dart';
 import 'package:tubez/widgets/paymentWidgets/CountDown.dart';
 import 'package:tubez/widgets/paymentWidgets/MovieDescription.dart';
 import 'package:tubez/model/pdfItem.dart'; // Make sure this import exists for your 'Movie' model
+import 'package:tubez/entity/Film.dart';
 
 class paymentScreenState extends StatefulWidget {
   final Set<String> mySeats;
 
-  paymentScreenState({super.key, required this.mySeats});
-
+  paymentScreenState({super.key, required this.mySeats, required this.movie});
+  final Film movie;
   @override
   State<paymentScreenState> createState() => _paymentScreenStateState();
 }
@@ -23,6 +24,8 @@ class _paymentScreenStateState extends State<paymentScreenState> {
       Movie(name: 'Movie 1', price: 45.00),
       Movie(name: 'Movie 2', price: 50.00),
     ];
+    final Film movie = widget.movie;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +55,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
               children: [
                 const CountDown(),
                 const SizedBox(height: 20),
-                const MovieDescription(),
+                MovieDescription(movie: movie),
                 const SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width,

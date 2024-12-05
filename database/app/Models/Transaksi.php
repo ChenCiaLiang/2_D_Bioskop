@@ -24,17 +24,17 @@ class Transaksi extends Model
 
     public function users()
     {
-        return $this->belongsTo(User::class, 'idUser', 'id');
+        return $this->belongsTo(User::class);
     }
 
     public function pemesananTiket()
     {
-        return $this->belongsTo(PemesananTiket::class, 'idPemesananTiket', 'id');
+        return $this->belongsTo(PemesananTiket::class);
     }
 
     public function history()
     {
-        return $this->hasMany(History::class, 'idTransaksi', 'id');
+        return $this->hasOne(History::class);
     }
 
 }

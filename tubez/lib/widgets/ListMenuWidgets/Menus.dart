@@ -19,12 +19,12 @@ class _MenusState extends State<Menus> {
   int selectedTab = 0;
 
   final List<Map<String, String>> makananList = [
-    {'image': 'assets/images/Makanan.png', 'title': 'Makanan'},
-    {'image': 'assets/images/Makanan.png', 'title': 'Makanan'},
+    {'image': 'assets/images/makanan.png', 'title': 'Makanan'},
+    {'image': 'assets/images/makanan.png', 'title': 'Makanan'},
   ];
 
   final List<Map<String, String>> minumanList = [
-    {'image': 'assets/images/Minuman.png', 'title': 'Minuman'},
+    {'image': 'assets/images/minuman.png', 'title': 'Minuman'},
     {'image': 'assets/images/Popcorn_and_Beans.png', 'title': 'Minuman'},
   ];
 

@@ -70,11 +70,12 @@ class TransaksiClient {
         Uri.http(url, '$endpoint/transaksi'),
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type":
-              "application/json", // Set Content-Type header to application/json
+          "Content-Type": "application/json", // Set Content-Type header to application/json
         },
         body: bodyData, // Send the JSON data in the body
       );
+
+      print(response.statusCode);
 
       if (response.statusCode != 200) {
         throw Exception(

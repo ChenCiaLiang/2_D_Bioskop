@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tubez/entity/Film.dart';
 
 class MovieDescription extends StatelessWidget {
   const MovieDescription({
     super.key,
+    required this.movie,
   });
+
+  final Film movie;
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +22,19 @@ class MovieDescription extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10),
         child: Row(
           children: [
-            Image.asset(
-              'assets/images/spiderman.jpg',
+            Image.network(
+              'http://10.0.2.2:8000${movie.fotoFilm}',
               width: 100,
               height: 160,
               fit: BoxFit.cover,
             ),
             SizedBox(width: 20),
-            const Expanded(
+            Expanded(
               // Added Expanded to wrap text
               child: Column(
                 children: [
                   Text(
-                    "SPIDER-MAN : INTO THE SPIDER-VERSE",
+                    "${movie.judul}",
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

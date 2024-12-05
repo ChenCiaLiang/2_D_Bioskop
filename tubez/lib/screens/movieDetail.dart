@@ -140,7 +140,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => selectSeatScreen()));
+                                    builder: (context) => selectSeatScreen(movie: movie)));
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(

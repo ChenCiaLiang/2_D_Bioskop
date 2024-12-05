@@ -4,12 +4,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/model/pdfItem.dart';
 import 'package:tubez/model/transaksi.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
 import 'package:tubez/screens/payment.dart';
+import 'package:tubez/entity/Film.dart';
 
 class TrapeziumPainter extends CustomPainter {
   @override
@@ -38,7 +40,8 @@ class TrapeziumPainter extends CustomPainter {
 }
 
 class selectSeatScreen extends StatefulWidget {
-  const selectSeatScreen({super.key});
+  const selectSeatScreen({super.key, required this.movie});
+  final Film movie;
 
   @override
   State<selectSeatScreen> createState() => _selectSeatScreenState();
@@ -93,6 +96,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Film movie = widget.movie;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -201,7 +205,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          showSlideInModal(context, mySeats);
+                          showSlideInModal(context, mySeats, movie);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -332,7 +336,7 @@ class SeatNumber {
   }
 }
 
-void showSlideInModal(BuildContext context, Set<String> mySeats) {
+void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allow height to adjust based on content
@@ -380,14 +384,14 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                       Container(
                           height: 80,
                           width: 80,
-                          child: Image.asset('assets/images/spiderman.jpg')),
+                          child: Image.network('http://10.0.2.2:8000${movie.fotoFilm}')),
                       const SizedBox(width: 10),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Spiderman into The Spiderverse",
+                              "${movie.judul}",
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -501,7 +505,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                     onPressed: () async {
                       try {
                         var response = await TransaksiClient.createTransaksi(
-                            5,
+                            6,
                             "Credit Card",
                             (45 * mySeats.length).toDouble(),
                             mySeats.toList());
@@ -512,6 +516,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats) {
                               MaterialPageRoute(
                                   builder: (context) => paymentScreenState(
                                         mySeats: mySeats,
+                                        movie: movie,
                                       )));
                         } else {
                           showDialog(
