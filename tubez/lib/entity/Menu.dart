@@ -3,8 +3,8 @@ import 'dart:convert';
 class Menu{
   int? id;
   int? idSpesialPromo;
-  String makanan;
-  String minuman;
+  String jenis;
+  String nama;
   double harga;
   String ukuran;
   String deskripsi;
@@ -13,8 +13,8 @@ class Menu{
   Menu({
     this.id,
     required this.idSpesialPromo,
-    required this.makanan,
-    required this.minuman,
+    required this.jenis,
+    required this.nama,
     required this.harga,
     required this.ukuran,
     required this.deskripsi,
@@ -26,8 +26,8 @@ class Menu{
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
     id: json['id'],
     idSpesialPromo: json['idSpesialPromo'],
-    makanan: json['makanan'],
-    minuman: json['minuman'],
+    jenis: json['jenis'],
+    nama: json['nama'],
     harga: json['harga'],
     ukuran: json['ukuran'],
     deskripsi: json['deskripsi'],
@@ -38,8 +38,8 @@ class Menu{
   Map<String, dynamic> toJson() => {
     'id': id,
     'idSpesialPromo': idSpesialPromo,
-    'makanan': makanan,
-    'minuman': minuman,
+    'jenis': jenis,
+    'nama': nama,
     'harga': harga,
     'ukuran': ukuran,
     'deskripsi': deskripsi,

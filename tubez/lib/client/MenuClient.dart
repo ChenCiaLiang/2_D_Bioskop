@@ -26,8 +26,8 @@ class MenuClient{
 
       List<Menu> allMenus = list.map((e) => Menu.fromJson(e)).toList();
 
-      List<Menu> makananList = allMenus.where((menu) => menu.makanan.isNotEmpty).toList();
-      List<Menu> minumanList = allMenus.where((menu) => menu.minuman.isNotEmpty).toList();
+      List<Menu> makananList = allMenus.where((menu) => menu.jenis == "makanan").toList();
+      List<Menu> minumanList = allMenus.where((menu) => menu.jenis == "minuman").toList();
 
       // return list.map((e) => Menu.fromJson(e)).toList();
       return allMenus;
