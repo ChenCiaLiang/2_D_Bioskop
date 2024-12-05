@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/index', [UserController::class, 'index']);
 
-    Route::get('history', [HistoryController::class, 'index']);
+    Route::get('/history', [HistoryController::class, 'index']);
 
     Route::get('/kursi/all', [TransaksiController::class, 'getAll']);
 

@@ -19,13 +19,16 @@ class History extends Model
         'idTransaksi',
         'idReview',
         'status',
+        'isReview',
     ];
 
-    public function transaksi(){
-        return $this->belongsTo(Transaksi::class);
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'idTransaksi', 'id');
     }
 
-    public function review(){
-        return $this->belongsTo(Review::class);
+    public function review()
+    {
+        return $this->belongsTo(Review::class, 'idReview', 'id');
     }
 }
