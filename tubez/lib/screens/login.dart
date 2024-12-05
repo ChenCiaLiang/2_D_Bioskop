@@ -5,7 +5,6 @@ import 'package:tubez/theme.dart';
 import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/component/form_component.dart';
-import 'package:tubez/screens/profile.dart';
 import 'package:tubez/client/UserClient.dart';
 
 class LoginScreen extends StatefulWidget {

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
 import 'package:tubez/entity/History.dart'; // Mengimpor model History
 import 'package:tubez/client/HistoryClient.dart'; // Mengimpor HistoryClient untuk mengambil data
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/client/UserClient.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class HistoryScreen extends StatefulWidget {

@@ -5,7 +5,6 @@ import 'package:tubez/widgets/ListMenuWidgets/PromoHeader.dart';
 import 'package:tubez/widgets/ListMenuWidgets/Menu.dart';
 import 'package:tubez/widgets/ListMenuWidgets/SpesialPromoCarousel.dart';
 import 'package:tubez/widgets/ListMenuWidgets/Promo.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubez/entity/User.dart';
 
 final themeMode = ValueNotifier(2);
@@ -18,7 +17,14 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  User user = User(email: '', id: 0, username: '', password: '', noTelepon: '', tanggalLahir: '', foto: '');
+  User user = User(
+      email: '',
+      id: 0,
+      username: '',
+      password: '',
+      noTelepon: '',
+      tanggalLahir: '',
+      foto: '');
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
