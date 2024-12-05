@@ -9,42 +9,21 @@ use Illuminate\Support\Facades\Storage;
 
 class ReviewController extends Controller
 {
-    /**
-     * create
-     * 
-     * @return void
-     */
-    public function create()
-    {
-        return view('review.create');
-    }
-
-    /**
-     * store
-     * 
-     * @param Request $request
-     * @return void
-     */
     public function store(Request $request)
     {
-        //validate form
-        $request->validate(
-            [
-                'review',
-                'rating' => 'required',
-            ],
-        );
+        $request->validate([
+            'film_id' => 'required|integer',
+            'rating' => 'required|numeric',
+            'review' => 'required|string',
+        ]);
 
-        try {
-            Review::create([
-                'review' => $request->review,
-                'rating' => $request->rating
-            ]);
+        $review = Review::create([
+            'film_id' => $request->film_id,
+            'rating' => $request->rating,
+            'review' => $request->review,
+        ]);
 
-            return view('history.show');
-        } catch (Exception $e) {
-            return view('history.show');
-        }
+        return response()->json(['message' => 'Review submitted successfully'], 200);
     }
 
     public function edit($id)
