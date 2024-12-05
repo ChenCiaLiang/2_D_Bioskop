@@ -18,6 +18,16 @@ class Menus extends StatefulWidget {
 class _MenusState extends State<Menus> {
   int selectedTab = 0;
 
+  final List<Map<String, String>> makananList = [
+    {'image': 'assets/images/Makanan.png', 'title': 'Makanan'},
+    {'image': 'assets/images/Makanan.png', 'title': 'Makanan'},
+  ];
+
+  final List<Map<String, String>> minumanList = [
+    {'image': 'assets/images/Minuman.png', 'title': 'Minuman'},
+    {'image': 'assets/images/Popcorn_and_Beans.png', 'title': 'Minuman'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -139,9 +149,11 @@ class _MenusState extends State<Menus> {
 
   List<Map<String, String>> _getSelectedItems() {
     if (selectedTab == 1) {
-      return minumanList.where((menu) => menu.minuman.isNotEmpty).toList();
+      // return minumanList.where((menu) => menu.minuman.isNotEmpty).toList();
+      return makananList;
     } else if (selectedTab == 2) {
-      return makananList.where((menu) => menu.makanan.isNotEmpty).toList();
+      // return makananList.where((menu) => menu.makanan.isNotEmpty).toList();
+      return minumanList;
     } else {
       return [...makananList, ...minumanList];
     }
