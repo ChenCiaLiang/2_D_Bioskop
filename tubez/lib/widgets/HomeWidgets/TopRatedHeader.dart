@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/screens/seeMoreScreen.dart';
 
 class TopratedHeader extends StatelessWidget {
   const TopratedHeader({
@@ -23,16 +24,28 @@ class TopratedHeader extends StatelessWidget {
         const Spacer(),
         Container(
           padding: const EdgeInsets.only(right: 12),
-          child: const Text(
-            'see more ',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: Colors.amber,
-            ),
+          child: TextButton(
+            onPressed: () {
+              pushSeeMore(context);
+            },
+            child: const Text('see more ',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.amber,
+                )),
           ),
         ),
       ],
+    );
+  }
+
+  void pushSeeMore(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const seeMoreScreen(index: 2),
+      ),
     );
   }
 }

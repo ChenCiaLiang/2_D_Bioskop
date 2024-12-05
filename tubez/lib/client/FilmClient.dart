@@ -40,6 +40,35 @@ class FilmClient {
     }
   }
 
+  static Future<List<Film>> find(String searchText) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+
+      var response = await get(Uri.http(url, '$endpoint/find/$searchText'), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load films');
+      }
+
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.containsKey('data')) {
+        Iterable list = jsonResponse['data'];
+        return list.map((e) => Film.fromJson(e)).toList();
+      } else {
+        throw Exception('Unexpected response format');
+      }
+      
+    } catch (e) {
+      print("Error: $e");
+      throw Exception('Failed to load films');
+    }
+  }
+
   // // Mengambil data User dari API sesuai ID
   // static Future<User> find(id) async {
   //   try{

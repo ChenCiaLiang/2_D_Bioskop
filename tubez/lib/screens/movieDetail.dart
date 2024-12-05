@@ -70,7 +70,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                             child: Wrap(
                               spacing: 15.0,
                               runSpacing: 8.0,
-                              children: List.generate(5, (index) {
+                              children: List.generate(2, (index) {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 6),
@@ -79,14 +79,23 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(color: Colors.white),
                                   ),
-                                  child: Text(
-                                    "${movie.genre}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  child: index == 0
+                                      ? Text(
+                                          "${movie.genre}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Text(
+                                          "${movie.durasi}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 );
                               }),
                             ),

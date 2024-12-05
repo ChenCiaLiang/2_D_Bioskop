@@ -1,63 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/movieDetail.dart';
-
-final List<Map<String, String>> movieList = [
-  {
-    'image': 'assets/images/deadpool.jpg',
-    'title': 'Deadpool Season 3 sangat panjang anjayyyyyyyaaaa'
-  },
-  {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
-  {
-    'image': 'assets/images/transformers.jpg',
-    'title': 'Transformers optimum pride anjay'
-  },
-  {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
-  {'image': 'assets/images/spiderman.jpg', 'title': 'Spiderverse'},
-];
+import 'package:tubez/entity/Film.dart';
 
 class nowPlayingScreen extends StatefulWidget {
-  const nowPlayingScreen({super.key});
+  const nowPlayingScreen({super.key, required this.movieList});
+
+  final Iterable<Film> movieList;
 
   @override
   State<nowPlayingScreen> createState() => _nowPlayingScreenState();
 }
 
-class _nowPlayingScreenState extends State<nowPlayingScreen>
-    with TickerProviderStateMixin {
+class _nowPlayingScreenState extends State<nowPlayingScreen> with TickerProviderStateMixin {
+
+  late List<Film> nowPlayingMovies;
   @override
   void initState() {
     super.initState();
+    nowPlayingMovies = widget.movieList.where((movie) => movie.status == 'Now Playing').toList();
+  }
+
+  @override
+  void didUpdateWidget(covariant nowPlayingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.movieList != oldWidget.movieList) {
+      setState(() {
+        nowPlayingMovies = widget.movieList.where((movie) => movie.status == 'Now Playing').toList();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => moveiDetailScreen(movie: null!,)));
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: GridView.builder(
-          physics: NeverScrollableScrollPhysics(), // Biar ga bisa ke scroll
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount:
-                2, // Jumlah gambar yang tampil per gambar poster itu
-            mainAxisSpacing: 13,
-            crossAxisSpacing: 8,
-            childAspectRatio:
-                0.5, // Untuk ngatur jarak antar gambar yang sebagai child
-          ),
-          itemCount: movieList.length,
-          itemBuilder: (context, index) {
-            final movie = movieList[index];
-            return Container(
+    return Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: GridView.builder(
+        physics: NeverScrollableScrollPhysics(), // Prevent scrolling
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Number of columns
+          mainAxisSpacing: 13,
+          crossAxisSpacing: 8,
+          childAspectRatio: 0.5, // Aspect ratio for each cell
+        ),
+        itemCount: nowPlayingMovies.length, // Use widget.movieList here
+        itemBuilder: (context, index) {
+          final movie = nowPlayingMovies[index];
+
+          return GestureDetector(
+            onTap: () {
+              // On tapping a movie, navigate to the MovieDetailScreen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => moveiDetailScreen(movie: movie),
+                ),
+              );
+            },
+            child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.transparent, // Background color to separate items
+                color: Colors.transparent, // Transparent background for separation
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -68,35 +72,31 @@ class _nowPlayingScreenState extends State<nowPlayingScreen>
                     flex: 3,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        movie["image"]!,
+                      child: Image.network(
+                        'http://10.0.2.2:8000${movie.fotoFilm}',
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  // Movie title text
-
                   const SizedBox(height: 10),
+                  // Movie title
                   Expanded(
-                      flex: 1,
-                      child: Column(
-                        children: [
-                          Text(
-                            movie["title"]!,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ))
+                    flex: 1,
+                    child: Text(
+                      movie.judul,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

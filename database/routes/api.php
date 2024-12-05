@@ -26,4 +26,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/transaksi', [TransaksiController::class, 'store']);
 
     Route::get('/film/get', [FilmController::class, 'fetchAll']);
+
+    Route::get('/film/find/{judul}', [FilmController::class, 'find']);
 });

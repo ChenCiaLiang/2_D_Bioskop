@@ -69,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchDataFilm() async {
     try {
-      print('Test : ${user.email}');
       final data = await FilmClient.fetchAll();
 
       if(data.isEmpty){
