@@ -27,7 +27,7 @@ class IsiHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.only(bottom: 16, left: 15, right: 15),
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Color(0xFF424242),
@@ -44,7 +44,7 @@ class IsiHistory extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
+            child: Image.network(
               image,
               width: 80,
               height: 120,
@@ -155,7 +155,7 @@ class IsiHistory extends StatelessWidget {
                       width: 100,
                       height: 30,
                       child: OutlinedButton(
-                        onPressed: () => showEditReview(context),
+                        onPressed: () {},
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0),
                           child: Text(
