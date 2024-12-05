@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 
-final List<Map<String, String>> movieList = [
-  {
-    'image': 'assets/images/deadpool.jpg',
-    'title': 'Deadpool Season 3 sangat panjang anjayyyyyyyaaaa'
-  },
-  {'image': 'assets/images/elemental.jpg', 'title': 'Elemental'},
-  {
-    'image': 'assets/images/transformers.jpg',
-    'title': 'Transformers optimum pride anjay'
-  },
-  {'image': 'assets/images/the_boys.jpg', 'title': 'The Boys'},
-  {'image': 'assets/images/spiderman.jpg', 'title': 'Spiderverse'},
-];
+import 'package:tubez/screens/movieDetail.dart';
+import 'package:tubez/entity/Film.dart';
 
 class comingSoonScreen extends StatefulWidget {
-  const comingSoonScreen({super.key});
+  const comingSoonScreen({super.key, required this.movieList});
+  final Iterable<Film> movieList;
 
   @override
   State<comingSoonScreen> createState() => _comingSoonScreenState();
 }
 
-class _comingSoonScreenState extends State<comingSoonScreen>
-    with TickerProviderStateMixin {
+class _comingSoonScreenState extends State<comingSoonScreen> with TickerProviderStateMixin {
+  late List<Film> comingSoonMovies;
   @override
   void initState() {
     super.initState();
+    comingSoonMovies = widget.movieList.where((movie) => movie.status == 'Coming Soon').toList();
+  }
+
+  @override
+  void didUpdateWidget(covariant comingSoonScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.movieList != oldWidget.movieList) {
+      setState(() {
+        comingSoonMovies = widget.movieList.where((movie) => movie.status == 'Coming Soon').toList();
+      });
+    }
   }
 
   @override
@@ -35,57 +36,65 @@ class _comingSoonScreenState extends State<comingSoonScreen>
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: GridView.builder(
-        physics: NeverScrollableScrollPhysics(), // Biar ga bisa ke scroll
+        physics: NeverScrollableScrollPhysics(), // Prevent scrolling
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Jumlah gambar yang tampil per gambar poster itu
+          crossAxisCount: 2, // Number of columns
           mainAxisSpacing: 13,
           crossAxisSpacing: 8,
-          childAspectRatio:
-              0.5, // Untuk ngatur jarak antar gambar yang sebagai child
+          childAspectRatio: 0.5, 
+
         ),
-        itemCount: movieList.length,
+        itemCount: comingSoonMovies.length, // Use widget.movieList here
         itemBuilder: (context, index) {
-          final movie = movieList[index];
-          return Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.transparent, // Background color to separate items
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Movie poster image
-                Expanded(
-                  flex: 3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      movie["image"]!,
-                      fit: BoxFit.cover,
+          final movie = comingSoonMovies[index]; // Access Film object
+          return GestureDetector(
+            onTap: () {
+              // On tapping a movie, navigate to the MovieDetailScreen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => moveiDetailScreen(movie: movie),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.transparent, // Transparent background for separation
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Movie poster image
+                  Expanded(
+                    flex: 3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        'http://10.0.2.2:8000${movie.fotoFilm}',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                // Movie title text
 
-                const SizedBox(height: 10),
-                Expanded(
+                  const SizedBox(height: 10),
+                  // Movie title
+                  Expanded(
                     flex: 1,
-                    child: Column(
-                      children: [
-                        Text(
-                          movie["title"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ))
-              ],
+                    child: Text(
+                      movie.judul,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },

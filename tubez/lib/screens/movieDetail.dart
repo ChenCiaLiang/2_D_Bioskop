@@ -6,9 +6,12 @@ import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/scheduleWidget.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/timeWidget.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/cinemaTypeWidget.dart';
+import 'package:tubez/entity/Film.dart';
 
 class moveiDetailScreen extends StatefulWidget {
-  const moveiDetailScreen({super.key});
+  const moveiDetailScreen({super.key, required this.movie});
+
+  final Film movie;
 
   @override
   State<moveiDetailScreen> createState() => _moveiDetailScreenState();
@@ -17,6 +20,7 @@ class moveiDetailScreen extends StatefulWidget {
 class _moveiDetailScreenState extends State<moveiDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final Film movie = widget.movie;
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -24,8 +28,8 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
             Positioned(
               top: 0,
               left: 0,
-              child: Image.asset(
-                'assets/images/spiderman.jpg',
+              child: Image.network(
+                'http://10.0.2.2:8000${movie.fotoFilm!}',
                 width: MediaQuery.of(context).size.width,
                 height: 500,
                 fit: BoxFit.cover,
@@ -54,7 +58,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                 ),
                 child: Stack(
                   children: [
-                    const MovieDescription(),
+                    MovieDescription(movie: movie),
                     const SizedBox(height: 20),
                     Positioned(
                       top: 240,
@@ -66,7 +70,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                             child: Wrap(
                               spacing: 15.0,
                               runSpacing: 8.0,
-                              children: List.generate(5, (index) {
+                              children: List.generate(2, (index) {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 6),
@@ -75,14 +79,23 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(color: Colors.white),
                                   ),
-                                  child: Text(
-                                    "${index + 1}h18m",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 10,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                  child: index == 0
+                                      ? Text(
+                                          "${movie.genre}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : Text(
+                                          "${movie.durasi}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                 );
                               }),
                             ),

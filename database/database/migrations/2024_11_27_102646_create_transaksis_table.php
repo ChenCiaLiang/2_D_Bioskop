@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->foreign('idPemesananTiket')->references('id')->on('pemesananTikets')->onDelete('cascade');
             $table->string('metodePembayaran');
             $table->double('totalHarga');
-            $table->longtext('kursiDipesan');
+            $table->longText('kursiDipesan');
             $table->timestamps();
         });
     }
