@@ -117,7 +117,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                       ),
                     ),
                     Positioned(
-                      bottom: 260,
+                      bottom: 280,
                       left: 0,
                       right: 0,
                       child: Align(

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/menuDetail.dart';
+import 'package:tubez/entity/Menu.dart';
 
-class Menu extends StatefulWidget {
+
+class Menus extends StatefulWidget {
+  const Menus({
+    super.key,
+    required this.menuList,
+  });
+
+  final List<Menu> menuList;
+
   @override
-  _MenuState createState() => _MenuState();
+  _MenusState createState() => _MenusState();
 }
 
-class _MenuState extends State<Menu> {
+class _MenusState extends State<Menus> {
   int selectedTab = 0;
 
   final List<Map<String, String>> makananList = [
@@ -140,8 +149,10 @@ class _MenuState extends State<Menu> {
 
   List<Map<String, String>> _getSelectedItems() {
     if (selectedTab == 1) {
+      // return minumanList.where((menu) => menu.minuman.isNotEmpty).toList();
       return makananList;
     } else if (selectedTab == 2) {
+      // return makananList.where((menu) => menu.makanan.isNotEmpty).toList();
       return minumanList;
     } else {
       return [...makananList, ...minumanList];

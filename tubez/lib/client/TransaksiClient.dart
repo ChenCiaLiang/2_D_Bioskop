@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:tubez/client/UserClient.dart';
-import 'package:tubez/entity/User.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
