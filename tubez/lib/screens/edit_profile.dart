@@ -1,46 +1,164 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tubez/client/UserClient.dart';
+import 'dart:io';
+
+import 'package:tubez/entity/User.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final String username;
+  final String email;
+  final String noTelp;
+  final String dateBirth;
+  final String password;
+  final String currentPhoto;
+
+  const EditProfileScreen({
+    super.key,
+    required this.username,
+    required this.email,
+    required this.noTelp,
+    required this.dateBirth,
+    required this.password,
+    required this.currentPhoto,
+  });
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  TextEditingController controllerUsername =
-      TextEditingController(text: 'Agus Zefanto');
-  TextEditingController controllerEmail =
-      TextEditingController(text: 'agoes@gmail.com');
-  TextEditingController controllerTelp =
-      TextEditingController(text: '0821234567890');
-  TextEditingController controllerTanggal =
-      TextEditingController(text: '18/08/2004');
-  TextEditingController controllerPassword = TextEditingController();
-  TextEditingController controllerConfirm = TextEditingController();
+  late TextEditingController controllerUsername;
+  late TextEditingController controllerEmail;
+  late TextEditingController controllerTelp;
+  late TextEditingController controllerDateBirth;
+  late TextEditingController controllerPassword;
+  late TextEditingController controllerConfirm;
+
+  @override
+  void initState() {
+    super.initState();
+    controllerUsername = TextEditingController(text: widget.username);
+    controllerEmail = TextEditingController(text: widget.email);
+    controllerTelp = TextEditingController(text: widget.noTelp);
+    controllerDateBirth = TextEditingController(text: widget.dateBirth);
+    controllerPassword = TextEditingController();
+    controllerConfirm = TextEditingController();
+  }
 
   File? _profileImage;
 
-  Future<void> _changeProfileImage() async {}
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _chooseProfileImage() async {
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pilih Sumber Gambar'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, ImageSource.camera); // Camera
+              },
+              child: const Text('Kamera'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, ImageSource.gallery); // Gallery
+              },
+              child: const Text('Galeri'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (source != null) {
+      final XFile? pickedFile = await _picker.pickImage(source: source);
+
+      if (pickedFile != null) {
+        setState(() {
+          _profileImage = File(pickedFile.path);
+        });
+      }
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    // Send updated profile data to backend
+    try {
+      var updatedData = {
+        'username': controllerUsername.text,
+        'email': controllerEmail.text,
+        'noTelp': controllerTelp.text,
+        'dateBirth': controllerDateBirth.text,
+        'password': controllerPassword.text,
+      };
+
+      User user = User(
+        username: controllerUsername.text,
+        email: controllerEmail.text,
+        noTelepon: controllerTelp.text,
+        tanggalLahir: controllerDateBirth.text,
+        password: controllerPassword.text,
+      );
+
+      var response = await UserClient.update(user, profileImage: _profileImage);
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile updated successfully!")),
+        );
+        Navigator.pop(context, updatedData);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update profile")),
+        );
+      }
+    } catch (e) {
+      print("Error updating profile: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error updating profile")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color.fromARGB(36, 158, 158, 158),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
         ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            color: Color.fromARGB(255, 255, 205, 3),
-            fontWeight: FontWeight.bold,
-          ),
+        leadingWidth: 80,
+        title: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Edit Profile',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color.fromARGB(205, 205, 144, 3),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            CircleAvatar(
+              backgroundColor: const Color.fromARGB(36, 158, 158, 158),
+              radius: 25,
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  height: 60,
+                  width: 60,
+                ),
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
       ),
@@ -56,18 +174,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   radius: 50,
                   backgroundImage: _profileImage != null
                       ? FileImage(_profileImage!)
-                      : const AssetImage("assets/images/download.png")
-                          as ImageProvider,
+                      : widget.currentPhoto.isNotEmpty
+                          ? NetworkImage(widget.currentPhoto) as ImageProvider
+                          : const AssetImage("assets/images/download.png")
+                              as ImageProvider,
                   backgroundColor: Colors.grey,
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    onTap: _changeProfileImage,
+                    onTap: _chooseProfileImage,
                     child: CircleAvatar(
                       radius: 15,
-                      backgroundColor: Colors.yellow,
+                      backgroundColor: const Color.fromARGB(205, 205, 144, 3),
                       child: const Icon(
                         Icons.camera_alt,
                         color: Colors.black,
@@ -86,7 +206,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             _buildTextField(label: "MOBILE NUMBER", controller: controllerTelp),
             const SizedBox(height: 10),
             _buildTextField(
-                label: "DATE OF BIRTH", controller: controllerTanggal),
+                label: "DATE OF BIRTH", controller: controllerDateBirth),
             const SizedBox(height: 20),
             _buildTextField(
                 label: "PASSWORD",
@@ -100,7 +220,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Save profile changes logic
+                if (controllerPassword.text != controllerConfirm.text) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Passwords do not match!")),
+                  );
+                  return;
+                }
+
+                _updateProfile();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -147,7 +274,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             fillColor: Colors.grey[900],
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
+              borderSide: BorderSide(color: Colors.white, width: 2),
             ),
           ),
           style: const TextStyle(color: Colors.white),

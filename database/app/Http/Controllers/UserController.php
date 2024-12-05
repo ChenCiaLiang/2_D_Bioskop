@@ -58,7 +58,7 @@ class UserController extends Controller
         try {
             $users = User::where('email', $request->email)->first();
 
-            if (!$users || !Hash::check($request->password, $users->password)) {
+            if (!$users && !Hash::check($request->password, $users->password)) {
                 return response()->json([
                     'message' => 'email atau password salah'
                 ], 401);
