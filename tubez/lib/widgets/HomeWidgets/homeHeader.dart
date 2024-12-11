@@ -59,7 +59,8 @@ class HomeHeader extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => moveiDetailScreen(movie: films[0]),
+                              builder: (context) =>
+                                  moveiDetailScreen(movie: films[0]),
                             ),
                           );
                         } else {
@@ -75,7 +76,9 @@ class HomeHeader extends StatelessWidget {
                                     itemCount: films.length,
                                     itemBuilder: (context, index) {
                                       return ListTile(
-                                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 8),
                                         leading: Image.network(
                                           'http://10.0.2.2:8000${films[index].fotoFilm}',
                                           width: 50,
@@ -87,7 +90,9 @@ class HomeHeader extends StatelessWidget {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => moveiDetailScreen(movie: films[index]),
+                                              builder: (context) =>
+                                                  moveiDetailScreen(
+                                                      movie: films[index]),
                                             ),
                                           );
                                         },
@@ -114,7 +119,8 @@ class HomeHeader extends StatelessWidget {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Film tidak ada'),
-                              content: const Text('Maaf, film yang anda cari belum tayang atau tidak ada.'),
+                              content: const Text(
+                                  'Maaf, film yang anda cari belum tayang atau tidak ada.'),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {
@@ -141,9 +147,10 @@ class HomeHeader extends StatelessWidget {
                       builder: (context) => const profileScreen()),
                 );
               },
-              child: CircleAvatar(  
+              child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage: NetworkImage('http://10.0.2.2:8000/storage/profilepict/profile.jpg'),
+                backgroundImage:
+                    NetworkImage('http://10.0.2.2:8000/storage/${user.foto}'),
               ),
             ),
           ],
