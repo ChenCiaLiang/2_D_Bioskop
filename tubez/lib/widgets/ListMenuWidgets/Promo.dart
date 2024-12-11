@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:tubez/screens/PromoDetail.dart';
 
 final List<Map<String, dynamic>> promoList = [
-  {'image': 'assets/images/Promo.png', 'title': 'Promo1', 'price': 10000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo2', 'price': 20000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo3', 'price': 30000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo4', 'price': 40000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo5', 'price': 50000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo6', 'price': 40000},
-  {'image': 'assets/images/Promo.png', 'title': 'Promo7', 'price': 10000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo1', 'price': 10000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo2', 'price': 20000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo3', 'price': 30000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo4', 'price': 40000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo5', 'price': 50000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo6', 'price': 40000},
+  {'image': 'assets/images/promo.png', 'title': 'Promo7', 'price': 10000},
 ];
 
 class Promo extends StatelessWidget {

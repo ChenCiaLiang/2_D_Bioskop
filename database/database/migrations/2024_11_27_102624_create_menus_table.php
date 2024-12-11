@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('idSpesialPromo');
             $table->foreign('idSpesialPromo')->references('id')->on('spesialpromos')->onDelete('cascade');
-            $table->string('makanan');
-            $table->string('minuman');
+            $table->string('jenis');
+            $table->string('nama');
             $table->double('harga');
             $table->string('ukuran');
             $table->string('fotoMenu');

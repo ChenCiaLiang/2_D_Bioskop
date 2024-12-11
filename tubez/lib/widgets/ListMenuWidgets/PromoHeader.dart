@@ -20,18 +20,18 @@ class PromoHeader extends StatelessWidget {
             ),
           ),
         ),
-        const Spacer(),
-        Container(
-          padding: const EdgeInsets.only(right: 12),
-          child: const Text(
-            'see more ',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: Colors.amber,
-            ),
-          ),
-        ),
+        // const Spacer(),
+        // Container(
+        //   padding: const EdgeInsets.only(right: 12),
+        //   child: const Text(
+        //     'see more ',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.w500,
+        //       fontSize: 14,
+        //       color: Colors.amber,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

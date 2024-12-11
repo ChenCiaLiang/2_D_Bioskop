@@ -44,7 +44,7 @@ class NowPlayingHeader extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const seeMoreScreen(),
+        builder: (_) => const seeMoreScreen(index: 0),
       ),
     );
   }

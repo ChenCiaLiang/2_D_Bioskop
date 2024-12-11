@@ -17,14 +17,10 @@ class PemesananTiket extends Model
 
     protected $fillable = [
         'idJadwalTayang',
-        'idFilm',
+        'kursiDipesan',
     ];
 
-    public function film(){
-        return $this->belongsTo(Film::class);
-    }
-
-    public function jadwalTayang(){
+    public function JadwalTayang(){
         return $this->belongsTo(JadwalTayang::class);
     }
 }

@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:tubez/client/UserClient.dart';
-import 'package:tubez/entity/User.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tubez/model/transaksi.dart';
+import 'package:tubez/entity/transaksi.dart';
 
 class TransaksiClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
@@ -68,15 +66,16 @@ class TransaksiClient {
       log("BodyData: $bodyData");
 
       // Send POST request with headers and body
-      var response = await post(
-        Uri.http(url, '$endpoint/transaksi'),
+      var response = await post(  
+        Uri.http(url, '$endpoint/pemesanantiket'),
         headers: {
           "Authorization": "Bearer $token",
-          "Content-Type":
-              "application/json", // Set Content-Type header to application/json
+          "Content-Type": "application/json", // Set Content-Type header to application/json
         },
         body: bodyData, // Send the JSON data in the body
       );
+
+      print(response.statusCode);
 
       if (response.statusCode != 200) {
         throw Exception(

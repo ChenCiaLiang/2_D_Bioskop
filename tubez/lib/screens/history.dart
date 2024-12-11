@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
 import 'package:tubez/entity/History.dart'; // Mengimpor model History
 import 'package:tubez/client/HistoryClient.dart'; // Mengimpor HistoryClient untuk mengambil data
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/client/UserClient.dart';
-import 'package:http/http.dart' as http;
+import 'package:tubez/widgets/historyWidgets/isiHistory.dart'; // Mengimpor IsiHistory
 import 'dart:convert';
 
 class HistoryScreen extends StatefulWidget {
@@ -17,6 +17,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final HistoryClient _historyClient = HistoryClient();
   int? userId; // Menyimpan userId yang akan digunakan
+  Future<List<History>>? _historyFuture;
 
   // Fungsi untuk mengambil userId dari token
   Future<void> ambilToken() async {
@@ -35,7 +36,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
           userId = dataUser['id']; // Menyimpan userId di state
         });
 
-        print('User ID: $userId');
+        print('User ID: ${userId}');
+
+        // Setelah userId diperoleh, ambil data history
+        if (userId != null) {
+          setState(() {
+            _historyFuture = _historyClient.fetchHistory(userId!);
+          });
+        }
       } else {
         print('Failed to load user data');
       }
@@ -52,25 +60,37 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (userId == null) {
+    // Jika userId masih null atau _historyFuture belum diinisialisasi, tampilkan loading indicator
+    if (userId == null || _historyFuture == null) {
       return Scaffold(
         appBar: HistoryHeader(),
-        body: Center(child: CircularProgressIndicator()), // Menunggu userId
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
+    // Jika userId sudah terisi, maka tampilkan data history
     return Scaffold(
       appBar: HistoryHeader(),
       body: FutureBuilder<List<History>>(
-        future: _historyClient.fetchHistory(
-            userId!), // Memanggil fungsi untuk mendapatkan data history
+        future: _historyFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator()); // Menunggu data
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text(
+                '${snapshot.error}',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No history found'));
+            return Center(
+              child: Text(
+                'No History Found',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            );
           } else {
             List<History> historyList = snapshot.data!;
 
@@ -78,13 +98,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
               itemCount: historyList.length,
               itemBuilder: (context, index) {
                 History history = historyList[index];
-                return Card(
-                  margin: EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(history.idReview.toString()),
-                    subtitle: Text(history.idTransaksi.toString()),
-                    trailing: Text(history.status),
-                  ),
+                return IsiHistory(
+                  image:
+                      'http://10.0.2.2:8000${history.fotoFilm}', // Gambar film
+                  title: history.judul, // Judul film
+                  status: history.status, // Status film
+                  studio: history.idStudio.toInt(), // ID studio
+                  date: history.tanggalTayang, // Tanggal tayang
+                  total: 'Rp ${history.totalHarga}', // Total harga
+                  isReviewed: history.isReviewed, // Sudah review apa belum
+                  ticketCount: history.ticketCount, // Jumlah tiket
                 );
               },
             );

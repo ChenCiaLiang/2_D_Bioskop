@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/entity/Film.dart';
 
 class MovieDescription extends StatelessWidget {
   const MovieDescription({
     super.key,
+    required this.movie,
   });
+
+  final Film movie;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,8 @@ class MovieDescription extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height,
               child: Container(
-                child: Image.asset('assets/images/spiderman.jpg'),
+                child: Image.network('http://10.0.2.2:8000${movie.fotoFilm!}',
+                    fit: BoxFit.cover, width: 200),
               ),
             ),
             Container(
@@ -33,8 +38,8 @@ class MovieDescription extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          child: const Text(
-                            "SPIDER-MAN : INTO THE SPIDERVERSE",
+                          child: Text(
+                            "${movie.judul}",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -53,8 +58,8 @@ class MovieDescription extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
-                              const Text(
-                                "10.0",
+                              Text(
+                                "${movie.jumlahRating}",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -92,9 +97,9 @@ class MovieDescription extends StatelessWidget {
                             thickness: 3,
                             child: Container(
                               margin: const EdgeInsets.only(right: 6.0),
-                              child: const SingleChildScrollView(
+                              child: SingleChildScrollView(
                                   child: Text(
-                                      "Bitten by a radioactive spider in the subway, Brooklyn teenager Miles Morales suddenly develops mysterious powers that transform him into the one and only Spider-Man. When he meets Peter Parker, he soon realizes that there are many others who share his special, high-flying talents. Miles must now use his newfound skills to battle the evil Kingpin, a hulking madman who can open portals to other universes and pull different versions of Spider-Man into our world.",
+                                      "${movie.sinopsis}",
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,

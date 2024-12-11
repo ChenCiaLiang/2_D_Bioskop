@@ -31,8 +31,8 @@ class Film extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function pemesananTiket(){
-        return $this->hasMany(PemesananTiket::class);
+    public function JadwalTayang(){
+        return $this->hasMany(JadwalTayang::class);
     }
     
 

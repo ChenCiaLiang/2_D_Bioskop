@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('idJadwalTayang');
             $table->foreign('idJadwalTayang')->references('id')->on('jadwalTayangs')->onDelete('cascade');
-            $table->unsignedBigInteger('idFilm');
-            $table->foreign('idFilm')->references('id')->on('films')->onDelete('cascade');
+            $table->longText('kursiDipesan');
             $table->timestamps();
         });
     }

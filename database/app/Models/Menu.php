@@ -17,8 +17,8 @@ class Menu extends Model
 
     protected $fillable = [
         'idSpesialPromo',
-        'makanan',
-        'minuman',
+        'jenis',
+        'nama',
         'harga',
         'ukuran',
         'deskripsi',

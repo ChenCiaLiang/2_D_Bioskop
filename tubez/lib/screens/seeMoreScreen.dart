@@ -1,19 +1,52 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tubez/screens/comingSoonScreen.dart';
 import 'package:tubez/screens/nowPlayingScreen.dart';
 import 'package:tubez/screens/topRatedScreen.dart';
 import 'package:tubez/widgets/HomeWidgets/homeHeader.dart';
+import 'package:tubez/entity/Film.dart';
+import 'package:tubez/client/FilmClient.dart';
+import 'dart:convert';
 
 class seeMoreScreen extends StatefulWidget {
-  const seeMoreScreen({super.key});
-
+  const seeMoreScreen({super.key, required this.index});
+  final int index;
   @override
   State<seeMoreScreen> createState() => _seeMoreScreenState();
 }
 
 class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateMixin{
   int selectedIndex = 0;
-  
+  Iterable<Film> listFilm = [];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.index;
+    fetchDataFilm();
+  }
+
+  Future<void> fetchDataFilm() async {
+    try {
+      final data = await FilmClient.fetchAll();
+
+      if(data.isEmpty){
+        throw Exception('Data is empty');
+      }
+
+      setState(() {
+        listFilm = data;
+      });
+
+      listFilm.forEach((film) {
+        print(film.fotoFilm); // Assuming `film` is a `Film` object with a `judul` attribute
+      });
+
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +81,13 @@ class _seeMoreScreenState extends State<seeMoreScreen> with TickerProviderStateM
     Widget _tampilKonten() {
       switch (selectedIndex) {
         case 0:
-          return nowPlayingScreen();
+          return nowPlayingScreen(movieList: listFilm);
         case 1:
-          return comingSoonScreen();
+          return comingSoonScreen(movieList: listFilm);
         case 2:
-          return topRatedScreen();
+          return topRatedScreen(movieList: listFilm);
         default:
-          return nowPlayingScreen();
+          return nowPlayingScreen(movieList: listFilm);
       }
     }
 
