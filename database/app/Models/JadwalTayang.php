@@ -18,8 +18,14 @@ class JadwalTayang extends Model
     protected $fillable = [
         'idStudio',
         'idJadwal',
+        'idFilm',
+        'tanggalTayang',
     ];
 
+    public function film(){
+        return $this->belongsTo(Film::class);
+    }
+    
     public function studio(){
         return $this->belongsTo(Studio::class);
     }

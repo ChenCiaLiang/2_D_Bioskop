@@ -4,8 +4,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/client/PemesananTiketClient.dart';
 import 'package:tubez/model/pdfItem.dart';
-import 'package:tubez/model/transaksi.dart';
+import 'package:tubez/entity/pemesanantiket.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:book_my_seat/book_my_seat.dart';
@@ -50,18 +51,18 @@ class selectSeatScreen extends StatefulWidget {
 class _selectSeatScreenState extends State<selectSeatScreen> {
   Set<SeatNumber> selectedSeats = Set();
   Set<String> mySeats = {}; // This will store the translated seat numbers
-  late Future<List<Transaksi>> futureTransaksi;
+  late Future<List<PemesananTiket>> futureTransaksi;
   final int rows = 10;
   final int cols = 10;
 
   @override
   void initState() {
     super.initState();
-    futureTransaksi = TransaksiClient
+    futureTransaksi = PemesananTiketClient
         .getAllKursi(); // Fetch data when the widget is initialized
   }
 
-  List<List<SeatState>> generateSeatLayout(List<Transaksi> transaksiList) {
+  List<List<SeatState>> generateSeatLayout(List<PemesananTiket> transaksiList) {
     // Collect all reserved seats
     List<String> reservedSeats =
         transaksiList.expand((transaksi) => transaksi.kursiDipesan).toList();
@@ -504,10 +505,8 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie) {
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        var response = await TransaksiClient.createTransaksi(
-                            6,
-                            "Credit Card",
-                            (45 * mySeats.length).toDouble(),
+                        var response = await PemesananTiketClient.createPemesananTiket(
+                            1,
                             mySeats.toList());
 
                         if (response.statusCode == 200) {
@@ -542,6 +541,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie) {
                         }
                       } catch (e) {
                         showDialog(
+                          
                           context: context,
                           builder: (_) => AlertDialog(
                             title: const Text('Error'),

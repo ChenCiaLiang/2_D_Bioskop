@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggalTayang');
             $table->time('jamTayang');
             $table->timestamps();
         });

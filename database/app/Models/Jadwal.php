@@ -16,7 +16,6 @@ class Jadwal extends Model
     protected $primaryKey = "id";
 
     protected $fillable = [
-        'tanggalTayang',
         'jamTayang',
     ];
 

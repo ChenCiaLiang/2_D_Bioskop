@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PemesananTiketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -25,9 +26,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/history', [HistoryController::class, 'index']);
 
-    Route::get('/kursi/all', [TransaksiController::class, 'getAll']);
+    Route::get('/kursi/all', [PemesananTiketController::class, 'getAll']);
 
-    Route::post('/transaksi', [TransaksiController::class, 'store']);
+    Route::post('/pemesanantiket', [PemesananTiketController::class, 'store']);
 
     Route::get('/menu/get', [MenuController::class, 'fetchAll']);
     Route::get('/spesialPromo/get', [MenuController::class, 'fetchAll']);

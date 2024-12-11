@@ -141,7 +141,7 @@ class HomeHeader extends StatelessWidget {
                       builder: (context) => const profileScreen()),
                 );
               },
-              child: CircleAvatar(
+              child: CircleAvatar(  
                 radius: size.width / 16,
                 backgroundImage: NetworkImage('http://10.0.2.2:8000/storage/profilepict/profile.jpg'),
               ),

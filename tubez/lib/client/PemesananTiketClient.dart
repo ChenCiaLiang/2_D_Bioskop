@@ -3,16 +3,16 @@ import 'dart:developer';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tubez/entity/transaksi.dart';
+import 'package:tubez/entity/pemesanantiket.dart';
 
-class TransaksiClient {
+class PemesananTiketClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
 
   //untuk emulator
   static final String url = '10.0.2.2:8000';
   static final String endpoint = '/api';
 
-  static Future<List<Transaksi>> getAllKursi() async {
+  static Future<List<PemesananTiket>> getAllKursi() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
@@ -24,14 +24,14 @@ class TransaksiClient {
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
       final List<dynamic> parsedJson = json.decode(response.body);
-      final List<Transaksi> list = parsedJson
-          .map((data) => Transaksi.fromJson(data as Map<String, dynamic>))
+      final List<PemesananTiket> list = parsedJson
+          .map((data) => PemesananTiket.fromJson(data as Map<String, dynamic>))
           .toList();
-      for (var transaksi in list) {
-        log('ID: ${transaksi.id}');
-        log('Kursi Dipesan: ${transaksi.kursiDipesan}');
-        for (var kursi in transaksi.kursiDipesan) {
-          log('Kursi ${transaksi.id}: $kursi');
+      for (var PemesananTiket in list) {
+        log('ID: ${PemesananTiket.id}');
+        log('Kursi Dipesan: ${PemesananTiket.kursiDipesan}');
+        for (var kursi in PemesananTiket.kursiDipesan) {
+          log('Kursi ${PemesananTiket.id}: $kursi');
         }
       }
 
@@ -41,21 +41,15 @@ class TransaksiClient {
     }
   }
 
-  static Future<Response> createTransaksi(
-      int idPemesananTiket,
-      String metodePembayaran,
-      double totalHarga,
+  static Future<Response> createPemesananTiket(
+      int idJadwalTayang,
       List<String> kursiDipesan) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      int? userId = int.parse(prefs.getString('userId')!);
       String? token = prefs.getString('auth_token');
 
-      final data = Transaksi(
-        idUser: userId,
-        idPemesananTiket: idPemesananTiket,
-        metodePembayaran: metodePembayaran,
-        totalHarga: totalHarga,
+      final data = PemesananTiket(
+        idJadwalTayang: idJadwalTayang,
         kursiDipesan: kursiDipesan,
       );
 
@@ -66,7 +60,7 @@ class TransaksiClient {
       log("BodyData: $bodyData");
 
       // Send POST request with headers and body
-      var response = await post(  
+      var response = await post(
         Uri.http(url, '$endpoint/pemesanantiket'),
         headers: {
           "Authorization": "Bearer $token",

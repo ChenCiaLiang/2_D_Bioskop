@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreign('idStudio')->references('id')->on('studios')->onDelete('cascade');
             $table->unsignedBigInteger('idJadwal');
             $table->foreign('idJadwal')->references('id')->on('jadwals')->onDelete('cascade');
+            $table->unsignedBigInteger('idFilm');
+            $table->foreign('idFilm')->references('id')->on('films')->onDelete('cascade');
+            $table->date('tanggalTayang');
             $table->timestamps();
         });
     }
