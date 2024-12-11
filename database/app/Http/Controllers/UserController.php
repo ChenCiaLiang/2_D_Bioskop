@@ -32,7 +32,7 @@ class UserController extends Controller
                 'noTelepon' => $request->noTelepon,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'foto' => "profilePict/profile.jpg",
+                'foto' => "profilepict/profile.jpg",
             ]);
 
             return response()->json([ // respon ketika berhasil
@@ -134,9 +134,8 @@ class UserController extends Controller
                 'username' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . Auth::user()->id,
                 'noTelepon' => 'required',
-                'tanggalLahir' => 'required',
+                'tanggalLahir' => 'required|date',
                 'password' => 'nullable',
-                'confirmPW' => 'nullable|same:password',
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
@@ -146,34 +145,39 @@ class UserController extends Controller
             // Menemukan pengguna yang akan diupdate
             $user = User::findOrFail($userId);
 
+            // Cek dan simpan foto jika ada
             if ($request->hasFile('foto')) {
-                if ($user->foto && file_exists(public_path($user->foto))) {
-                    unlink(public_path($user->foto));
-                }
-
-                // Simpan foto baru
                 $file = $request->file('foto');
-                $fileName = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images'), $fileName);
+                $fileName = time() . '_' . $file->getClientOriginalName(); 
+                $file->move(public_path('storage/profilepict'), $fileName);
 
                 // Update path foto di database
-                $user->foto = 'profilePict/' . $fileName;
+                $user->foto = 'profilepict/' . $fileName;
             }
 
-            // Update profil pengguna
-            $user->update([
-                'username' => $validatedData['username'],
-                'email' => $validatedData['email'],
-                'noTelepon' => $validatedData['noTelepon'],
-                'tanggalLahir' => $validatedData['tanggalLahir'],
-                'password' => Hash::make($validatedData['password']),
-            ]);
+            // Update data lainnya
+            $user->username = $validatedData['username'];
+            $user->email = $validatedData['email'];
+            $user->noTelepon = $validatedData['noTelepon'];
+            $user->tanggalLahir = $validatedData['tanggalLahir'];
 
-            return response()->json(['message' => 'User updated successfully'], 200);
+            // Update password jika diubah
+            if ($request->filled('password')) {
+                $user->password = Hash::make($validatedData['password']);
+            }
 
+            // Simpan perubahan
+            $user->save();
+
+            return response()->json([
+                'message' => 'Profile updated successfully',
+                'user' => $user
+            ], 200);
         } catch (\Exception $e) {
-            // Jika ada error, tangkap dan log pesan errornya
-            return response()->json(['message' => 'Failed to update profile: ' . $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Failed to update profile',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

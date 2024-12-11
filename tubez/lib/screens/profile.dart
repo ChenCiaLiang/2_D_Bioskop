@@ -3,8 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/screens/edit_profile.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:tubez/screens/login.dart';
 
 class profileScreen extends StatefulWidget {
@@ -47,9 +45,8 @@ class _profileScreenState extends State<profileScreen> {
           _noTelp = dataUser['noTelepon'];
           _dateBirth = dataUser['tanggalLahir'];
           _password = dataUser['password'];
-          _profileImage = dataUser['foto'] ??
-              "assets/images/download.png"; // Fallback image if no profile picture
-          _isLoading = false; // Data has been loaded
+          _profileImage = dataUser['foto'];
+          _isLoading = false;
         });
       } else {
         print("Failed to load user data");
@@ -126,8 +123,8 @@ class _profileScreenState extends State<profileScreen> {
                         GestureDetector(
                           child: CircleAvatar(
                             radius: 60,
-                            backgroundImage: NetworkImage(_profileImage!),
-                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage(
+                                'http://10.0.2.2:8000/storage/$_profileImage'),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -195,6 +192,7 @@ class _profileScreenState extends State<profileScreen> {
                                 _noTelp = updatedData['noTelp'];
                                 _dateBirth = updatedData['dateBirth'];
                                 _password = updatedData['password'];
+                                _profileImage = updatedData['currentPhoto'];
                               });
                             }
                           },
