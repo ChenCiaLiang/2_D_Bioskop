@@ -24,11 +24,10 @@ class HistoryController extends Controller
             }
 
             // Mengambil history, transaksi, dan pemesanantikets berdasarkan user_id
-            $historyData = Transaksi::with([
-                'users',
-                'history',
-                'pemesananTiket.JadwalTayang.film',
-                'pemesananTiket.JadwalTayang.studio',
+            $historyData = History::with([
+                'transaksi',
+                'transaksi.pemesananTiket.JadwalTayang.film',
+                'transaksi.pemesananTiket.JadwalTayang.studio',
             ])
             ->where('idUser', $userId)
             ->get();

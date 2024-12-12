@@ -14,7 +14,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final HistoryClient _historyClient = HistoryClient();
+  // final HistoryClient _historyClient = HistoryClient();
   int? userId; // Menyimpan userId yang akan digunakan
   late Future<List<History>> _historyFuture;
 
@@ -49,7 +49,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
-    _historyFuture = _historyClient.fetchHistory();
+    _historyFuture = HistoryClient.fetchHistory();
   }
 
   @override
@@ -80,7 +80,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Text(
-                'No History Found',
+                'No History Found $snapshot',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -92,22 +92,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
               itemCount: historyList.length,
               itemBuilder: (context, index) {
                 History history = historyList[index];
-                return IsiHistory(
-                  image:
-                      'http://10.0.2.2:8000${history.transaksi!.pemesananTiket?.jadwalTayang?.film?.fotoFilm}', // Gambar film
-                  title: history.transaksi!.pemesananTiket!.jadwalTayang!.film!
-                      .judul, // Judul film
-                  status: history.status, // Status pembayaran
-                  studio: history
-                      .transaksi!.pemesananTiket!.jadwalTayang!.studio!.id!
-                      .toInt(), // ID studio
-                  date: history
-                      .transaksi!.pemesananTiket!.jadwalTayang!.tanggalTayang
-                      .toString(), // Tanggal tayang
-                  total: 'Rp ${history.transaksi!.totalHarga}', // Total harga
-                  isReviewed: history.isReviewed, // Sudah review apa belum
-                  ticketCount: history.transaksi!.countTiket, // Jumlah tiket
-                );
+                if (history.transaksi != null) {
+                  return IsiHistory(
+                    image:
+                        'http://10.0.2.2:8000${history.transaksi!.pemesananTiket?.jadwalTayang?.film?.fotoFilm}', // Gambar film
+                    title: history.transaksi!.pemesananTiket!.jadwalTayang!
+                        .film!.judul!, // Judul film
+                    status: history.status!, // Status pembayaran
+                    studio: history
+                        .transaksi!.pemesananTiket!.jadwalTayang!.studio!.id!
+                        .toInt(), // ID studio
+                    date: history
+                        .transaksi!.pemesananTiket!.jadwalTayang!.tanggalTayang
+                        .toString(), // Tanggal tayang
+                    total: 'Rp ${history.transaksi!.totalHarga}', // Total harga
+                    isReviewed: history.isReviewed, // Sudah review apa belum
+                    ticketCount: history.transaksi!.countTiket, // Jumlah tiket
+                  );
+                }
               },
             );
           }

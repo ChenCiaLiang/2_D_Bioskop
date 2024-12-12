@@ -6,7 +6,8 @@ class History {
   BigInt id;
   BigInt idTransaksi;
   BigInt idReview;
-  String status;
+  BigInt idUser;
+  String? status;
   bool isReviewed; // Menggunakan tipe bool
   Transaksi? transaksi;
 
@@ -14,10 +15,13 @@ class History {
     required this.id,
     required this.idTransaksi,
     required this.idReview,
+    required this.idUser,
     required this.status,
     required this.isReviewed,
     this.transaksi,
   });
+
+  factory History.fromRawJson(String str) => History.fromJson(json.decode(str));
 
   // Factory constructor untuk parsing JSON
   factory History.fromJson(Map<String, dynamic> json) {
@@ -37,10 +41,25 @@ class History {
       id: _parseBigInt(json['id']),
       idTransaksi: _parseBigInt(json['idTransaksi']),
       idReview: _parseBigInt(json['idReview']),
+      idUser: _parseBigInt(json['idUser']),
       status: status,
       isReviewed: isReviewed,
       transaksi: transaksi,
     );
+  }
+
+  String toRawJson() => json.encode(toJson());
+  // Convert object ke JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id.toString(),
+      'idTransaksi': idTransaksi.toString(),
+      'idReview': idReview.toString(),
+      'idUser': idUser.toString(),
+      'status': status,
+      'isReview': isReviewed ? 1 : 0,
+      'transaksi': transaksi?.toJson(), // Jika transaksi tidak null
+    };
   }
 
   // Fungsi untuk parsing BigInt dengan aman
@@ -59,28 +78,16 @@ class History {
     }
     return BigInt.zero; // fallback
   }
-
-  // Convert object ke JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id.toString(),
-      'idTransaksi': idTransaksi.toString(),
-      'idReview': idReview.toString(),
-      'status': status,
-      'isReview': isReviewed ? 1 : 0,
-      'transaksi': transaksi?.toJson(), // Jika transaksi tidak null
-    };
-  }
 }
 
 class Film {
   int? id;
-  String judul;
-  String status;
-  String durasi;
-  String genre;
-  String ageRestriction;
-  String sinopsis;
+  String? judul;
+  String? status;
+  String? durasi;
+  String? genre;
+  String? ageRestriction;
+  String? sinopsis;
   double jumlahRating;
   String? fotoFilm;
 
@@ -128,7 +135,7 @@ class Transaksi {
   final int? id;
   final int idUser;
   final int idPemesananTiket;
-  final String metodePembayaran;
+  final String? metodePembayaran;
   final double totalHarga;
   final List<String> kursiDipesan;
   final int countTiket;
@@ -186,7 +193,7 @@ class Transaksi {
 
 class Studio {
   final int? id;
-  final String jenis;
+  final String? jenis;
   final int jumlahKursi;
   final double harga;
 

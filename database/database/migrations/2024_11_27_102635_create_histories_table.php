@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('idTransaksi');
             $table->foreign('idTransaksi')->references('id')->on('transaksis')->onDelete('cascade');
+            $table->unsignedBigInteger('idUser');
+            $table->foreign('idUser')->references('id')->on('users')->onDelete('cascade');
             $table->string('status');
             $table->tinyInteger('isReview');
             $table->timestamps();
