@@ -6,7 +6,6 @@ class Menu{
   String jenis;
   String nama;
   double harga;
-  String ukuran;
   String deskripsi;
   String? fotoMenu;
 
@@ -16,7 +15,6 @@ class Menu{
     required this.jenis,
     required this.nama,
     required this.harga,
-    required this.ukuran,
     required this.deskripsi,
     this.fotoMenu,
   });
@@ -29,7 +27,6 @@ class Menu{
     jenis: json['jenis'],
     nama: json['nama'],
     harga: json['harga'],
-    ukuran: json['ukuran'],
     deskripsi: json['deskripsi'],
     fotoMenu: json['fotoMenu'],
   );
@@ -41,7 +38,6 @@ class Menu{
     'jenis': jenis,
     'nama': nama,
     'harga': harga,
-    'ukuran': ukuran,
     'deskripsi': deskripsi,
     'fotoMenu': fotoMenu,
   };

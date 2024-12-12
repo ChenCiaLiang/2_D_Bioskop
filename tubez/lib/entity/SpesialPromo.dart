@@ -4,9 +4,8 @@ class SpesialPromo{
   int? id;
   String judul;
   String status;
-  String deskripsi;
   String tanggalBerlaku;
-  String harga;
+  double harga;
   String ketentuan;
   String? fotoPromo;
 
@@ -14,7 +13,6 @@ class SpesialPromo{
     this.id,
     required this.judul,
     required this.status,
-    required this.deskripsi,
     required this.tanggalBerlaku,
     required this.harga,
     required this.ketentuan,
@@ -27,7 +25,6 @@ class SpesialPromo{
     id: json['id'],
     judul: json['judul'],
     status: json['status'],
-    deskripsi: json['deskripsi'],
     tanggalBerlaku: json['tanggalBerlaku'],
     harga: json['harga'],
     ketentuan: json['ketentuan'],
@@ -39,7 +36,6 @@ class SpesialPromo{
     'id': id,
     'judul': judul,
     'status': status,
-    'deskripsi': deskripsi,
     'tanggalBerlaku': tanggalBerlaku,
     'harga': harga,
     'ketentuan': ketentuan,

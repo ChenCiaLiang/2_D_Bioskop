@@ -18,16 +18,6 @@ class Menus extends StatefulWidget {
 class _MenusState extends State<Menus> {
   int selectedTab = 0;
 
-  final List<Map<String, String>> makananList = [
-    {'image': 'assets/images/makanan.png', 'title': 'Makanan'},
-    {'image': 'assets/images/makanan.png', 'title': 'Makanan'},
-  ];
-
-  final List<Map<String, String>> minumanList = [
-    {'image': 'assets/images/minuman.png', 'title': 'Minuman'},
-    {'image': 'assets/images/Popcorn_and_Beans.png', 'title': 'Minuman'},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -96,23 +86,21 @@ class _MenusState extends State<Menus> {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          itemCount: _getSelectedItems().length,
+          itemCount: selectedMenu(widget.menuList).length,
           itemBuilder: (context, index) {
-            final item = _getSelectedItems()[index];
+            final item = selectedMenu(widget.menuList)[index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => MenuDetailScreen(
-                      itemTitle: item['title']!,
-                      itemImage: item['image']!,
+                      itemMenu: item,
                     ),
                   ),
                 );
               },
               child: Container(
-
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[900],
@@ -124,8 +112,8 @@ class _MenusState extends State<Menus> {
                       height: 170,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          item['image']!,
+                        child: Image.network(
+                          'http://10.0.2.2:8000${item.fotoMenu!}',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -133,7 +121,7 @@ class _MenusState extends State<Menus> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        item['title']!,
+                        item.nama,
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
@@ -144,18 +132,33 @@ class _MenusState extends State<Menus> {
           },
         ),
       ],
-    );
+    );  
   }
 
-  List<Map<String, String>> _getSelectedItems() {
+  List<Menu> selectedMenu(List<Menu> listMenu) {
     if (selectedTab == 1) {
-      // return minumanList.where((menu) => menu.minuman.isNotEmpty).toList();
-      return makananList;
+      return listMenu.where((menu) => menu.jenis == 'makanan').toList();
     } else if (selectedTab == 2) {
-      // return makananList.where((menu) => menu.makanan.isNotEmpty).toList();
-      return minumanList;
+      return listMenu.where((menu) => menu.jenis == 'minuman').toList();
     } else {
-      return [...makananList, ...minumanList];
+      return listMenu;
     }
   }
+
+  // String getTitle(Menu item) {
+  //   String itemTitle = '';
+
+  //   if (selectedTab == 1) {
+  //     itemTitle = item.makanan;
+  //   } else if (selectedTab == 2) {
+  //     itemTitle = item.minuman;
+  //   } else {
+  //     if (item.minuman.isEmpty) {
+  //       itemTitle = item.makanan;
+  //     } else if (item.makanan.isEmpty) {
+  //       itemTitle = item.minuman;
+  //     }
+  //   }
+  //   return itemTitle;
+  // }
 }

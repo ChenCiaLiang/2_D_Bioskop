@@ -8,6 +8,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\SpesialPromoController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\JadwalTayangController;
 
@@ -37,7 +38,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/pemesanantiket', [PemesananTiketController::class, 'store']);
 
     Route::get('/menu/get', [MenuController::class, 'fetchAll']);
-    Route::get('/spesialPromo/get', [MenuController::class, 'fetchAll']);
+    Route::get('/menu/find/{nama}', [MenuController::class, 'find']);
+    Route::get('/spesialPromo/get', [SpesialPromoController::class, 'fetchAll']);
 
     Route::get('/film/get', [FilmController::class, 'fetchAll']);
     Route::get('/film/find/{judul}', [FilmController::class, 'find']);
