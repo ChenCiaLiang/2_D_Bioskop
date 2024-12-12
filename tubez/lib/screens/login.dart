@@ -157,8 +157,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               emailController.text, passwordController.text);
 
                           if (response) {
-                            
-
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

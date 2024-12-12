@@ -5,7 +5,6 @@ import 'package:tubez/entity/History.dart'; // Mengimpor model History
 import 'package:tubez/client/HistoryClient.dart'; // Mengimpor HistoryClient untuk mengambil data
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/widgets/historyWidgets/isiHistory.dart'; // Mengimpor IsiHistory
-import 'dart:convert';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
