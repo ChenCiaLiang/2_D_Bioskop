@@ -38,6 +38,8 @@ class Film{
     fotoFilm: json['fotoFilm'],
   );
 
+  get idFilm => null;
+
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
     'id': id,

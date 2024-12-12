@@ -157,8 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               emailController.text, passwordController.text);
 
                           if (response) {
-                            final response2 =
-                                await TransaksiClient.getAllKursi();
+                            
 
                             Navigator.pushReplacement(
                               context,

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->string('status');
-            $table->string('deskripsi');
             $table->date('tanggalBerlaku');
             $table->double('harga');
             $table->string('ketentuan');

@@ -19,7 +19,6 @@ class SpesialPromo extends Model
     protected $fillable = [
         'judul',
         'status',
-        'deskripsi',
         'tanggalBerlaku',
         'harga',
         'ketentuan',

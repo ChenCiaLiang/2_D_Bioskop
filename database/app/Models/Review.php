@@ -17,6 +17,7 @@ class Review extends Model
 
     protected $fillable = [
         'idFilm',
+        'idHistory',
         'review',
         'rating',
     ];
@@ -26,7 +27,7 @@ class Review extends Model
     }
 
     public function history(){
-        return $this->hasOne(History::class);
+        return $this->belongsTo(History::class, 'idHistory', 'id');
     }
 
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\FilmController;
+use App\Http\Controllers\JadwalTayangController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -35,4 +36,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/film/get', [FilmController::class, 'fetchAll']);
     Route::get('/film/find/{judul}', [FilmController::class, 'find']);
+
+    Route::get('/jadwaltayang/get/{id}', [JadwalTayangController::class, 'fetchByIdFilm']);
 });

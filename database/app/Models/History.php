@@ -17,7 +17,6 @@ class History extends Model
 
     protected $fillable = [
         'idTransaksi',
-        'idReview',
         'status',
         'isReview',
     ];
@@ -27,8 +26,14 @@ class History extends Model
         return $this->belongsTo(Transaksi::class, 'idTransaksi', 'id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser', 'id');
+    }
+
     public function review()
     {
-        return $this->belongsTo(Review::class, 'idReview', 'id');
+        return $this->hasOne(Review::class, 'idHistory');
     }
+
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/entity/JadwalTayang.dart';
 
 class cinemaTypeWidget extends StatefulWidget {
-  const cinemaTypeWidget({super.key});
+  const cinemaTypeWidget({super.key, required this.jadwalTayang, required this.onTimeSelected});
+  final List<Jadwaltayang> jadwalTayang;
+  final Function(int) onTimeSelected;
 
   @override
   State<cinemaTypeWidget> createState() => _cinemaTypeWidgetState();
@@ -12,11 +15,20 @@ class _cinemaTypeWidgetState extends State<cinemaTypeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final ambilJenis = widget.jadwalTayang
+        .map((e) => e.studio?.jenis)
+        .where((jenis) => jenis != null)
+        .toSet()
+        .toList();
+
+    print('Jenis Studio nya: $ambilJenis');
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(2, (index) {
+        children: List.generate(ambilJenis.length, (index) {
           final isActive = selectedIndex == index;
+          final jenisStudio = ambilJenis[index]!;
 
           return Padding(
             padding: const EdgeInsets.only(right: 10.0),
@@ -25,6 +37,8 @@ class _cinemaTypeWidgetState extends State<cinemaTypeWidget> {
                 setState(() {
                   selectedIndex = index;
                 });
+                var selectedJadwal = widget.jadwalTayang.firstWhere((jadwal) => jadwal.studio?.jenis == jenisStudio);
+                widget.onTimeSelected(selectedJadwal.idStudio!);
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
@@ -48,7 +62,7 @@ class _cinemaTypeWidgetState extends State<cinemaTypeWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    index == 0 ? "Premium" : "Standard",
+                    jenisStudio,
                     style: const TextStyle(fontSize: 12.0),
                   ),
                 ],

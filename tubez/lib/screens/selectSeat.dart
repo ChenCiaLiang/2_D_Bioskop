@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/client/PemesananTiketClient.dart';
+import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/model/pdfItem.dart';
 import 'package:tubez/entity/pemesanantiket.dart';
 import 'dart:ui';
@@ -41,8 +42,9 @@ class TrapeziumPainter extends CustomPainter {
 }
 
 class selectSeatScreen extends StatefulWidget {
-  const selectSeatScreen({super.key, required this.movie});
+  const selectSeatScreen({super.key, required this.movie, required this.jadwalTayang});
   final Film movie;
+  final Jadwaltayang? jadwalTayang;
 
   @override
   State<selectSeatScreen> createState() => _selectSeatScreenState();
@@ -97,6 +99,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Jadwaltayang jadwal = widget.jadwalTayang!;
     final Film movie = widget.movie;
     return Scaffold(
       body: SafeArea(
@@ -206,7 +209,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          showSlideInModal(context, mySeats, movie);
+                          showSlideInModal(context, mySeats, movie, jadwal);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -337,7 +340,7 @@ class SeatNumber {
   }
 }
 
-void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie) {
+void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jadwaltayang jadwal) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allow height to adjust based on content
@@ -506,7 +509,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie) {
                     onPressed: () async {
                       try {
                         var response = await PemesananTiketClient.createPemesananTiket(
-                            1,
+                            jadwal.id!,
                             mySeats.toList());
 
                         if (response.statusCode == 200) {
