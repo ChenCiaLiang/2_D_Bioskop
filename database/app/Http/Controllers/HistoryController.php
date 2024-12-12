@@ -10,7 +10,7 @@ use Exception;
 
 class HistoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
             $userId = Auth::id();

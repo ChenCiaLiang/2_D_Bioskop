@@ -7,37 +7,30 @@ class HistoryClient {
   static final String apiUrl =
       'http://10.0.2.2:8000/api'; // Ganti dengan URL API yang benar
 
-  // Fungsi untuk mengambil data history dari API
-  static Future<List<History>> fetchHistory() async {
+  static Future<List<History>> fetchHistory(int userId) async {
     try {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
 
       final response = await http.get(
-        Uri.parse('$apiUrl/history'),
+        Uri.parse('$apiUrl/history?userId=$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
         },
       );
 
-      print('Response status: ${response.statusCode}');
-
       if (response.statusCode == 200) {
-        Iterable data = json.decode(response.body)['history'];
-        print('Data received: $data');
-
-        Iterable dataHistory = data.map((e) => History.fromJson(e)).toList();
-
-        print('Data list $dataHistory');
-
-        return data.map((e) => History.fromJson(e)).toList();
+        print('Response body: ${response.body}');
+        Iterable list = json.decode(response.body)['history'];
+        print('Parsed data: $list');
+        return list.map((e) => History.fromJson(e)).toList();
       } else {
         throw Exception('Failed to load history');
       }
     } catch (e) {
-      print('Error: $e');
-      return []; // Mengembalikan list kosong jika terjadi error
+      print('Error fetching history: $e');
+      return [];
     }
   }
 }

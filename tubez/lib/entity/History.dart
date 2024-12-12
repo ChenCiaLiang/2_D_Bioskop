@@ -7,8 +7,8 @@ class History {
   BigInt idTransaksi;
   BigInt idReview;
   BigInt idUser;
-  String? status;
-  bool isReviewed; // Menggunakan tipe bool
+  String status;
+  bool isReview; // Menggunakan tipe bool
   Transaksi? transaksi;
 
   History({
@@ -17,7 +17,7 @@ class History {
     required this.idReview,
     required this.idUser,
     required this.status,
-    required this.isReviewed,
+    required this.isReview,
     this.transaksi,
   });
 
@@ -25,25 +25,21 @@ class History {
 
   // Factory constructor untuk parsing JSON
   factory History.fromJson(Map<String, dynamic> json) {
-    // Konversi dari TINYINT (0 atau 1) menjadi bool
-    bool isReviewed = json['isReview'] == 1; // pastikan key sesuai dengan data
+    bool isReview = json['isReview'] == 1;
 
-    // Pastikan transaksi ada dan bukan null
     Transaksi? transaksi = json['transaksi'] != null
         ? Transaksi.fromJson(json['transaksi'])
         : null;
 
-    // Pastikan status tidak null dan berikan nilai default jika perlu
     String status = json['status'] ?? '';
 
-    // Menggunakan metode parsing BigInt dengan aman
     return History(
       id: _parseBigInt(json['id']),
       idTransaksi: _parseBigInt(json['idTransaksi']),
       idReview: _parseBigInt(json['idReview']),
       idUser: _parseBigInt(json['idUser']),
       status: status,
-      isReviewed: isReviewed,
+      isReview: isReview,
       transaksi: transaksi,
     );
   }
@@ -57,7 +53,7 @@ class History {
       'idReview': idReview.toString(),
       'idUser': idUser.toString(),
       'status': status,
-      'isReview': isReviewed ? 1 : 0,
+      'isReview': isReview ? 1 : 0,
       'transaksi': transaksi?.toJson(), // Jika transaksi tidak null
     };
   }
@@ -82,14 +78,14 @@ class History {
 
 class Film {
   int? id;
-  String? judul;
-  String? status;
-  String? durasi;
-  String? genre;
-  String? ageRestriction;
-  String? sinopsis;
+  String judul;
+  String status;
+  String durasi;
+  String genre;
+  String ageRestriction;
+  String sinopsis;
   double jumlahRating;
-  String? fotoFilm;
+  String fotoFilm;
 
   Film({
     required this.id,
@@ -100,7 +96,7 @@ class Film {
     required this.ageRestriction,
     required this.sinopsis,
     required this.jumlahRating,
-    this.fotoFilm,
+    required this.fotoFilm,
   });
 
   factory Film.fromRawJson(String str) => Film.fromJson(json.decode(str));
@@ -135,12 +131,9 @@ class Transaksi {
   final int? id;
   final int idUser;
   final int idPemesananTiket;
-  final String? metodePembayaran;
+  final String metodePembayaran;
   final double totalHarga;
-  final List<String> kursiDipesan;
-  final int countTiket;
-  final User? user;
-  final PemesananTiket? pemesananTiket;
+  final PemesananTiket? pemesanan_tiket;
 
   Transaksi({
     this.id,
@@ -148,10 +141,7 @@ class Transaksi {
     required this.idPemesananTiket,
     required this.metodePembayaran,
     required this.totalHarga,
-    required this.kursiDipesan,
-    required this.countTiket,
-    required this.user,
-    required this.pemesananTiket,
+    required this.pemesanan_tiket,
   });
 
   // Factory constructor to parse JSON
@@ -167,14 +157,8 @@ class Transaksi {
       totalHarga: json['totalHarga'] is double
           ? json['totalHarga']
           : double.parse(json['totalHarga'].toString()),
-      // Decode kursiDipesan string into a List<String>
-      kursiDipesan: List<String>.from(jsonDecode(json['kursiDipesan'])),
-      countTiket: json['kursiDipesan'] is String
-          ? List<String>.from(jsonDecode(json['kursiDipesan'])).length
-          : json['kursiDipesan'].length,
-      user: json['user'] != null ? User.fromJson(json['user']) : null,
-      pemesananTiket: json['pemesananTiket'] != null
-          ? PemesananTiket.fromJson(json['pemesananTiket'])
+      pemesanan_tiket: json['pemesanan_tiket'] != null
+          ? PemesananTiket.fromJson(json['pemesanan_tiket'])
           : null,
     );
   }
@@ -185,17 +169,16 @@ class Transaksi {
       'idPemesananTiket': idPemesananTiket,
       'metodePembayaran': metodePembayaran,
       'totalHarga': totalHarga,
-      'kursiDipesan': kursiDipesan,
-      'users': user,
+      'pemesanan_tiket': pemesanan_tiket,
     };
   }
 }
 
 class Studio {
   final int? id;
-  final String? jenis;
+  final String jenis;
   final int jumlahKursi;
-  final double harga;
+  final dynamic harga;
 
   Studio({
     required this.id,
@@ -204,40 +187,37 @@ class Studio {
     required this.harga,
   });
 
-  // Factory constructor to parse JSON
-  factory Studio.fromJson(Map<String, dynamic> json) {
-    return Studio(
-      id: json['id'] is int ? json['id'] : int.parse(json['id']),
-      jenis: json['jenis'],
-      jumlahKursi: json['jumlahKursi'] is int
-          ? json['jumlahKursi']
-          : int.parse(json['jumlahKursi']),
-      harga: json['harga'] is double
-          ? json['harga']
-          : double.parse(json['harga'].toString()),
-    );
-  }
+  factory Studio.fromRawJson(String str) => Studio.fromJson(json.decode(str));
 
-  Map<String, dynamic> toJson() {
-    return {
-      'jenis': jenis,
-      'jumlahKursi': jumlahKursi,
-      'harga': harga,
-    };
-  }
+  factory Studio.fromJson(Map<String, dynamic> json) => Studio(
+        id: json['id'],
+        jenis: json['jenis'],
+        jumlahKursi: json['jumlahKursi'],
+        harga: json['harga'],
+      );
+
+  String toRawJson() => json.encode(toJson());
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'jenis': jenis,
+        'jumlahKursi': jumlahKursi,
+        'harga': harga,
+      };
 }
 
 class PemesananTiket {
   final int? id;
   final int idJadwalTayang;
   final List<String> kursiDipesan;
-  final JadwalTayang? jadwalTayang;
+  final JadwalTayang? jadwal_tayang;
+  final int countTiket;
 
   PemesananTiket({
-    this.id = null,
+    required this.id,
     required this.idJadwalTayang,
     required this.kursiDipesan,
-    required this.jadwalTayang,
+    required this.jadwal_tayang,
+    required this.countTiket,
   });
 
   // Factory constructor to parse JSON
@@ -249,8 +229,11 @@ class PemesananTiket {
           : int.parse(json['idJadwalTayang']),
       // Decode kursiDipesan string into a List<String>
       kursiDipesan: List<String>.from(jsonDecode(json['kursiDipesan'])),
-      jadwalTayang: json['jadwalTayang'] != null
-          ? JadwalTayang.fromJson(json['jadwalTayang'])
+      countTiket: json['kursiDipesan'] is String
+          ? List<String>.from(jsonDecode(json['kursiDipesan'])).length
+          : json['kursiDipesan'].length,
+      jadwal_tayang: json['jadwal_tayang'] != null
+          ? JadwalTayang.fromJson(json['jadwal_tayang'])
           : null,
     );
   }
@@ -259,7 +242,7 @@ class PemesananTiket {
     return {
       'idJadwalTayang': idJadwalTayang,
       'kursiDipesan': kursiDipesan,
-      'jadwalTayang': jadwalTayang?.toJson(),
+      'jadwalTayang': jadwal_tayang?.toJson(),
     };
   }
 }
@@ -269,7 +252,7 @@ class JadwalTayang {
   final int? idStudio;
   final int? idJadwal;
   final int? idFilm;
-  final DateTime tanggalTayang;
+  final String tanggalTayang;
   final Studio? studio;
   final Film? film;
 
@@ -295,7 +278,7 @@ class JadwalTayang {
           : int.parse(json['idJadwal']),
       idFilm:
           json['idFilm'] is int ? json['idFilm'] : int.parse(json['idFilm']),
-      tanggalTayang: json['tanggalTayang'],
+      tanggalTayang: json['tanggalTayang'].toString(),
       studio: json['studio'] != null ? Studio.fromJson(json['studio']) : null,
       film: json['film'] != null ? Film.fromJson(json['film']) : null,
     );
