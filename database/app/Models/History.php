@@ -17,7 +17,6 @@ class History extends Model
 
     protected $fillable = [
         'idTransaksi',
-        'idReview',
         'status',
         'isReview',
     ];
@@ -29,6 +28,6 @@ class History extends Model
 
     public function review()
     {
-        return $this->belongsTo(Review::class, 'idReview', 'id');
+        return $this->hasOne(Review::class);
     }
 }

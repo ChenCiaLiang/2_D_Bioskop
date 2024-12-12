@@ -17,16 +17,17 @@ class Review extends Model
 
     protected $fillable = [
         'idFilm',
+        'idHistory',
         'review',
         'rating',
     ];
 
     public function film(){
-        return $this->belongsTo(Film::class);
+        return $this->belongsTo(Film::class, 'idFilm', 'id');
     }
 
     public function history(){
-        return $this->hasOne(History::class);
+        return $this->belongsTo(History::class, 'idHistory', 'id');
     }
 
 }

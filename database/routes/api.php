@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\FilmController;
@@ -25,6 +26,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update/{id}', [UserController::class, 'update']);
 
     Route::get('/history', [HistoryController::class, 'index']);
+
+    Route::post('/history/create', [HistoryController::class, 'store']);
+
+    Route::post('/review/create', [ReviewController::class, 'store']);
 
     Route::get('/kursi/all', [PemesananTiketController::class, 'getAll']);
 

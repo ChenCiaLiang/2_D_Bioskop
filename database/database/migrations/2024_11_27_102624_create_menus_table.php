@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nama');
             $table->double('harga');
             $table->string('ukuran');
+            $table->string('deskripsi');
             $table->string('fotoMenu');
             $table->timestamps();
         });
