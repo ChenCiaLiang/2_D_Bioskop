@@ -36,4 +36,5 @@ class History extends Model
     {
         return $this->hasOne(Review::class);
     }
+
 }
