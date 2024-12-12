@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('idFilm');
             $table->foreign('idFilm')->references('id')->on('films')->onDelete('cascade');
+            $table->unsignedBigInteger('idHistory');
+            $table->foreign('idHistory')->references('id')->on('histories')->onDelete('cascade');
             $table->string('review');
             $table->float('rating');
             $table->timestamps();

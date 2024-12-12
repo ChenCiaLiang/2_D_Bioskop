@@ -22,6 +22,7 @@ class MovieDescription extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height,
+              padding: EdgeInsets.symmetric(horizontal:8),
               child: Container(
                 child: Image.network('http://10.0.2.2:8000${movie.fotoFilm!}',
                     fit: BoxFit.cover, width: 200),
