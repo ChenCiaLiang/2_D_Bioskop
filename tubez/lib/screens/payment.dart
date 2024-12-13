@@ -3,10 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/entity/transaksi.dart';
-import 'package:tubez/screens/pdf_view.dart'; // Import your pdf view file
+import 'package:tubez/screens/pdf_view.dart';
 import 'package:tubez/screens/selectPayment.dart';
 import 'package:tubez/widgets/paymentWidgets/MovieDescription.dart';
-import 'package:tubez/model/pdfItem.dart'; // Make sure this import exists for your 'Movie' model
+import 'package:tubez/model/pdfItem.dart';
 import 'package:tubez/entity/Film.dart';
 
 class paymentScreenState extends StatefulWidget {
