@@ -121,7 +121,7 @@ Future<void> createPDF(
               pw.SizedBox(height: 20),
               pw.Container( 
                 child: pw.BarcodeWidget(
-                  data: 'https://youtu.be/xvFZjo5PgG0',
+                  data: '${film.judul} - ${price.toString()} - ${mySeats.join(', ')}',
                   barcode: qrImage,
                   width: 200,
                   height: 200,
