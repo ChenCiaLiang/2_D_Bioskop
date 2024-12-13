@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -14,85 +15,225 @@ Future<void> createPDF(
   BuildContext context,
   List<Movie> soldMovies,
 ) async {
-  final doc = pw.Document();
   final now = DateTime.now();
   final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+  final doc = pw.Document();
 
+  pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
+    return pw.MemoryImage(imageBytes);
+  }
+
+  // Define your page theme here
   final pdfTheme = pw.PageTheme(
     pageFormat: PdfPageFormat.a4,
     buildBackground: (pw.Context context) {
       return pw.Container(
         decoration: pw.BoxDecoration(
-          border: pw.Border.all(color: PdfColor.fromHex('#FFBD59'), width: 1),
+          border: pw.Border.all(color: PdfColor.fromHex('#000000'), width: 1),
+          color: PdfColor.fromHex('#232323'),
         ),
       );
     },
   );
 
+  // Add a page to the document
   doc.addPage(
-    pw.MultiPage(
-        pageTheme: pdfTheme,
-        header: (pw.Context context) {
-          return headerPdf();
-        },
-        build: (pw.Context context) {
-          return [
-            // Title and general info
-            pw.Text("Order Summary",
-                style:
-                    pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 10),
-            pw.Text("Name: $name", style: pw.TextStyle(fontSize: 12)),
-            pw.Text("Total Price: Rp $price",
-                style: pw.TextStyle(fontSize: 12)),
-            pw.SizedBox(height: 20),
-            // List of sold movies
-            pw.Text("Sold Movies:",
-                style:
-                    pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 10),
-            // Loop through the list of sold movies
-            ...soldMovies.map((movie) {
-              return pw.Text("${movie.name} - Rp ${movie.price}",
-                  style: pw.TextStyle(fontSize: 12));
-            }).toList(),
-          ];
-        },
-        footer: (pw.Context context) {
-          return pw.Container(
-              color: PdfColors.amber, child: footerPDF(formattedDate));
-        }),
-  );
-
-  Navigator.push(context,
-      MaterialPageRoute(builder: (context) => PreviewScreen(doc: doc)));
-}
-
-pw.Header headerPdf() {
-  return pw.Header(
-      margin: pw.EdgeInsets.zero,
-      outlineColor: PdfColors.amber50,
-      outlineStyle: PdfOutlineStyle.normal,
-      level: 5,
-      decoration: pw.BoxDecoration(
-        shape: pw.BoxShape.rectangle,
-        gradient: pw.LinearGradient(
-          colors: [PdfColor.fromHex('#FCDF8A'), PdfColor.fromHex("#F38381")],
-          begin: pw.Alignment.topLeft,
-          end: pw.Alignment.bottomRight,
-        ),
-      ),
-      child: pw.Center(
-        child: pw.Text(
-          '-Modul 8 Library-',
-          style: pw.TextStyle(
-            fontWeight: pw.FontWeight.bold,
-            fontSize: 12,
+    pw.Page(
+      pageTheme: pdfTheme,
+      build: (pw.Context context) {
+        return pw.Center(
+          child: pw.Column(
+            children: [
+              pw.Container(
+                width: 400,
+                height: 180,
+                margin: pw.EdgeInsets.all(16),
+                padding: pw.EdgeInsets.all(16),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(
+                      color: PdfColor.fromHex('#000000'), width: 1),
+                  borderRadius: pw.BorderRadius.circular(10),
+                  color: PdfColor.fromHex('#3A3838'),
+                ),
+                child: pw.Row(children: [
+                  pw.Container(
+                      width: 90,
+                      height: 120,
+                      margin: pw.EdgeInsets.only(right: 16),
+                      decoration: pw.BoxDecoration(
+                        color: PdfColor.fromHex('#ffffff'),
+                      )),
+                  pw.Column(children: [
+                    pw.Text(
+                      "Spiderman : Into The Spider-Verse",
+                      style: pw.TextStyle(
+                          fontSize: 16,
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontWeight: pw.FontWeight.bold),
+                      softWrap: true,
+                      overflow: pw.TextOverflow.clip,
+                    ),
+                    pw.Text(
+                      "Atma Cinema",
+                      style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontWeight: pw.FontWeight.bold),
+                      softWrap: true,
+                      overflow: pw.TextOverflow.clip,
+                    ),
+                    pw.Text(
+                      "Universitas Atma Jaya Cinema",
+                      style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontWeight: pw.FontWeight.bold),
+                      softWrap: true,
+                      overflow: pw.TextOverflow.clip,
+                    ),
+                    pw.Text(
+                      "Monday,07 October 2024 18:00",
+                      style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontWeight: pw.FontWeight.bold),
+                      softWrap: true,
+                      overflow: pw.TextOverflow.clip,
+                    ),
+                  ])
+                ]),
+              ),
+              pw.Text("FLUTTER KONTOL",
+                  style: pw.TextStyle(color: PdfColor.fromHex('#ffffff'))),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                  width: 200,
+                  height: 200,
+                  decoration: pw.BoxDecoration(
+                    color: PdfColor.fromHex('#3A3838'),
+                  )),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                margin: pw.EdgeInsets.only(left: 20, right: 20),
+                child: pw.Column(
+                  children: [
+                    pw.Row(children: [
+                      pw.Text(
+                        "Tickets",
+                        style: pw.TextStyle(
+                            color: PdfColor.fromHex('#ffffff'),
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.Spacer(),
+                      pw.Text("2x Rp 45.000",
+                          style: pw.TextStyle(
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontSize: 16)),
+                    ]),
+                    pw.SizedBox(height: 4),
+                    pw.Row(
+                      children: [
+                        pw.Text(
+                          " A1,A2",
+                          style: pw.TextStyle(
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold),
+                          overflow: pw.TextOverflow.clip,
+                          maxLines: 1, // Ensure text is on a single line
+                        ),
+                        pw.Spacer(),
+                        pw.Text(
+                          "90.000",
+                          style: pw.TextStyle(
+                              color: PdfColor.fromHex('#ffffff'), fontSize: 16),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 40),
+              pw.Container(
+                margin: pw.EdgeInsets.symmetric(horizontal: 20),
+                child: pw.Row(
+                  children: [
+                    pw.Text(
+                      "SubTotal",
+                      style: pw.TextStyle(
+                        color: PdfColor.fromHex('#ffffff'),
+                        fontSize: 20,
+                      ),
+                    ),
+                    pw.Spacer(),
+                    pw.Text(
+                      "Rp 90.000",
+                      style: pw.TextStyle(
+                        color: PdfColor.fromHex('#ffffff'),
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                margin: pw.EdgeInsets.symmetric(horizontal: 20),
+                child: pw.Row(
+                  children: [
+                    pw.Text(
+                      "OrderFees",
+                      style: pw.TextStyle(
+                        color: PdfColor.fromHex('#ffffff'),
+                        fontSize: 20,
+                      ),
+                    ),
+                    pw.Spacer(),
+                    pw.Text(
+                      "Rp 0",
+                      style: pw.TextStyle(
+                        color: PdfColor.fromHex('#ffffff'),
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Container(
+                margin: pw.EdgeInsets.symmetric(horizontal: 20),
+                child: pw.Row(
+                  children: [
+                    pw.Text(
+                      "Total Payment",
+                      style: pw.TextStyle(
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontSize: 20,
+                          fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Spacer(),
+                    pw.Text(
+                      "Rp 90.000",
+                      style: pw.TextStyle(
+                          color: PdfColor.fromHex('#ffffff'),
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-        ),
-      ));
+        );
+      },
+    ),
+  );
+// Navigate to the preview screen only after the document is generated
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PreviewScreen(doc: doc),
+    ),
+  );
 }
-
-pw.Center footerPDF(String formattedDate) => pw.Center(
-    child: pw.Text('Created At $formattedDate',
-        style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)));

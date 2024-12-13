@@ -20,7 +20,6 @@ class Menu extends Model
         'jenis',
         'nama',
         'harga',
-        'ukuran',
         'deskripsi',
         'fotoMenu',
     ];

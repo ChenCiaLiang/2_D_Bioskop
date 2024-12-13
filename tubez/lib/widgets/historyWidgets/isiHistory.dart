@@ -47,7 +47,7 @@ class IsiHistory extends StatelessWidget {
             child: Image.network(
               image,
               width: 80,
-              height: 120,
+              height: 145,
               fit: BoxFit.cover,
             ),
           ),
@@ -61,6 +61,7 @@ class IsiHistory extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
                 SizedBox(height: 4),
@@ -71,14 +72,14 @@ class IsiHistory extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                     Text(
                       status,
                       style: TextStyle(
                           color: Colors.amber,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                   ],
                 ),
@@ -89,14 +90,14 @@ class IsiHistory extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                     Text(
                       '$studio',
                       style: TextStyle(
                           color: Colors.amber,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                   ],
                 ),
@@ -107,14 +108,14 @@ class IsiHistory extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                     Text(
                       date,
                       style: TextStyle(
                           color: Colors.amber,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12),
+                          fontSize: 14),
                     ),
                   ],
                 ),
@@ -146,10 +147,10 @@ class IsiHistory extends StatelessWidget {
                 'Tickets: $ticketCount',
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 67),
+              SizedBox(height: 95),
               isReviewed
                   ? SizedBox(
                       width: 100,
@@ -184,7 +185,7 @@ class IsiHistory extends StatelessWidget {
                           child: Text(
                             'Review',
                             style: TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold),
+                                fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                         ),
                         style: ElevatedButton.styleFrom(

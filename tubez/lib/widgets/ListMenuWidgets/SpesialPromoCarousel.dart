@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tubez/screens/spesialPromoDetail.dart';
-
-final List<Map<String, dynamic>> spesialPromoList = [
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
-  {'image': 'assets/images/SpesialPromo.png', 'title': 'Spesial Promo', 'price': 10000},
-];
+import 'package:tubez/entity/Menu.dart';
+import 'package:tubez/entity/SpesialPromo.dart';
 
 class Spesialpromocarousel extends StatelessWidget {
   const Spesialpromocarousel({
     super.key,
+    required this.spesialPromoList,
+    required this.menuList,
   });
+
+  final List<SpesialPromo> spesialPromoList;
+  final List<Menu> menuList;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +23,13 @@ class Spesialpromocarousel extends StatelessWidget {
           enlargeCenterPage: false,
           viewportFraction: 1),
       items: spesialPromoList.map((spesialPromo) {
+        int? index = spesialPromo.id;
         return GestureDetector(
           onTap: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => SpesialPromoDetailScreen(
-                  itemTitle: spesialPromo['title']!,
-                  itemImage: spesialPromo['image']!,
-                  itemPrice: spesialPromo['price']!,
+                  itemSpesial: spesialPromo,
+                  itemMenu: getMenu(menuList, index),
                 )));
           },
           child: Container(
@@ -41,8 +40,8 @@ class Spesialpromocarousel extends StatelessWidget {
                 Expanded(
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.asset(
-                      spesialPromo['image']!,
+                    child: Image.network(
+                      'http://10.0.2.2:8000${spesialPromo.fotoPromo}',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -53,5 +52,16 @@ class Spesialpromocarousel extends StatelessWidget {
         );
       }).toList(),
     );
+  }
+
+  List<Menu> getMenu(List<Menu> menuList, int? promoIndex){
+    List<Menu> menus = [];
+    
+    for (var i = 0; i < menuList.length; i++) {
+      if(menuList[i].idSpesialPromo == promoIndex){
+        menus.add(menuList[i]);
+      }
+    }
+    return menus;
   }
 }

@@ -11,7 +11,6 @@ class SpesialPromoController extends Controller
     public function fetchAll()
     {
         try{
-
             $spesialPromo = SpesialPromo::all();
             
             if(!$spesialPromo){

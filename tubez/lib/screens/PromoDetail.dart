@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/entity/Menu.dart';
+import 'package:tubez/entity/SpesialPromo.dart';
 
 class PromoDetailScreen extends StatefulWidget {
-  final String itemTitle;
-  final String itemImage;
-  final int itemPrice;
+  final SpesialPromo itemPromo;
+  final List<Menu> itemMenu;
 
   PromoDetailScreen({
-    required this.itemTitle,
-    required this.itemImage,
-    required this.itemPrice,
+    required this.itemPromo,
+    required this.itemMenu,
   });
 
   @override
@@ -16,6 +16,18 @@ class PromoDetailScreen extends StatefulWidget {
 }
 
 class _PromoDetailScreenState extends State<PromoDetailScreen> {
+  late SpesialPromo promo;
+  late List<Menu> menu;
+  late List<String> terms;
+
+  @override
+  void initState() {
+    super.initState();
+    promo = widget.itemPromo;
+    menu = widget.itemMenu;
+    terms = promo.ketentuan.split('.');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +38,9 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.asset(
-                    widget.itemImage,
+                  //ini foto promonya-_-
+                  child: Image.network(
+                    'http://10.0.2.2:8000${promo.fotoPromo}',
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -54,8 +67,9 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //tampil nama/judul promo-_-
                   Text(
-                    widget.itemTitle,
+                    promo.judul,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -64,7 +78,7 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Popcorn Original (M) + Jeruk Smoothie',
+                    deskripsiPromo(menu),
                     style: TextStyle(color: Colors.white70, fontSize: 16),
                   ),
                   const SizedBox(height: 20),
@@ -77,30 +91,54 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildBulletPoint(
-                      'Berlaku hanya di hari Senin hingga Jumat.'),
-                  _buildBulletPoint(
-                      'Infokan ke kasir saat ingin klaim promo ini.'),
-                  _buildBulletPoint(
-                      '1 member dapat klaim deals ini sebanyak 1x per hari.'),
-                  _buildBulletPoint(
-                      'Cek selalu masa berlaku promo.'),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Berlaku sampai dengan 2024-11-23',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 16,
-                    ),
+                  //tampil Ketentuan -_-
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: terms.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '• ',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                            Expanded(
+                              child: Text(
+                                terms[index], //ini ketentuannya-_-
+                                style: TextStyle(
+                                    color: Colors.grey[300], fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                   const Spacer(),
-                  Text(
-                    'Rp ${widget.itemPrice.toString()}',
-                    style: TextStyle(
-                      color: Colors.amber,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Berlaku sampai dengan ${promo.tanggalBerlaku}',
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        'Rp ${promo.harga.toString()}',
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -111,24 +149,37 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
     );
   }
 
-  Widget _buildBulletPoint(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '• ',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(color: Colors.grey[300], fontSize: 16),
-            ),
-          ),
-        ],
-      ),
-    );
+  // Widget pointTerms(String text) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 4),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           '• ',
+  //           style: TextStyle(color: Colors.white, fontSize: 16),
+  //         ),
+  //         Expanded(
+  //           child: Text(
+  //             text,
+  //             style: TextStyle(color: Colors.grey[300], fontSize: 16),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  String deskripsiPromo(List<Menu> menuList) {
+    String deskripsi = '';
+
+    for (var i = 0; i < menuList.length; i++) {
+      if (i != 0) {
+        deskripsi += ' + ';
+      }
+      deskripsi += menuList[i].nama;
+    }
+
+    return deskripsi;
   }
 }

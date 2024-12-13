@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/entity/Menu.dart';
 
 class MenuDetailScreen extends StatefulWidget {
-  final String itemTitle;
-  final String itemImage;
+  final Menu itemMenu;
 
   MenuDetailScreen({
-    required this.itemTitle, 
-    required this.itemImage
+    required this.itemMenu,
   });
 
   @override
@@ -14,13 +13,21 @@ class MenuDetailScreen extends StatefulWidget {
 }
 
 class _MenuDetailScreenState extends State<MenuDetailScreen> {
-  String selectedSize = 'Besar';
-  Map<String, int> sizePrices = {
-    'Besar': 24000,
-    'Sedang': 20000,
-    'Kecil': 15000,
-    'Extra Hemat': 10000,
-  };
+  late String ukuran;
+  late Map<String, double> price;
+  late Menu menus;
+
+  @override
+  void initState() {
+    super.initState();
+    ukuran = 'kecil';
+    menus = widget.itemMenu;
+    price = {
+      'besar': menus.harga * 2.5,
+      'sedang': menus.harga * 2,
+      'kecil': menus.harga * 1,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +39,8 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.asset(
-                    widget.itemImage,
+                  child: Image.network(
+                    'http://10.0.2.2:8000${menus.fotoMenu}',
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -61,7 +68,7 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.itemTitle,
+                    menus.nama,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -70,34 +77,35 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Nikmati popcorn dengan cita rasa biasa saja namun umero umo...',
+                    menus.deskripsi,
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'UKURAN',
+                    'Ukuran',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
+
                     ),
                   ),
                   const SizedBox(height: 12),
                   Wrap(
                     spacing: 10,
                     runSpacing: 10,
-                    children: sizePrices.keys.map((size) {
+                    children: price.keys.map((size) {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            selectedSize = size;
+                            ukuran = size;
                           });
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 20),
                           decoration: BoxDecoration(
-                            color: selectedSize == size
+                            color: ukuran == size
                                 ? Colors.amber
                                 : Colors.transparent,
                             border: Border.all(
@@ -109,7 +117,7 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                           child: Text(
                             size,
                             style: TextStyle(
-                              color: selectedSize == size
+                              color: ukuran == size
                                   ? Colors.black
                                   : Colors.amber,
                               fontWeight: FontWeight.bold,
@@ -124,14 +132,14 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'UKURAN: $selectedSize',
+                        'UKURAN: $ukuran',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
                       ),
                       Text(
-                        'Rp ${sizePrices[selectedSize]!.toString()}',
+                        'Rp ${price[ukuran].toString()}',
                         style: TextStyle(
                           color: Colors.amber,
                           fontSize: 22,

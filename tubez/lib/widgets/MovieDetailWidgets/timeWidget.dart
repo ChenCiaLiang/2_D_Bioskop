@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:tubez/entity/JadwalTayang.dart';
 class TimeWidget extends StatefulWidget {
-  const TimeWidget({super.key});
-
+  const TimeWidget({super.key, required this.jadwalTayang, required this.onTimeSelected});
+  final List<Jadwaltayang> jadwalTayang;
+  final Function(int) onTimeSelected;
   @override
   State<TimeWidget> createState() => _TimeWidgetState();
 }
@@ -11,15 +13,20 @@ class _TimeWidgetState extends State<TimeWidget> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final ambilJam = widget.jadwalTayang
+        .map((e) => e.jadwal?.jamTayang) 
+        .where((jamTayang) => jamTayang != null)
+        .toSet()
+        .toList();
+
+        final limaJamTayang = ambilJam.take(5).toList();
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(5, (index) {
-          final day = now.add(Duration(days: index));
-          final dayName = index == 0 ? "Today" : "Day ${index + 1}";
-          final dayNumber = day.day.toString().padLeft(2, '0');
+        children: List.generate(limaJamTayang.length, (index) {
+          final jamTayang = limaJamTayang[index]!;
+          final jamHHMM = jamTayang.substring(0, 5);
           final isActive = selectedIndex == index;
 
           return Padding(
@@ -29,6 +36,8 @@ class _TimeWidgetState extends State<TimeWidget> {
                 setState(() {
                   selectedIndex = index;
                 });
+                
+                widget.onTimeSelected(widget.jadwalTayang[index].idJadwal!);
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -51,7 +60,7 @@ class _TimeWidgetState extends State<TimeWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("18.00", style: const TextStyle(fontSize: 10.0)),
+                  Text(jamHHMM, style: const TextStyle(fontSize: 10.0)),
                 ],
               ),
             ),

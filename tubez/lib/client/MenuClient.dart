@@ -24,15 +24,38 @@ class MenuClient{
 
       Iterable list = json.decode(response.body)['data'];
 
-      List<Menu> allMenus = list.map((e) => Menu.fromJson(e)).toList();
-
-      List<Menu> makananList = allMenus.where((menu) => menu.jenis == "makanan").toList();
-      List<Menu> minumanList = allMenus.where((menu) => menu.jenis == "minuman").toList();
-
-      // return list.map((e) => Menu.fromJson(e)).toList();
-      return allMenus;
+      return list.map((e) => Menu.fromJson(e)).toList();
     }catch(e){
-      return Future.error('-_- ${e.toString()}');
+      return Future.error('Menu Error at ${e.toString()}');
+    }
+  }
+
+  static Future<List<Menu>> find(String searchText) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+
+      var response = await get(Uri.http(url, '$endpoint/find/$searchText'), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      });
+
+      if (response.statusCode != 200) {
+        throw Exception('Menu not found!');
+      }
+
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.containsKey('data')) {
+        Iterable list = jsonResponse['data'];
+        return list.map((e) => Menu.fromJson(e)).toList();
+      } else {
+        throw Exception('Unexpected response format');
+      }
+      
+    } catch (e) {
+      print("Error: $e");
+      throw Exception('Failed to load films');
     }
   }
 }

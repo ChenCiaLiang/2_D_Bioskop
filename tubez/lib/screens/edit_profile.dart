@@ -89,12 +89,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _updateProfile() async {
     // Send updated profile data to backend
     try {
+      File? profileImage = _profileImage ?? File(widget.currentPhoto);
+      print('File exists: ${File(widget.currentPhoto).existsSync()}');
+
       var updatedData = {
         'username': controllerUsername.text,
         'email': controllerEmail.text,
         'noTelp': controllerTelp.text,
         'dateBirth': controllerDateBirth.text,
         'password': controllerPassword.text,
+        'foto': profileImage,
       };
 
       User user = User(
@@ -105,7 +109,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         password: controllerPassword.text,
       );
 
-      var response = await UserClient.update(user, profileImage: _profileImage);
+      var response = await UserClient.update(user, profileImage: profileImage);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile updated successfully!")),
@@ -175,10 +180,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _profileImage != null
                       ? FileImage(_profileImage!)
                       : widget.currentPhoto.isNotEmpty
-                          ? NetworkImage(widget.currentPhoto) as ImageProvider
-                          : const AssetImage("assets/images/download.png")
+                          ? NetworkImage(
+                                  'http://10.0.2.2:8000/storage/${widget.currentPhoto}')
+                              as ImageProvider
+                          : NetworkImage(
+                                  'http://10.0.2.2:8000/storage/$_profileImage')
                               as ImageProvider,
-                  backgroundColor: Colors.grey,
                 ),
                 Positioned(
                   bottom: 0,

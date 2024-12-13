@@ -23,15 +23,15 @@ class JadwalTayang extends Model
     ];
 
     public function film(){
-        return $this->belongsTo(Film::class);
+        return $this->belongsTo(Film::class, 'idFilm', 'id');
     }
     
     public function studio(){
-        return $this->belongsTo(Studio::class);
+        return $this->belongsTo(Studio::class, 'idStudio', 'id');
     }
 
     public function jadwal(){
-        return $this->belongsTo(Jadwal::class);
+        return $this->belongsTo(Jadwal::class, 'idJadwal', 'id');
     }
 
     public function pemesananTiket(){
