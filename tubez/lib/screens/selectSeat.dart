@@ -7,7 +7,7 @@ import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/client/PemesananTiketClient.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/model/pdfItem.dart';
-import 'package:tubez/entity/pemesanantiket.dart';
+import 'package:tubez/entity/pemesanan_tiket.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:book_my_seat/book_my_seat.dart';
