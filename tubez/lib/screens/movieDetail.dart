@@ -29,6 +29,15 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
   void initState() {
     super.initState();
     jadwalTayang = JadwalTayangClient.fetchByIdFilm(widget.movie.id!);
+    jadwalTayang.then((jadwalList) {
+      if (jadwalList.isNotEmpty) {
+        setState(() {
+          SelectedDay = jadwalList[0].tanggalTayang;
+          idSelectedTime = jadwalList[0].idJadwal;
+          idSelectedJenis = jadwalList[0].idStudio;
+        });
+      }
+    });
   }
 
   void handleSelectedDay(DateTime selectedJadwal) {
@@ -46,38 +55,33 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
     idSelectedJenis = selectedJadwal;
   }
 
-
   Jadwaltayang? cariJadwalTayang(List<Jadwaltayang> jadwalTayangList) {
-    try{
-
+    try {
       return jadwalTayangList.firstWhere((jadwalTayang) =>
-        jadwalTayang.tanggalTayang == SelectedDay &&
-        jadwalTayang.idJadwal == idSelectedTime &&
-        jadwalTayang.idStudio == idSelectedJenis
-      );
-
-    }catch(e){
+          jadwalTayang.tanggalTayang == SelectedDay &&
+          jadwalTayang.idJadwal == idSelectedTime &&
+          jadwalTayang.idStudio == idSelectedJenis);
+    } catch (e) {
       print('Jadwal tidak ditemukan');
       return null;
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
     final Film movie = widget.movie;
     return FutureBuilder<List<Jadwaltayang>>(
-      future: jadwalTayang, 
-      builder: (_, snapshot){
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator()); // Loading
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}')); // Error
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No data available')); // No data
-        } else if(snapshot.data == null){
-          return Center(child: Text('No data available')); // No data
-        }else {
+        future: jadwalTayang,
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator()); // Loading
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}')); // Error
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No data available')); // No data
+          } else if (snapshot.data == null) {
+            return Center(child: Text('No data available')); // No data
+          } else {
             return Scaffold(
               body: SafeArea(
                 child: Stack(
@@ -133,8 +137,10 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                                               horizontal: 12, vertical: 6),
                                           decoration: BoxDecoration(
                                             color: Colors.transparent,
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(color: Colors.white),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border:
+                                                Border.all(color: Colors.white),
                                           ),
                                           child: index == 0
                                               ? Text(
@@ -160,67 +166,94 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  const Text(
-                                    "Schedule",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.white,
+                                  if (movie.status == 'Now Playing') ...[
+                                    const Text(
+                                      "Schedule",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Schedulewidget(jadwalTayang: snapshot.data!, onTimeSelected: handleSelectedDay),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TimeWidget(jadwalTayang: snapshot.data!, onTimeSelected: handleSelectedTime),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: cinemaTypeWidget(jadwalTayang: snapshot.data!, onTimeSelected: handleSelectedJenis),
-                                  ),
+                                    const SizedBox(height: 10),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Schedulewidget(
+                                          jadwalTayang: snapshot.data!,
+                                          onTimeSelected: handleSelectedDay),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TimeWidget(
+                                          jadwalTayang: snapshot.data!,
+                                          onTimeSelected: handleSelectedTime),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: cinemaTypeWidget(
+                                          jadwalTayang: snapshot.data!,
+                                          onTimeSelected: handleSelectedJenis),
+                                    ),
+                                  ] else ...[
+                                    SizedBox(height: 20),
+                                    Center(
+                                      child: Text(
+                                        "Movie is not available right now",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 22,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
-                            Positioned(
-                              bottom: 280,
-                              left: 0,
-                              right: 0,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    var selectedJadwal = cariJadwalTayang(snapshot.data!);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => selectSeatScreen(movie: movie, jadwalTayang: selectedJadwal)));
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 90, vertical: 15),
-                                    child: Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black),
+                            if (movie.status == 'Now Playing') ...[
+                              Positioned(
+                                bottom: 280,
+                                left: 0,
+                                right: 0,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      var selectedJadwal =
+                                          cariJadwalTayang(snapshot.data!);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  selectSeatScreen(
+                                                      movie: movie,
+                                                      jadwalTayang:
+                                                          selectedJadwal!)));
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 90, vertical: 15),
+                                      child: Text(
+                                        'Continue',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
                                     ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 255, 255, 255),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 255, 255, 255),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ]
                           ],
                         ),
                       ),
@@ -231,7 +264,6 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
               ),
             );
           }
-        }
-      );
+        });
   }
 }
