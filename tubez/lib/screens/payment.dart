@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tubez/client/PemesananTiketClient.dart';
+import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/entity/transaksi.dart';
 import 'package:tubez/screens/pdf_view.dart'; // Import your pdf view file
 import 'package:tubez/screens/selectPayment.dart';
 import 'package:tubez/widgets/paymentWidgets/CountDown.dart';
@@ -9,13 +13,27 @@ import 'package:tubez/entity/Film.dart';
 class paymentScreenState extends StatefulWidget {
   final Set<String> mySeats;
 
-  paymentScreenState({super.key, required this.mySeats, required this.movie});
+  paymentScreenState(
+      {super.key,
+      required this.mySeats,
+      required this.movie,
+      required this.idPemesananTiket});
   final Film movie;
+  final int idPemesananTiket;
   @override
   State<paymentScreenState> createState() => _paymentScreenStateState();
 }
 
 class _paymentScreenStateState extends State<paymentScreenState> {
+  String _metodePembayaran = "Not Selected";
+
+  NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    decimalDigits: 0,
+    name: 'Rp ',
+    symbol: 'Rp ',
+  );
+
   @override
   Widget build(BuildContext context) {
     Set<String> mySeats = widget.mySeats;
@@ -26,6 +44,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
     ];
     final Film movie = widget.movie;
 
+    double totalPayment = 45000.00 * widget.mySeats.length;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +72,6 @@ class _paymentScreenStateState extends State<paymentScreenState> {
             padding: const EdgeInsets.all(12.0), // Padding around the content
             child: Column(
               children: [
-                const CountDown(),
                 const SizedBox(height: 20),
                 MovieDescription(movie: movie),
                 const SizedBox(height: 20),
@@ -82,41 +100,51 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                       ),
                       const SizedBox(
                           width: 10), // Adjusted spacing between icon and text
-                      Column(
-                        children: [
-                          Row(children: [
-                            const Text(
-                              "Tickets",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(width: 140),
-                            const Text("2x Rp 45.000",
-                                style: TextStyle(color: Colors.white)),
-                          ]),
-                          SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                " ${mySeats.join(', ')}",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1, // Ensure text is on a single line
-                              ),
-                              const SizedBox(width: 170),
-                              const Text(
-                                "90.000",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                            ],
-                          )
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Tickets",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text("${mySeats.length} x Rp 45.000",
+                                      style: TextStyle(color: Colors.white)),
+                                ]),
+                            SizedBox(height: 4),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    " ${mySeats.join(', ')}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines:
+                                        2, // Ensure text is on a single line
+                                  ),
+                                ),
+                                Text(
+                                  currencyFormatter.format(totalPayment),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -133,7 +161,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                     ),
                     Spacer(),
                     Text(
-                      "Rp 90.000",
+                      currencyFormatter.format(totalPayment),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -173,7 +201,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                     ),
                     Spacer(),
                     Text(
-                      "Rp 90.000",
+                      currencyFormatter.format(totalPayment),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -184,12 +212,15 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    // Navigate to a new screen when the user taps the container
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            selectPaymentScreen(), // Replace with your target screen
+                        builder: (context) => selectPaymentScreen(
+                            title: _metodePembayaran,
+                            onPaymentSelected: (metodePembayaran) =>
+                                setState(() {
+                                  _metodePembayaran = metodePembayaran;
+                                })),
                       ),
                     );
                   },
@@ -217,7 +248,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                           ),
                           SizedBox(width: 20),
                           Text(
-                            "Dana",
+                            _metodePembayaran,
                             style: TextStyle(
                                 color: Colors.amber,
                                 fontWeight: FontWeight.bold,
@@ -238,13 +269,65 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 ),
                 SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: () {
-                    createPDF(
-                      'John Doe',
-                      90.00,
-                      context,
-                      soldMovies,
-                    );
+                  onPressed: () async {
+                    try {
+                      var response = await TransaksiClient.createTransaksi(
+                          Transaksi(
+                              metodePembayaran: _metodePembayaran,
+                              idUser: 1,
+                              totalHarga: totalPayment,
+                              idPemesananTiket: widget.idPemesananTiket));
+
+                      if (response.statusCode == 200) {
+                        createPDF(
+                          'John Doe',
+                          90.00,
+                          context,
+                          soldMovies,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Password Salah'),
+                            content: TextButton(
+                                onPressed: () => {},
+                                child: const Text('Daftar Disini !!!')),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Error'),
+                          content: TextButton(
+                              onPressed: () => {},
+                              child: const Text('Samting wong')),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 90, vertical: 15),

@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/review/create', [ReviewController::class, 'store']);
 
-    Route::get('/kursi/all', [PemesananTiketController::class, 'getAll']);
+    Route::get('/kursi/all/{idJadwalTayang}', [PemesananTiketController::class, 'getAll']);
 
     Route::post('/pemesanantiket', [PemesananTiketController::class, 'store']);
 
@@ -45,4 +45,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/film/find/{judul}', [FilmController::class, 'find']);
 
     Route::get('/jadwaltayang/get/{id}', [JadwalTayangController::class, 'fetchByIdFilm']);
+
+    Route::post('/transaksi/create', [TransaksiController::class, 'store']);
 });
