@@ -5,18 +5,27 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:tubez/entity/Film.dart';
 import 'package:tubez/screens/previewScreen.dart';
 import 'package:tubez/model/pdfItem.dart';
 import 'package:intl/intl.dart';
+import 'package:tubez/screens/payment.dart';
+import 'package:barcode/barcode.dart';
 
 Future<void> createPDF(
-  String name,
+  Film film,
   double price,
   BuildContext context,
-  List<Movie> soldMovies,
+  String datePayment,
+  Set<String> mySeats,
+  int idStudio,
 ) async {
-  final now = DateTime.now();
-  final formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+  final qrImage = Barcode.qrCode();
+
+  final gambarFilm = pw.MemoryImage(
+    (await rootBundle.load('assets${film.fotoFilm}')).buffer.asUint8List(),
+  );
+
   final doc = pw.Document();
 
   pw.ImageProvider pdfImageProvider(Uint8List imageBytes) {
@@ -57,61 +66,70 @@ Future<void> createPDF(
                 ),
                 child: pw.Row(children: [
                   pw.Container(
+                      child: pw.Image(gambarFilm),
                       width: 90,
                       height: 120,
                       margin: pw.EdgeInsets.only(right: 16),
                       decoration: pw.BoxDecoration(
                         color: PdfColor.fromHex('#ffffff'),
                       )),
-                  pw.Column(children: [
-                    pw.Text(
-                      "Spiderman : Into The Spider-Verse",
-                      style: pw.TextStyle(
-                          fontSize: 16,
-                          color: PdfColor.fromHex('#ffffff'),
-                          fontWeight: pw.FontWeight.bold),
-                      softWrap: true,
-                      overflow: pw.TextOverflow.clip,
-                    ),
-                    pw.Text(
-                      "Atma Cinema",
-                      style: pw.TextStyle(
-                          fontSize: 12,
-                          color: PdfColor.fromHex('#ffffff'),
-                          fontWeight: pw.FontWeight.bold),
-                      softWrap: true,
-                      overflow: pw.TextOverflow.clip,
-                    ),
-                    pw.Text(
-                      "Universitas Atma Jaya Cinema",
-                      style: pw.TextStyle(
-                          fontSize: 12,
-                          color: PdfColor.fromHex('#ffffff'),
-                          fontWeight: pw.FontWeight.bold),
-                      softWrap: true,
-                      overflow: pw.TextOverflow.clip,
-                    ),
-                    pw.Text(
-                      "Monday,07 October 2024 18:00",
-                      style: pw.TextStyle(
-                          fontSize: 12,
-                          color: PdfColor.fromHex('#ffffff'),
-                          fontWeight: pw.FontWeight.bold),
-                      softWrap: true,
-                      overflow: pw.TextOverflow.clip,
-                    ),
-                  ])
+                  pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.SizedBox(height: 20),
+                        pw.Text(
+                          film.judul,
+                          style: pw.TextStyle(
+                              fontSize: 16,
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontWeight: pw.FontWeight.bold),
+                          softWrap: true,
+                          overflow: pw.TextOverflow.clip,
+                        ),
+                        pw.Text(
+                          "Atma Cinema",
+                          style: pw.TextStyle(
+                              fontSize: 12,
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontWeight: pw.FontWeight.bold),
+                          softWrap: true,
+                          overflow: pw.TextOverflow.clip,
+                        ),
+                        pw.Text(
+                          "Universitas Atma Jaya Cinema",
+                          style: pw.TextStyle(
+                              fontSize: 12,
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontWeight: pw.FontWeight.bold),
+                          softWrap: true,
+                          overflow: pw.TextOverflow.clip,
+                        ),
+                        pw.Text(
+                          datePayment,
+                          style: pw.TextStyle(
+                              fontSize: 12,
+                              color: PdfColor.fromHex('#ffffff'),
+                              fontWeight: pw.FontWeight.bold),
+                          softWrap: true,
+                          overflow: pw.TextOverflow.clip,
+                        ),
+                      ])
                 ]),
               ),
-              pw.Text("FLUTTER KONTOL",
+              pw.Text("Your Ticket",
                   style: pw.TextStyle(color: PdfColor.fromHex('#ffffff'))),
               pw.SizedBox(height: 20),
-              pw.Container(
+              pw.Container( 
+                child: pw.BarcodeWidget(
+                  data: 'https://youtu.be/xvFZjo5PgG0',
+                  barcode: qrImage,
                   width: 200,
                   height: 200,
                   decoration: pw.BoxDecoration(
-                    color: PdfColor.fromHex('#3A3838'),
-                  )),
+                    color: PdfColor.fromHex('#ebebeb'),
+                  )
+                ),
+              ),
               pw.SizedBox(height: 20),
               pw.Container(
                 margin: pw.EdgeInsets.only(left: 20, right: 20),
@@ -126,7 +144,8 @@ Future<void> createPDF(
                             fontWeight: pw.FontWeight.bold),
                       ),
                       pw.Spacer(),
-                      pw.Text("2x Rp 45.000",
+                      pw.Text(
+                          "${mySeats.length} x ${currencyFormatter.format(getHargaKursi(idStudio))}",
                           style: pw.TextStyle(
                               color: PdfColor.fromHex('#ffffff'),
                               fontSize: 16)),
@@ -135,7 +154,7 @@ Future<void> createPDF(
                     pw.Row(
                       children: [
                         pw.Text(
-                          " A1,A2",
+                          " ${mySeats.join(', ')}",
                           style: pw.TextStyle(
                               color: PdfColor.fromHex('#ffffff'),
                               fontSize: 16,
@@ -145,7 +164,7 @@ Future<void> createPDF(
                         ),
                         pw.Spacer(),
                         pw.Text(
-                          "90.000",
+                          currencyFormatter.format(price),
                           style: pw.TextStyle(
                               color: PdfColor.fromHex('#ffffff'), fontSize: 16),
                         ),
@@ -168,7 +187,7 @@ Future<void> createPDF(
                     ),
                     pw.Spacer(),
                     pw.Text(
-                      "Rp 90.000",
+                      currencyFormatter.format(price),
                       style: pw.TextStyle(
                         color: PdfColor.fromHex('#ffffff'),
                         fontSize: 16,
@@ -214,7 +233,7 @@ Future<void> createPDF(
                     ),
                     pw.Spacer(),
                     pw.Text(
-                      "Rp 90.000",
+                      currencyFormatter.format(price),
                       style: pw.TextStyle(
                           color: PdfColor.fromHex('#ffffff'),
                           fontSize: 16,

@@ -24,12 +24,30 @@ class paymentScreenState extends StatefulWidget {
       required this.mySeats,
       required this.movie,
       required this.idPemesananTiket,
-      this.jadwalTayang});
+      required this.jadwalTayang});
   final Film movie;
   final int idPemesananTiket;
   final Jadwaltayang? jadwalTayang;
   @override
   State<paymentScreenState> createState() => _paymentScreenStateState();
+}
+
+NumberFormat currencyFormatter = NumberFormat.currency(
+  locale: 'id',
+  decimalDigits: 0,
+  name: 'Rp ',
+  symbol: 'Rp ',
+);
+
+double getHargaKursi(int idStudio){
+  print('idstudionya ini bro : $idStudio');
+  if(idStudio == 1){
+    return 35000;
+  }else if(idStudio == 2){
+    return 50000;
+  }else{
+    return 0;
+  }
 }
 
 class _paymentScreenStateState extends State<paymentScreenState> {
@@ -39,14 +57,8 @@ class _paymentScreenStateState extends State<paymentScreenState> {
 
   String currentDate = DateFormat('EEEEEE, dd-MM-yyyy').format(DateTime.now());
   late final int idStudio;
-
-  NumberFormat currencyFormatter = NumberFormat.currency(
-    locale: 'id',
-    decimalDigits: 0,
-    name: 'Rp ',
-    symbol: 'Rp ',
-  );
   late double totalPayment;
+  late String datePayment;
 
   Future<void> ambilToken() async {
     UserClient userClient = UserClient();
@@ -102,18 +114,16 @@ class _paymentScreenStateState extends State<paymentScreenState> {
     ambilToken();
     if (widget.jadwalTayang != null) {
       idStudio = widget.jadwalTayang!.idStudio;
+      datePayment = DateFormat('EEEEEE, dd-MM-yyyy').format(widget.jadwalTayang!.tanggalTayang);
     } else {
       idStudio = 0;
+      datePayment = 'Tanggal Kosong';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Set<String> mySeats = widget.mySeats;
-    List<Movie> soldMovies = [
-      Movie(name: 'Movie 1', price: 45.00),
-      Movie(name: 'Movie 2', price: 50.00),
-    ];
     if (idStudio == 1) {
       totalPayment = widget.mySeats.length * 35000;
     } else {
@@ -150,7 +160,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 const SizedBox(height: 20),
                 MovieDescription(
                   movie: movie,
-                  currentDate: currentDate,
+                  currentDate: datePayment,
                 ),
                 const SizedBox(height: 20),
                 Container(
@@ -193,7 +203,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text("${mySeats.length} x Rp 45.000",
+                                  Text("${mySeats.length} x ${currencyFormatter.format(getHargaKursi(idStudio))}",
                                       style: TextStyle(color: Colors.white)),
                                 ]),
                             SizedBox(height: 4),
@@ -403,10 +413,12 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                       if (responseHistory.statusCode == 200) {
                         // Buat PDF
                         createPDF(
-                          'John Doe',
-                          90.00,
+                          widget.movie,
+                          totalPayment,
                           context,
-                          soldMovies,
+                          datePayment,
+                          mySeats,
+                          idStudio,
                         );
                       } else {
                         showDialog(

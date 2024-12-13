@@ -43,7 +43,7 @@ class Promo extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                       child: Image.asset(
                         'http://10.0.2.2:8000${promo.fotoPromo}',
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),

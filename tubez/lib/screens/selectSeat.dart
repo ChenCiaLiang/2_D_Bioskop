@@ -33,6 +33,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   late Future<List<PemesananTiket>> futureTransaksi;
   late int rows;
   late int cols;
+  late String datePayment;
 
   NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -45,6 +46,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   void initState() {
     super.initState();
     _fetchSeatData();
+    datePayment = DateFormat('EEEEEE, dd-MM-yyyy').format(widget.jadwalTayang!.tanggalTayang);
   }
 
   @override
@@ -220,7 +222,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           showSlideInModal(context, mySeats, movie,
-                              widget.jadwalTayang!, currencyFormatter, 0);
+                              widget.jadwalTayang!, currencyFormatter, 0, datePayment);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -355,16 +357,15 @@ void showSlideInModal(
     BuildContext context,
     Set<String> mySeats,
     Film movie,
-    Jadwaltayang jadwalTayang,
+    Jadwaltayang? jadwalTayang,
     NumberFormat currencyFormatter,
-    double totalPayment) {
-  if (jadwalTayang.idStudio == 1) {
+    double totalPayment,
+    String datePayment) {
+  if (jadwalTayang!.idStudio == 1) {
     totalPayment = mySeats.length * 35000;
   } else {
     totalPayment = mySeats.length * 50000;
   }
-  String currentDate = DateFormat('EEEEEE, dd-MM-yyyy')
-      .format(DateTime.now()); // You can change the format as needed
 
   showModalBottomSheet(
     context: context,
@@ -421,7 +422,7 @@ void showSlideInModal(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${movie.judul}",
+                              movie.judul,
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -430,7 +431,7 @@ void showSlideInModal(
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "$currentDate",
+                              datePayment,
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -561,8 +562,8 @@ void showSlideInModal(
                                 builder: (context) => paymentScreenState(
                                   mySeats: mySeats,
                                   movie: movie,
-                                  idPemesananTiket:
-                                      idPemesananTiket, // Pass the 'id'
+                                  idPemesananTiket: idPemesananTiket,
+                                  jadwalTayang: jadwalTayang,
                                 ),
                               ),
                             );
