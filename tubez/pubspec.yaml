@@ -25,6 +25,7 @@ dependencies:
   http: ^0.13.6
   mime: ^2.0.0
   path: ^1.9.0
+  barcode: ^2.1.0
   
 dev_dependencies:
   camera: ^0.10.5+2
@@ -46,6 +47,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/storage/films/
     - assets/images/
 
   fonts:

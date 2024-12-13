@@ -29,6 +29,8 @@ class TransaksiClient {
         },
         body: bodyData,
       );
+      print('asdasd ${response.body}');
+      print('aaaaaaaaaaaaaaaaaaaa ${response.statusCode}');
 
       if (response.statusCode != 200) {
         throw Exception('Failed to create transaksi: ${response.body}');

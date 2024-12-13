@@ -60,9 +60,9 @@ class HistoryController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'idTransaksi' => 'required',
+            'idUser' => 'required',
             'status' => 'required',
             'isReview' => 'required|integer|max:1',
         ]);
@@ -71,6 +71,7 @@ class HistoryController extends Controller
 
             History::create([
                 'idTransaksi' => $request->idTransaksi,
+                'idUser' => $request->idUser,
                 'status' => $request->status,
                 'isReview' => $request->isReview,
             ]);

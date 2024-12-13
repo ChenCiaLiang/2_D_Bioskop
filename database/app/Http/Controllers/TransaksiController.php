@@ -15,8 +15,8 @@ class TransaksiController extends Controller
     {
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
-            'idUser' => 'required|integer', // Ensure the user exists
-            'idPemesananTiket' => 'required|integer', // Ensure PemesananTiket exists
+            'idUser' => 'required', // Ensure the user exists
+            'idPemesananTiket' => 'required', // Ensure PemesananTiket exists
             'metodePembayaran' => 'required|string', // Validate the payment method
             'totalHarga' => 'required|numeric', // Validate total price
         ]);
@@ -51,7 +51,7 @@ class TransaksiController extends Controller
                 'status' => 'success',
                 'message' => 'Transaction successfully created',
                 'data' => $transaksi
-            ], 201); // 201 Created
+            ], 200); // 201 Created
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
