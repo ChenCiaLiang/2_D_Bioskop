@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/screens/register.dart';
 import 'package:tubez/theme.dart';
@@ -6,6 +7,8 @@ import 'package:tubez/widgets/login_options.dart';
 import 'package:tubez/widgets/navigation.dart';
 import 'package:tubez/component/form_component.dart';
 import 'package:tubez/client/UserClient.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginScreen extends StatefulWidget {
   final Map? data;
@@ -116,25 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     )),
               ),
               const SizedBox(
-                height: 10,
+                height: 40,
               ),
-              TextButton(
-                  onPressed: () {
-                    Map<String, dynamic> formData = {};
-                    formData['username'] = emailController.text;
-                    formData['password'] = passwordController.text;
-                    pushRegister(context);
-                  },
-                  child: const Text(
-                    'Forgot Password',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationColor: Color.fromARGB(255, 179, 157, 219),
-                    ),
-                  )),
-              const SizedBox(
-                height: 10,
-              ),
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -152,60 +139,77 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
                       onPressed: () async {
-                        try {
-                          bool response = await UserClient.login(
-                              emailController.text, passwordController.text);
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            bool response = await UserClient.login(
+                                emailController.text, passwordController.text);
 
-                          if (response) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const navigationBar()),
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: const Text('Password Salah'),
-                                content: TextButton(
-                                    onPressed: () => pushRegister(context),
-                                    child: const Text('Daftar Disini !!!')),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'Cancel'),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text('OK'),
-                                  ),
+                            if (response) {
+                              final snackBar = SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Success!',
+                                  message: 'Berhasil Login!',
+                                  contentType: ContentType.success,
+                                ),
+                              );
+
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                              await Future.delayed(Duration(seconds: 1));
+                              
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const navigationBar()),
+                              );
+                            } else {
+                              Alert(
+                                context: context,
+                                type: AlertType.error,
+                                title: "Password Salah",
+                                desc: "Password Salah",
+                                buttons: [
+                                  DialogButton(
+                                    child: Text(
+                                      "OK",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.pop(context),
+                                    width: 120,
+                                  )
                                 ],
-                              ),
-                            );
-                          }
-                        } catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const Text('Error'),
-                              content: TextButton(
+                              ).show();
+                            } 
+                          } catch (e) {
+                            Alert(
+                              context: context,
+                              type: AlertType.error,
+                              title: "Username atau Password Salah",
+                              buttons: [
+                                DialogButton(
+                                  child: Text(
+                                    "Sign Up",
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                  color: Colors.amber,
                                   onPressed: () => pushRegister(context),
-                                  child: const Text('Samting wong')),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Cancel'),
-                                  child: const Text('Cancel'),
+                                  width: 120,
                                 ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, 'OK'),
-                                  child: const Text('OK'),
-                                ),
+                                DialogButton(
+                                  child: Text(
+                                    "Confirm",
+                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                  ),
+                                  color: Colors.lightGreen,
+                                  onPressed: () => Navigator.pop(context),
+                                  width: 120,
+                                )
                               ],
-                            ),
-                          );
+                            ).show();
+                          }
                         }
                       },
                       child: const Text('Log In')),
