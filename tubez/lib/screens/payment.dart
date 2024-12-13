@@ -26,6 +26,7 @@ class paymentScreenState extends StatefulWidget {
 
 class _paymentScreenStateState extends State<paymentScreenState> {
   String _metodePembayaran = "Not Selected";
+  String currentDate = DateFormat('EEEEEE, dd-MM-yyyy').format(DateTime.now());
 
   NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -73,7 +74,10 @@ class _paymentScreenStateState extends State<paymentScreenState> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                MovieDescription(movie: movie),
+                MovieDescription(
+                  movie: movie,
+                  currentDate: currentDate,
+                ),
                 const SizedBox(height: 20),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -270,6 +274,12 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
+                    createPDF(
+                      'John Doe',
+                      90.00,
+                      context,
+                      soldMovies,
+                    );
                     try {
                       var response = await TransaksiClient.createTransaksi(
                           Transaksi(
@@ -277,36 +287,6 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                               idUser: 1,
                               totalHarga: totalPayment,
                               idPemesananTiket: widget.idPemesananTiket));
-
-                      if (response.statusCode == 200) {
-                        createPDF(
-                          'John Doe',
-                          90.00,
-                          context,
-                          soldMovies,
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text('Password Salah'),
-                            content: TextButton(
-                                onPressed: () => {},
-                                child: const Text('Daftar Disini !!!')),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(context, 'Cancel'),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
                     } catch (e) {
                       showDialog(
                         context: context,

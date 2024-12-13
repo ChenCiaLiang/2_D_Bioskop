@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/client/PemesananTiketClient.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
@@ -15,32 +16,6 @@ import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
 import 'package:tubez/screens/payment.dart';
 import 'package:tubez/entity/Film.dart';
 
-class TrapeziumPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = const Color.fromARGB(
-          255, 255, 255, 255) // Set the color of the trapezium
-      ..style = PaintingStyle.fill; // Fill the trapezium
-
-    Path path = Path()
-      ..moveTo(size.width * 0.1, 0) // Top-left corner
-      ..lineTo(
-          size.width * 0.2, size.height) // Bottom-left corner (20% from left)
-      ..lineTo(
-          size.width * 0.8, size.height) // Bottom-right corner (80% from left)
-      ..lineTo(size.width * 0.9, 0) // Top-right corner
-      ..close(); // Close the path to form the flipped trapezium
-
-    canvas.drawPath(path, paint); // Draw the trapezium path
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false; // Only repaint if needed
-  }
-}
-
 class selectSeatScreen extends StatefulWidget {
   const selectSeatScreen(
       {super.key, required this.movie, required this.jadwalTayang});
@@ -52,11 +27,20 @@ class selectSeatScreen extends StatefulWidget {
 }
 
 class _selectSeatScreenState extends State<selectSeatScreen> {
+  late int idStudio;
   Set<SeatNumber> selectedSeats = Set();
   Set<String> mySeats = {}; // This will store the translated seat numbers
   late Future<List<PemesananTiket>> futureTransaksi;
-  final int rows = 10;
-  final int cols = 10;
+  late int rows;
+  late int cols;
+
+  NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    decimalDigits: 0,
+    name: 'Rp ',
+    symbol: 'Rp ',
+  );
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +50,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   @override
   void didUpdateWidget(covariant selectSeatScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (widget.jadwalTayang?.id != oldWidget.jadwalTayang?.id) {
       _fetchSeatData();
     } else {
@@ -74,6 +59,15 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   }
 
   void _fetchSeatData() {
+    idStudio = widget.jadwalTayang!.idStudio;
+    if (idStudio == 1) {
+      rows = 10;
+      cols = 10;
+    } else {
+      rows = 8;
+      cols = 8;
+    }
+
     if (widget.jadwalTayang?.id != null) {
       setState(() {
         futureTransaksi =
@@ -118,6 +112,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   @override
   Widget build(BuildContext context) {
     final Film movie = widget.movie;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -136,10 +131,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                   children: [
                     // First widget: CustomPaint for the trapezium
                     Container(
-                      child: CustomPaint(
-                        size: Size(MediaQuery.of(context).size.width, 100),
-                        painter: TrapeziumPainter(),
-                      ),
+                      child: Image.asset('assets/images/screen.png'),
                     ),
 
                     const SizedBox(height: 10),
@@ -227,8 +219,8 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          showSlideInModal(
-                              context, mySeats, movie, widget.jadwalTayang!);
+                          showSlideInModal(context, mySeats, movie,
+                              widget.jadwalTayang!, currencyFormatter, 0);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -359,8 +351,21 @@ class SeatNumber {
   }
 }
 
-void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie,
-    Jadwaltayang jadwalTayang) {
+void showSlideInModal(
+    BuildContext context,
+    Set<String> mySeats,
+    Film movie,
+    Jadwaltayang jadwalTayang,
+    NumberFormat currencyFormatter,
+    double totalPayment) {
+  if (jadwalTayang.idStudio == 1) {
+    totalPayment = mySeats.length * 35000;
+  } else {
+    totalPayment = mySeats.length * 50000;
+  }
+  String currentDate = DateFormat('EEEEEE, dd-MM-yyyy')
+      .format(DateTime.now()); // You can change the format as needed
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allow height to adjust based on content
@@ -425,11 +430,11 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "Monday, 07 Desember 2024",
+                              "$currentDate",
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 72, 70, 70)),
+                                  color: Color.fromARGB(255, 180, 180, 180)),
                             ),
                           ],
                         ),
@@ -522,7 +527,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie,
                               color: Colors.white),
                         ),
                         Text(
-                          "Rp 90.000",
+                          currencyFormatter.format(totalPayment),
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
