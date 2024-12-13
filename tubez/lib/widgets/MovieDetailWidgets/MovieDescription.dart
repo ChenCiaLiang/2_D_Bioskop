@@ -61,7 +61,7 @@ class MovieDescription extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "${movie.jumlahRating}",
+                                "${movie.jumlahRating.toStringAsFixed(1)}",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,

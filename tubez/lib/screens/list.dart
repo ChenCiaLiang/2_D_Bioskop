@@ -40,13 +40,14 @@ class _ListScreenState extends State<ListScreen> {
   Iterable<SpesialPromo> spesialPromoList = [];
   Iterable<Menu> menuList = [];
   int selectedTab = 0;
+  late Future<void> dataMakanan;
 
   @override
   void initState() {
     super.initState();
     ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
     super.initState();
-    fetchAllData();
+    dataMakanan = fetchAllData();
   }
 
   Future<void> ambilToken() async {
@@ -104,33 +105,56 @@ class _ListScreenState extends State<ListScreen> {
           children: [
             MenuHeader(size: size, user: user),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.only(left: 12),
-                      child: const Text(
-                        "Today's Special Offer!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
+              child: FutureBuilder<void>(
+                future: dataMakanan,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Spesialpromocarousel(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'spesial'), menuList: menuList.toList()),
-                    const SizedBox(height: 20),
-                    const PromoHeader(),
-                    const SizedBox(height: 20),
-                    Promo(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'promo'), menuList: menuList.toList()),
-                    const SizedBox(height: 20),
-                    Menus(menuList: menuList.toList()),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                    );
+                  } else if (menuList.isEmpty || spesialPromoList.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'Fetching Data',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }else{
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.only(left: 12),
+                            child: const Text(
+                              "Today's Special Offer!",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Spesialpromocarousel(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'spesial'), menuList: menuList.toList()),
+                          const SizedBox(height: 20),
+                          const PromoHeader(),
+                          const SizedBox(height: 20),
+                          Promo(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'promo'), menuList: menuList.toList()),
+                          const SizedBox(height: 20),
+                          Menus(menuList: menuList.toList()),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  } 
+                },
               ),
             ),
           ],
