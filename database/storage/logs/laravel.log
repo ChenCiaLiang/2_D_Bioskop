@@ -13026,6 +13026,7 @@ Did you mean one of these?
 #36 D:\\SEMESTER 5\\PBP\\TUBES\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('D:\\\\SEMESTER 5\\\\P...')
 #37 {main}
 "} 
+<<<<<<< Updated upstream
 [2024-12-13 10:37:05] local.ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `personal_access_tokens` where `personal_access_tokens`.`id` = 73 limit 1) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select * from `personal_access_tokens` where `personal_access_tokens`.`id` = 73 limit 1) at C:\\Users\\Lenovo\\OneDrive\\Documents\\K\\S 5\\PBP\\Pemrograman-Berbasis-Platform\\TUBES\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:825)
 [stacktrace]
 #0 C:\\Users\\Lenovo\\OneDrive\\Documents\\K\\S 5\\PBP\\Pemrograman-Berbasis-Platform\\TUBES\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(979): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
@@ -13148,4 +13149,50 @@ Did you mean one of these?
 #61 C:\\Users\\Lenovo\\OneDrive\\Documents\\K\\S 5\\PBP\\Pemrograman-Berbasis-Platform\\TUBES\\database\\public\\index.php(17): Illuminate\\Foundation\\Application->handleRequest(Object(Illuminate\\Http\\Request))
 #62 C:\\Users\\Lenovo\\OneDrive\\Documents\\K\\S 5\\PBP\\Pemrograman-Berbasis-Platform\\TUBES\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(23): require_once('C:\\\\Users\\\\Lenovo...')
 #63 {main}
+=======
+[2024-12-13 11:13:24] local.ERROR: No arguments expected for "optimize" command, got "clear". {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): No arguments expected for \"optimize\" command, got \"clear\". at D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php:193)
+[stacktrace]
+#0 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(86): Symfony\\Component\\Console\\Input\\ArgvInput->parseArgument('clear')
+#1 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(71): Symfony\\Component\\Console\\Input\\ArgvInput->parseToken('clear', true)
+#2 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\Input.php(53): Symfony\\Component\\Console\\Input\\ArgvInput->parse()
+#3 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Command\\Command.php(238): Symfony\\Component\\Console\\Input\\Input->bind(Object(Symfony\\Component\\Console\\Input\\InputDefinition))
+#4 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#5 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(1047): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#6 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(316): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Foundation\\Console\\OptimizeCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#7 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(167): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#9 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1205): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#10 D:\\Tampungan Clone\\2_D_Bioskop\\database\\artisan(13): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#11 {main}
+"} 
+[2024-12-13 11:30:25] local.ERROR: No arguments expected for "optimize" command, got "clear". {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): No arguments expected for \"optimize\" command, got \"clear\". at D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php:193)
+[stacktrace]
+#0 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(86): Symfony\\Component\\Console\\Input\\ArgvInput->parseArgument('clear')
+#1 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(71): Symfony\\Component\\Console\\Input\\ArgvInput->parseToken('clear', true)
+#2 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\Input.php(53): Symfony\\Component\\Console\\Input\\ArgvInput->parse()
+#3 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Command\\Command.php(238): Symfony\\Component\\Console\\Input\\Input->bind(Object(Symfony\\Component\\Console\\Input\\InputDefinition))
+#4 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#5 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(1047): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#6 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(316): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Foundation\\Console\\OptimizeCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#7 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(167): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#9 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1205): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#10 D:\\Tampungan Clone\\2_D_Bioskop\\database\\artisan(13): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#11 {main}
+"} 
+[2024-12-13 11:30:56] local.ERROR: No arguments expected for "optimize" command, got "clear". {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): No arguments expected for \"optimize\" command, got \"clear\". at D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php:193)
+[stacktrace]
+#0 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(86): Symfony\\Component\\Console\\Input\\ArgvInput->parseArgument('clear')
+#1 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\ArgvInput.php(71): Symfony\\Component\\Console\\Input\\ArgvInput->parseToken('clear', true)
+#2 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Input\\Input.php(53): Symfony\\Component\\Console\\Input\\ArgvInput->parse()
+#3 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Command\\Command.php(238): Symfony\\Component\\Console\\Input\\Input->bind(Object(Symfony\\Component\\Console\\Input\\InputDefinition))
+#4 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#5 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(1047): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#6 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(316): Symfony\\Component\\Console\\Application->doRunCommand(Object(Illuminate\\Foundation\\Console\\OptimizeCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#7 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\symfony\\console\\Application.php(167): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#8 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#9 D:\\Tampungan Clone\\2_D_Bioskop\\database\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1205): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#10 D:\\Tampungan Clone\\2_D_Bioskop\\database\\artisan(13): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#11 {main}
+>>>>>>> Stashed changes
 "} 
