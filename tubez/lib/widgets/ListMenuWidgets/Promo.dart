@@ -41,7 +41,7 @@ class Promo extends StatelessWidget {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                      child: Image.asset(
+                      child: Image.network(
                         'http://10.0.2.2:8000${promo.fotoPromo}',
                         fit: BoxFit.cover,
                       ),
