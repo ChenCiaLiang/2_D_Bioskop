@@ -41,12 +41,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/pemesanantiket', [PemesananTiketController::class, 'store']);
 
+
     Route::get('/menu/get', [MenuController::class, 'fetchAll']);
     Route::get('/menu/find/{nama}', [MenuController::class, 'find']);
     Route::get('/spesialPromo/get', [SpesialPromoController::class, 'fetchAll']);
 
     Route::get('/film/get', [FilmController::class, 'fetchAll']);
     Route::get('/film/find/{judul}', [FilmController::class, 'find']);
+    Route::post('/film/updateRating/{id}', [FilmController::class, 'updateRating']);
 
     Route::get('/jadwaltayang/get/{id}', [JadwalTayangController::class, 'fetchByIdFilm']);
 

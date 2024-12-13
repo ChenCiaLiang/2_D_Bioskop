@@ -124,13 +124,14 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                             fontSize: 16,
                           ),
                         ),
-                      ),
-                      Text(
-                        currencyFormatter.format(promo.harga),
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+            
+                        Text(
+                          currencyFormatter.format(promo.harga),
+                          style: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

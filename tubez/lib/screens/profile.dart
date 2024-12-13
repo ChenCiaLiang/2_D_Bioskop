@@ -56,7 +56,7 @@ class _profileScreenState extends State<profileScreen> {
       print("Token is null");
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
