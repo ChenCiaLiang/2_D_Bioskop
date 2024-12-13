@@ -368,8 +368,25 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
+                    if (_metodePembayaran == "Not Selected") {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text(
+                              'Please select a payment method before proceeding.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                      return;
+                    }
+
                     if (userId == null) {
-                      // Tampilkan pesan kesalahan jika userId tidak ditemukan
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
@@ -384,94 +401,25 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                           ],
                         ),
                       );
-                      return; // Keluar dari fungsi jika userId tidak ada
+                      return;
                     }
 
                     try {
                       var response = await TransaksiClient.createTransaksi(
-                          Transaksi(
-                              // Menggunakan alias
-                              metodePembayaran: _metodePembayaran,
-                              idUser: BigInt.from(userId!).toInt(),
-                              totalHarga: totalPayment,
-                              idPemesananTiket:
-                                  BigInt.from(widget.idPemesananTiket)
-                                      .toInt()));
+                        Transaksi(
+                          metodePembayaran: _metodePembayaran,
+                          idUser: BigInt.from(userId!).toInt(),
+                          totalHarga: totalPayment,
+                          idPemesananTiket:
+                              BigInt.from(widget.idPemesananTiket).toInt(),
+                        ),
+                      );
 
                       var data = json.decode(response.body)['data'];
                       BigInt idTransaksi = BigInt.from(data['id']);
-                      print('anjengoaksoakdsoak ${data['id']}');
-
-                      Response responseHistory = await HistoryClient.create(
-                          history_entity.History(
-                              idTransaksi: idTransaksi,
-                              idUser: BigInt.from(
-                                  userId!), // Menggunakan ID pengguna yang didapat
-                              status: 'Uncompleted', // Status yang sesuai
-                              isReview: false));
-
-                      print('asdasd ${responseHistory.statusCode}');
-                      if (responseHistory.statusCode == 200) {
-                        // History berhasil disimpan
-                        print("History created successfully");
-                      } else {
-                        // Tangani jika penyimpanan history gagal
-                        print(
-                            "Failed to create history: ${responseHistory.reasonPhrase}");
-                      }
-
-                      if (responseHistory.statusCode == 200) {
-                        // Buat PDF
-                        createPDF(
-                          widget.movie,
-                          totalPayment,
-                          context,
-                          datePayment,
-                          mySeats,
-                          idStudio,
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text('Error'),
-                            content: TextButton(
-                                onPressed: () => {},
-                                child: const Text('Transaction failed')),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(context, 'Cancel'),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                      print('Transaction ID: $idTransaksi');
                     } catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: const Text('Error'),
-                          content: TextButton(
-                              onPressed: () => {},
-                              child: Text('Something went wrong ${e}')),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'OK'),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
+                      print('Error: $e');
                     }
                   },
                   child: const Padding(

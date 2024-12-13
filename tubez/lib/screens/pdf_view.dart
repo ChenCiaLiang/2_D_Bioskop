@@ -86,6 +86,7 @@ Future<void> createPDF(
                           softWrap: true,
                           overflow: pw.TextOverflow.clip,
                         ),
+                        pw.SizedBox(height: 20),
                         pw.Text(
                           "Atma Cinema",
                           style: pw.TextStyle(
@@ -95,6 +96,7 @@ Future<void> createPDF(
                           softWrap: true,
                           overflow: pw.TextOverflow.clip,
                         ),
+                        pw.SizedBox(height: 20),
                         pw.Text(
                           "Universitas Atma Jaya Cinema",
                           style: pw.TextStyle(
@@ -104,6 +106,7 @@ Future<void> createPDF(
                           softWrap: true,
                           overflow: pw.TextOverflow.clip,
                         ),
+                        pw.SizedBox(height: 20),
                         pw.Text(
                           datePayment,
                           style: pw.TextStyle(
