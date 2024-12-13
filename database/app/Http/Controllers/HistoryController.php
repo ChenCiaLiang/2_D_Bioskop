@@ -29,9 +29,9 @@ class HistoryController extends Controller
                 'transaksi.pemesananTiket.JadwalTayang.film',
                 'transaksi.pemesananTiket.JadwalTayang.studio',
             ])
-            ->where('idUser', $userId)
-            ->get();
-            
+                ->where('idUser', $userId)
+                ->get();
+
             // Jika tidak ada data yang ditemukan
             if ($historyData->isEmpty()) {
                 return response()->json([
@@ -64,13 +64,15 @@ class HistoryController extends Controller
         $request->validate([
             'idTransaksi' => 'required',
             'status' => 'required',
+            'idUser' => 'required',
             'isReview' => 'required|integer|max:1',
         ]);
-        
+
         try {
 
             History::create([
                 'idTransaksi' => $request->idTransaksi,
+                'idUser' => $request->idUser,
                 'status' => $request->status,
                 'isReview' => $request->isReview,
             ]);
