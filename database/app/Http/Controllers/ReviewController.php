@@ -18,22 +18,43 @@ class ReviewController extends Controller
             'review' => 'required|string',
         ]);
 
-        $review = Review::create([
-            'idFilm' => $request->idFilm,
-            'idHistory' => $request->idHistory,
-            'rating' => $request->rating,
-            'review' => $request->review,
-        ]);
-
-        return response()->json([ // respon ketika berhasil
-            "status" => true,
-            "message" => "Create Review Successful",
-        ], 200);
+        try {
+            $review = Review::create([
+                'idFilm' => $request->idFilm,
+                'idHistory' => $request->idHistory,
+                'rating' => $request->rating,
+                'review' => $request->review,
+            ]);
+    
+            return response()->json([ // respon ketika berhasil
+                "status" => true,
+                "message" => "Create Review Successful",
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+                'history' => [],
+            ], 400);
+        }
     }
 
-    public function update($id)
+    public function index($id)
     {
-        $review = Review::find($id);
-        return view('review.edit', compact('review'));
+        $review = Review::query()->where('idHistory', $id)->get();
+
+        if (!$review) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Review not found',
+                'review' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Review data fetched successfully',
+            'review' => $review,
+        ], 200);
     }
 }

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
-import 'package:tubez/entity/History.dart'; // Mengimpor model History
-import 'package:tubez/client/HistoryClient.dart'; // Mengimpor HistoryClient untuk mengambil data
+import 'package:tubez/entity/History.dart';
+import 'package:tubez/client/HistoryClient.dart';
 import 'package:tubez/client/UserClient.dart';
-import 'package:tubez/widgets/historyWidgets/isiHistory.dart'; // Mengimpor IsiHistory
+import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -21,7 +21,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     await ambilToken();
     if (userId != null) {
       setState(() {
-        _historyFuture = HistoryClient.fetchHistory(userId!);
+        _historyFuture = HistoryClient.fetchHistory();
       });
     }
   }
@@ -100,9 +100,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           .toString() ??
                       'Unknown Date',
                   total: 'Rp ${history.transaksi?.totalHarga ?? 0}',
-                  isReviewed: history.isReview ?? false,
+                  isReview: history.isReview ?? false,
                   ticketCount:
                       history.transaksi?.pemesanan_tiket?.countTiket ?? 0,
+                  idFilm: history
+                      .transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.id,
+                  idHistory: history.id!,
                 );
               },
             );
