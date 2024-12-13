@@ -71,12 +71,12 @@ class FilmController extends Controller
         try{
             $film = Film::find($id);
             $review = Review::query()->where('idFilm',$id)->get();
-            
+            print('testtetete');
             $totalRating = $review->sum('rating');
             $totalReview = $review->count();
             $rating = $totalRating / $totalReview;
 
-            $film->rating = $rating;
+            $film->jumlahRating = $rating;
             $film->save();
 
             if(!$film){

@@ -68,6 +68,28 @@ class FilmClient {
       throw Exception('Failed to load films');
     }
   }
+  static Future<bool> updateRating(id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+
+      var response = await post(Uri.http(url, '$endpoint/updateRating/$id'), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      });
+
+      print('asdasdlasksadk ${response.statusCode}');
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load films');
+      }
+
+      return true;
+      
+    } catch (e) {
+      print("Error: $e");
+      throw Exception('Failed to load films');
+    }
+  }
 
   // // Mengambil data User dari API sesuai ID
   // static Future<User> find(id) async {

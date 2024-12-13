@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:tubez/client/FilmClient.dart';
 import 'package:tubez/client/ReviewClient.dart';
 import 'dart:convert';
-
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/entity/Review.dart'; // Untuk encode JSON
 
@@ -135,11 +135,13 @@ class _IsiReviewState extends State<IsiReview> {
     bool successUpdate = await ReviewClient.updateStatusHistory(
         widget.idHistory, "Completed", 1);
 
+    bool updateRating = await FilmClient.updateRating(widget.idFilm);
+
     setState(() {
       _isLoading = false; // Menyembunyikan loading setelah selesai
     });
 
-    if (success && successUpdate) {
+    if (success && successUpdate && updateRating) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Review berhasil dikirim'),
       ));

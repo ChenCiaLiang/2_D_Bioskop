@@ -70,7 +70,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Text(
-                'No History Found',
+                'Fetching History',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
