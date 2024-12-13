@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:tubez/entity/JadwalTayang.dart';
+
 class TimeWidget extends StatefulWidget {
-  const TimeWidget({super.key, required this.jadwalTayang, required this.onTimeSelected});
+  const TimeWidget(
+      {super.key, required this.jadwalTayang, required this.onTimeSelected});
   final List<Jadwaltayang> jadwalTayang;
   final Function(int) onTimeSelected;
   @override
@@ -14,12 +16,12 @@ class _TimeWidgetState extends State<TimeWidget> {
   @override
   Widget build(BuildContext context) {
     final ambilJam = widget.jadwalTayang
-        .map((e) => e.jadwal?.jamTayang) 
+        .map((e) => e.jadwal?.jamTayang)
         .where((jamTayang) => jamTayang != null)
         .toSet()
         .toList();
 
-        final limaJamTayang = ambilJam.take(5).toList();
+    final limaJamTayang = ambilJam.take(5).toList();
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -36,7 +38,7 @@ class _TimeWidgetState extends State<TimeWidget> {
                 setState(() {
                   selectedIndex = index;
                 });
-                
+
                 widget.onTimeSelected(widget.jadwalTayang[index].idJadwal!);
               },
               style: ButtonStyle(
@@ -53,7 +55,7 @@ class _TimeWidgetState extends State<TimeWidget> {
                     borderRadius: BorderRadius.circular(12.0),
                     side: BorderSide(
                         color: isActive ? Colors.amber : Colors.white,
-                        width: 2),
+                        width: 1),
                   ),
                 ),
               ),

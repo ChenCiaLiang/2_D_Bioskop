@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tubez/client/PemesananTiketClient.dart';
 import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/entity/transaksi.dart';
 import 'package:tubez/screens/pdf_view.dart'; // Import your pdf view file
 import 'package:tubez/screens/selectPayment.dart';
-import 'package:tubez/widgets/paymentWidgets/CountDown.dart';
 import 'package:tubez/widgets/paymentWidgets/MovieDescription.dart';
 import 'package:tubez/model/pdfItem.dart'; // Make sure this import exists for your 'Movie' model
 import 'package:tubez/entity/Film.dart';
@@ -17,16 +16,20 @@ class paymentScreenState extends StatefulWidget {
       {super.key,
       required this.mySeats,
       required this.movie,
-      required this.idPemesananTiket});
+      required this.idPemesananTiket,
+      this.jadwalTayang});
   final Film movie;
   final int idPemesananTiket;
+  final Jadwaltayang? jadwalTayang;
   @override
   State<paymentScreenState> createState() => _paymentScreenStateState();
 }
 
 class _paymentScreenStateState extends State<paymentScreenState> {
   String _metodePembayaran = "Not Selected";
+
   String currentDate = DateFormat('EEEEEE, dd-MM-yyyy').format(DateTime.now());
+  late final int idStudio;
 
   NumberFormat currencyFormatter = NumberFormat.currency(
     locale: 'id',
@@ -34,6 +37,17 @@ class _paymentScreenStateState extends State<paymentScreenState> {
     name: 'Rp ',
     symbol: 'Rp ',
   );
+  late double totalPayment;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.jadwalTayang != null) {
+      idStudio = widget.jadwalTayang!.idStudio;
+    } else {
+      idStudio = 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +57,12 @@ class _paymentScreenStateState extends State<paymentScreenState> {
       Movie(name: 'Movie 1', price: 45.00),
       Movie(name: 'Movie 2', price: 50.00),
     ];
+    if (idStudio == 1) {
+      totalPayment = widget.mySeats.length * 35000;
+    } else {
+      totalPayment = widget.mySeats.length * 50000;
+    }
     final Film movie = widget.movie;
-
-    double totalPayment = 45000.00 * widget.mySeats.length;
-
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
