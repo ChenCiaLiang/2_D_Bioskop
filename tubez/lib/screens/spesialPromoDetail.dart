@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
 import 'package:tubez/screens/list.dart';
@@ -13,7 +14,8 @@ class SpesialPromoDetailScreen extends StatefulWidget {
   });
 
   @override
-  _SpesialPromoDetailScreenState createState() => _SpesialPromoDetailScreenState();
+  _SpesialPromoDetailScreenState createState() =>
+      _SpesialPromoDetailScreenState();
 }
 
 class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
@@ -41,7 +43,7 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                 Positioned.fill(
                   //tampil foto spesialnya-_-
                   child: Image.network(
-                    'http://10.0.2.2:8000${spesial.fotoPromo}',
+                    '$url${spesial.fotoPromo}',
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,
@@ -176,7 +178,7 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
     String deskripsi = '';
 
     for (var i = 0; i < menuList.length; i++) {
-      if(i != 0){
+      if (i != 0) {
         deskripsi += ' + ';
       }
       deskripsi += menuList[i].nama;

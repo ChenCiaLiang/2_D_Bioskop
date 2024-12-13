@@ -15,6 +15,7 @@ import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
 import 'package:tubez/screens/payment.dart';
 import 'package:tubez/entity/Film.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class selectSeatScreen extends StatefulWidget {
   const selectSeatScreen(
@@ -46,7 +47,8 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
   void initState() {
     super.initState();
     _fetchSeatData();
-    datePayment = DateFormat('EEEEEE, dd-MM-yyyy').format(widget.jadwalTayang!.tanggalTayang);
+    datePayment = DateFormat('EEEEEE, dd-MM-yyyy')
+        .format(widget.jadwalTayang!.tanggalTayang);
   }
 
   @override
@@ -221,8 +223,14 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          showSlideInModal(context, mySeats, movie,
-                              widget.jadwalTayang!, currencyFormatter, 0, datePayment);
+                          showSlideInModal(
+                              context,
+                              mySeats,
+                              movie,
+                              widget.jadwalTayang!,
+                              currencyFormatter,
+                              0,
+                              datePayment);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -414,8 +422,7 @@ void showSlideInModal(
                       Container(
                           height: 80,
                           width: 80,
-                          child: Image.network(
-                              'http://10.0.2.2:8000${movie.fotoFilm}')),
+                          child: Image.network('$url${movie.fotoFilm}')),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(

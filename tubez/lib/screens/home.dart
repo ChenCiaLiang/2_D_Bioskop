@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 
 import 'package:tubez/entity/Film.dart';
 import 'package:tubez/model/tiket.dart';
@@ -34,7 +35,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? userId;
-  User user = User(email: '', id: 0, username: '', password: '', noTelepon: '', tanggalLahir: '', foto: '');
+  User user = User(
+      email: '',
+      id: 0,
+      username: '',
+      password: '',
+      noTelepon: '',
+      tanggalLahir: '',
+      foto: '');
   Iterable<Film> listFilm = [];
 
   @override
@@ -44,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     fetchDataFilm();
   }
-  
+
   Future<void> ambilToken() async {
     UserClient userClient = UserClient();
     String? token = await userClient.getToken();
@@ -75,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final data = await FilmClient.fetchAll();
 
-      if(data.isEmpty){
+      if (data.isEmpty) {
         throw Exception('Data is empty');
       }
 
@@ -84,14 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
       });
 
       listFilm.forEach((film) {
-        print(film.fotoFilm); // Assuming `film` is a `Film` object with a `judul` attribute
+        print(film
+            .fotoFilm); // Assuming `film` is a `Film` object with a `judul` attribute
       });
-
     } catch (e) {
       log(e.toString());
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          'http://10.0.2.2:8000/storage/films/venom2.jpg',
+                          '$url/storage/films/venom2.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),

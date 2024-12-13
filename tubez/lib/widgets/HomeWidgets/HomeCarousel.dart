@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/movieDetail.dart';
 import 'package:tubez/entity/Film.dart';
 
@@ -15,13 +16,15 @@ class HomeCarousel extends StatefulWidget {
   State<HomeCarousel> createState() => _HomeCarouselState();
 }
 
-class _HomeCarouselState extends State<HomeCarousel> with TickerProviderStateMixin{
-
+class _HomeCarouselState extends State<HomeCarousel>
+    with TickerProviderStateMixin {
   late List<Film> carouselFilm;
   @override
   void initState() {
     super.initState();
-    carouselFilm = widget.filmList.where((movie) => movie.status == 'Now Playing').toList();
+    carouselFilm = widget.filmList
+        .where((movie) => movie.status == 'Now Playing')
+        .toList();
   }
 
   @override
@@ -29,7 +32,9 @@ class _HomeCarouselState extends State<HomeCarousel> with TickerProviderStateMix
     super.didUpdateWidget(oldWidget);
     if (widget.filmList != oldWidget.filmList) {
       setState(() {
-        carouselFilm = widget.filmList.where((movie) => movie.status == 'Now Playing').toList();
+        carouselFilm = widget.filmList
+            .where((movie) => movie.status == 'Now Playing')
+            .toList();
       });
     }
   }
@@ -44,13 +49,17 @@ class _HomeCarouselState extends State<HomeCarousel> with TickerProviderStateMix
           enlargeCenterPage: true,
           viewportFraction: 0.65),
       items: carouselFilm.map((movie) {
-        if(movie.status != "Now Playing"){
+        if (movie.status != "Now Playing") {
           return Container();
-        }else{
+        } else {
           return GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => moveiDetailScreen(movie: movie,)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => moveiDetailScreen(
+                            movie: movie,
+                          )));
             },
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -59,9 +68,10 @@ class _HomeCarouselState extends State<HomeCarousel> with TickerProviderStateMix
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        'http://10.0.2.2:8000${movie.fotoFilm!}',
+                        '$url${movie.fotoFilm!}',
                         fit: BoxFit.cover,
                         width: 220,
                       ),

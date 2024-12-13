@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/movieDetail.dart';
 import 'package:tubez/entity/Film.dart';
 
 class topRatedScreen extends StatefulWidget {
   const topRatedScreen({super.key, required this.movieList});
   final Iterable<Film> movieList;
-  
+
   @override
   State<topRatedScreen> createState() => _topRatedScreenState();
 }
 
-class _topRatedScreenState extends State<topRatedScreen> with TickerProviderStateMixin {
-  
+class _topRatedScreenState extends State<topRatedScreen>
+    with TickerProviderStateMixin {
   late List<Film> topRatedMovies;
   @override
   void initState() {
     super.initState();
-    topRatedMovies = widget.movieList.where((movie) => movie.jumlahRating >= 9).toList();
+    topRatedMovies =
+        widget.movieList.where((movie) => movie.jumlahRating >= 9).toList();
   }
 
   @override
@@ -24,14 +26,14 @@ class _topRatedScreenState extends State<topRatedScreen> with TickerProviderStat
     super.didUpdateWidget(oldWidget);
     if (widget.movieList != oldWidget.movieList) {
       setState(() {
-        topRatedMovies = widget.movieList.where((movie) => movie.jumlahRating >= 9).toList();
+        topRatedMovies =
+            widget.movieList.where((movie) => movie.jumlahRating >= 9).toList();
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: GridView.builder(
@@ -59,7 +61,8 @@ class _topRatedScreenState extends State<topRatedScreen> with TickerProviderStat
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.transparent, // Transparent background for separation
+                color:
+                    Colors.transparent, // Transparent background for separation
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -71,7 +74,7 @@ class _topRatedScreenState extends State<topRatedScreen> with TickerProviderStat
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        'http://10.0.2.2:8000${movie.fotoFilm}',
+                        '$url${movie.fotoFilm}',
                         fit: BoxFit.cover,
                       ),
                     ),

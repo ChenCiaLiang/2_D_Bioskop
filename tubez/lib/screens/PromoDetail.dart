@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
 import 'package:tubez/screens/list.dart';
@@ -43,7 +44,7 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                   Positioned.fill(
                     //ini foto promonya-_-
                     child: Image.network(
-                      'http://10.0.2.2:8000${promo.fotoPromo}',
+                      '$url${promo.fotoPromo}',
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,
@@ -98,8 +99,8 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                             children: [
                               Text(
                                 '• ',
-                                style:
-                                    TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               ),
                               Expanded(
                                 child: Text(
@@ -124,13 +125,13 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                             fontSize: 16,
                           ),
                         ),
-                      ),
-                      Text(
-                        currencyFormatter.format(promo.harga),
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          currencyFormatter.format(promo.harga),
+                          style: TextStyle(
+                            color: Colors.amber,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

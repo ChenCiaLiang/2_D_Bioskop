@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:tubez/client/apiURL.dart';
 
 import 'package:tubez/entity/User.dart';
 
@@ -47,11 +48,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     controllerDateBirth = TextEditingController(text: widget.dateBirth);
     controllerPassword = TextEditingController();
     controllerConfirm = TextEditingController();
-    _profileImage = widget.currentPhoto.isNotEmpty
-        ? File(widget.currentPhoto)
-        : null;
-    }
-
+    _profileImage =
+        widget.currentPhoto.isNotEmpty ? File(widget.currentPhoto) : null;
+  }
 
   final ImagePicker _picker = ImagePicker();
 
@@ -206,11 +205,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _profileImage != null
                       ? FileImage(_profileImage!)
                       : widget.currentPhoto.isNotEmpty
-                          ? NetworkImage(
-                                  'http://10.0.2.2:8000/storage/${widget.currentPhoto}')
+                          ? NetworkImage('$url/storage/${widget.currentPhoto}')
                               as ImageProvider
-                          : NetworkImage(
-                                  'http://10.0.2.2:8000/storage/$_profileImage')
+                          : NetworkImage('$url/storage/$_profileImage')
                               as ImageProvider,
                 ),
                 Positioned(
@@ -268,7 +265,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }
 
                 _updateProfile();
-              
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
