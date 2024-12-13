@@ -66,4 +66,20 @@ class PemesananTiketController extends Controller
         }
     }
 
+    public function deleteSeat($id)
+    {
+        $pemesananTiket = PemesananTiket::find($id);
+
+        try {
+            if (!$pemesananTiket) {
+                return response()->json(['message' => 'Seat not found'], 404);
+            } else {
+                $pemesananTiket->delete();
+            }
+
+            return response()->json(['message' => 'Pemesanan Tiket removed successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Failed to remove seats', 'message' => $e->getMessage()], 500);
+        }
+    }
 }
