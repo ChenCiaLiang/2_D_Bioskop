@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
+import 'package:tubez/screens/list.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 
 class PromoDetailScreen extends StatefulWidget {
@@ -123,13 +124,13 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        Text(
-                          'Rp ${promo.harga.toString()}',
-                          style: TextStyle(
-                            color: Colors.amber,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      ),
+                      Text(
+                        currencyFormatter.format(promo.harga),
+                        style: TextStyle(
+                          color: Colors.amber,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ],
                     ),

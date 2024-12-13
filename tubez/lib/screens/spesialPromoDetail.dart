@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
+import 'package:tubez/screens/list.dart';
 
 class SpesialPromoDetailScreen extends StatefulWidget {
   final SpesialPromo itemSpesial;
@@ -132,7 +133,7 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                         ),
                       ),
                       Text(
-                        'Rp ${spesial.harga.toString()}',
+                        currencyFormatter.format(spesial.harga),
                         style: TextStyle(
                           color: Colors.amber,
                           fontSize: 24,

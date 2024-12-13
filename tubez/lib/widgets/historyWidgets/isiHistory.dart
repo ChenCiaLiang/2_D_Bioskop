@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubez/widgets/historyWidgets/editReview.dart';
+import 'package:intl/intl.dart';
 import 'package:tubez/widgets/historyWidgets/isiReview.dart';
 
 class IsiHistory extends StatelessWidget {
@@ -11,8 +11,10 @@ class IsiHistory extends StatelessWidget {
     required this.studio,
     required this.date,
     required this.total,
-    required this.isReviewed,
+    required this.isReview,
     required this.ticketCount,
+    required this.idFilm, // Tambahkan idFilm
+    required this.idHistory, // Tambahkan idHistory
   });
 
   final String image;
@@ -21,18 +23,42 @@ class IsiHistory extends StatelessWidget {
   final int studio;
   final String date;
   final String total;
-  final bool isReviewed;
+  final bool isReview;
   final int ticketCount;
+  final int idFilm; // ID Film untuk dikirim ke IsiReview
+  final BigInt idHistory; // ID History untuk dikirim ke IsiReview
+
+  void _showReviewModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return IsiReview(
+          image: image,
+          title: title,
+          status: status,
+          studio: studio,
+          date: date,
+          total: total,
+          isReview: isReview,
+          ticketCount: ticketCount,
+          idFilm: idFilm, // Kirim idFilm
+          idHistory: idHistory, // Kirim idHistory
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16, left: 15, right: 15),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Color(0xFF424242),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        color: const Color(0xFF2C2C2C),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
           BoxShadow(
             color: Colors.black26,
             blurRadius: 4,
@@ -41,99 +67,120 @@ class IsiHistory extends StatelessWidget {
         ],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              image,
-              width: 80,
-              height: 145,
-              fit: BoxFit.cover,
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                image,
+                width: 80,
+                height: 140,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$title',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 16,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Status: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: status,
+                        style: const TextStyle(
+                          color: Colors.amber,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      'Status: ',
-                      style: TextStyle(
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Studio: ',
+                        style: TextStyle(
                           color: Colors.white,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                    Text(
-                      status,
-                      style: TextStyle(
+                        ),
+                      ),
+                      TextSpan(
+                        text: studio.toString(),
+                        style: const TextStyle(
                           color: Colors.amber,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      'Studio: ',
-                      style: TextStyle(
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: 'Date: ',
+                        style: TextStyle(
                           color: Colors.white,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                    Text(
-                      '$studio',
-                      style: TextStyle(
+                        ),
+                      ),
+                      TextSpan(
+                        text: date,
+                        style: const TextStyle(
                           color: Colors.amber,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text(
-                      'Date: ',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                    Text(
-                      date,
-                      style: TextStyle(
-                          color: Colors.amber,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
+                    const Text(
                       'Total: ',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 12,
                       ),
                     ),
                     Text(
                       total,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.amber,
                         fontWeight: FontWeight.bold,
+                        fontSize: 12,
                       ),
                     ),
                   ],
@@ -142,60 +189,47 @@ class IsiHistory extends StatelessWidget {
             ),
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 'Tickets: $ticketCount',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              SizedBox(height: 95),
-              isReviewed
-                  ? SizedBox(
-                      width: 100,
-                      height: 30,
-                      child: OutlinedButton(
-                        onPressed: () {},
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
-                          child: Text(
-                            'Reviewed',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.white),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      width: 100,
-                      height: 30,
-                      child: ElevatedButton(
-                        onPressed: () => showIsiReview(context),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
-                          child: Text(
-                            'Review',
-                            style: TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
+              const SizedBox(height: 90),
+              SizedBox(
+                width: 100,
+                height: 30,
+                child: ElevatedButton(
+                  onPressed: () => _showReviewModal(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isReview ? Colors.transparent : Colors.amber,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: BorderSide(
+                        color: isReview
+                            ? Colors.white
+                            : Colors.black, // Warna border sesuai status
+                        width: 2, // Lebar border
                       ),
                     ),
+                  ),
+                  child: Text(
+                    isReview ? 'Reviewed' : 'Review',
+                    style: TextStyle(
+                      color: isReview
+                          ? Colors.white
+                          : Colors.black, // Warna teks sesuai status
+                      fontSize: 10, // Ukuran font
+                      fontWeight: FontWeight.bold, // Ketebalan font
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ],

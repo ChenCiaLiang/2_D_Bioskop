@@ -31,7 +31,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/history/create', [HistoryController::class, 'store']);
 
+    Route::post('/history/update/{id}', [HistoryController::class, 'update']);
+
     Route::post('/review/create', [ReviewController::class, 'store']);
+
+    Route::get('/review/{id}', [ReviewController::class, 'index']);
 
     Route::get('/kursi/all/{idJadwalTayang}', [PemesananTiketController::class, 'getAll']);
 

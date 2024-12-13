@@ -16,6 +16,7 @@ import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/client/SpesialPromoClient.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
 import 'package:tubez/client/UserClient.dart';
+import 'package:intl/intl.dart';
 
 final themeMode = ValueNotifier(2);
 
@@ -25,6 +26,13 @@ class ListScreen extends StatefulWidget {
   @override
   State<ListScreen> createState() => _ListScreenState();
 }
+
+NumberFormat currencyFormatter = NumberFormat.currency(
+  locale: 'id',
+  decimalDigits: 0,
+  name: 'Rp ',
+  symbol: 'Rp ',
+);
 
 class _ListScreenState extends State<ListScreen> {
   int? userId;

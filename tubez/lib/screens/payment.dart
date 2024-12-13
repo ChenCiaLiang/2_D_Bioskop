@@ -418,6 +418,57 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                       var data = json.decode(response.body)['data'];
                       BigInt idTransaksi = BigInt.from(data['id']);
                       print('Transaction ID: $idTransaksi');
+
+                      Response responseHistory = await HistoryClient.create(
+                          history_entity.History(
+                              idTransaksi: idTransaksi,
+                              idUser: BigInt.from(
+                                  userId!), // Menggunakan ID pengguna yang didapat
+                              status: 'Uncompleted', // Status yang sesuai
+                              isReview: false));
+
+                      print('asdasd ${responseHistory.statusCode}');
+                      if (responseHistory.statusCode == 200) {
+                        // History berhasil disimpan
+                        print("History created successfully");
+                      } else {
+                        // Tangani jika penyimpanan history gagal
+                        print(
+                            "Failed to create history: ${responseHistory.reasonPhrase}");
+                      }
+
+                      if (responseHistory.statusCode == 200) {
+                        // Buat PDF
+                        createPDF(
+                          widget.movie,
+                          totalPayment,
+                          context,
+                          datePayment,
+                          mySeats,
+                          idStudio,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Error'),
+                            content: TextButton(
+                                onPressed: () => {},
+                                child: const Text('Transaction failed')),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     } catch (e) {
                       print('Error: $e');
                     }
