@@ -106,4 +106,30 @@ class PemesananTiketClient {
       return Future.error(e.toString());
     }
   }
+
+  static Future<bool> deleteKursi(int id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('auth_token');
+
+      var response = await delete(
+        Uri.http(url, '$endpoint/pemesanantiket/delete/$id'),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token"
+        },
+      );
+
+      log("Response Status Code: ${response.statusCode}");
+      log("Response Body: ${response.body}");
+      if (response.statusCode == 200) {
+        return true; // Return true if delete was successful
+      } else {
+        throw Exception('Failed to delete seats');
+      }
+    } catch (e) {
+      log("Error: $e");
+      return false; // Return false if an error occurred
+    }
+  }
 }

@@ -47,4 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/jadwaltayang/get/{id}', [JadwalTayangController::class, 'fetchByIdFilm']);
 
     Route::post('/transaksi/create', [TransaksiController::class, 'store']);
+
+    Route::delete('/pemesanantiket/delete/{id}', [PemesananTiketController::class, 'deleteSeat']);
 });

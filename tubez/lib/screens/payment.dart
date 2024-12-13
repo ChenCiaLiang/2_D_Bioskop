@@ -15,6 +15,7 @@ import 'package:tubez/widgets/paymentWidgets/MovieDescription.dart';
 import 'package:tubez/model/pdfItem.dart';
 import 'package:tubez/entity/Film.dart';
 import 'package:tubez/client/UserClient.dart';
+import 'package:tubez/client/PemesananTiketClient.dart';
 
 class paymentScreenState extends StatefulWidget {
   final Set<String> mySeats;
@@ -39,13 +40,13 @@ NumberFormat currencyFormatter = NumberFormat.currency(
   symbol: 'Rp ',
 );
 
-double getHargaKursi(int idStudio){
+double getHargaKursi(int idStudio) {
   print('idstudionya ini bro : $idStudio');
-  if(idStudio == 1){
+  if (idStudio == 1) {
     return 35000;
-  }else if(idStudio == 2){
+  } else if (idStudio == 2) {
     return 50000;
-  }else{
+  } else {
     return 0;
   }
 }
@@ -114,11 +115,18 @@ class _paymentScreenStateState extends State<paymentScreenState> {
     ambilToken();
     if (widget.jadwalTayang != null) {
       idStudio = widget.jadwalTayang!.idStudio;
-      datePayment = DateFormat('EEEEEE, dd-MM-yyyy').format(widget.jadwalTayang!.tanggalTayang);
+      datePayment = DateFormat('EEEEEE, dd-MM-yyyy')
+          .format(widget.jadwalTayang!.tanggalTayang);
     } else {
       idStudio = 0;
       datePayment = 'Tanggal Kosong';
     }
+  }
+
+  Future<void> deletePemesananTiket() async {
+    bool success = await PemesananTiketClient.deleteKursi(
+        widget.idPemesananTiket // Convert Set to List
+        );
   }
 
   @override
@@ -138,6 +146,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () {
+              deletePemesananTiket();
               Navigator.of(context).pop();
             },
           ),
@@ -203,7 +212,8 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text("${mySeats.length} x ${currencyFormatter.format(getHargaKursi(idStudio))}",
+                                  Text(
+                                      "${mySeats.length} x ${currencyFormatter.format(getHargaKursi(idStudio))}",
                                       style: TextStyle(color: Colors.white)),
                                 ]),
                             SizedBox(height: 4),
