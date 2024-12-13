@@ -33,4 +33,25 @@ class HistoryClient {
       return [];
     }
   }
+
+  static Future<http.Response> create(History history) async {
+    try {
+      UserClient userClient = UserClient();
+      String? token = await userClient.getToken();
+      var response = await http.post(
+          Uri.parse('$apiUrl/history/create'), // pergi ke /api/register
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: history.toRawJson());
+      // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+      print('aaaaaaaaaaaaaaaaaaaaa ${response.statusCode}');
+
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
 }

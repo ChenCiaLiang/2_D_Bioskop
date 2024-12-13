@@ -1,6 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:tubez/client/TransaksiClient.dart';
+import 'package:tubez/client/HistoryClient.dart';
+import 'package:tubez/entity/History.dart' as history_entity;
 import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/entity/transaksi.dart';
 import 'package:tubez/screens/pdf_view.dart';
@@ -8,6 +14,7 @@ import 'package:tubez/screens/selectPayment.dart';
 import 'package:tubez/widgets/paymentWidgets/MovieDescription.dart';
 import 'package:tubez/model/pdfItem.dart';
 import 'package:tubez/entity/Film.dart';
+import 'package:tubez/client/UserClient.dart';
 
 class paymentScreenState extends StatefulWidget {
   final Set<String> mySeats;
@@ -27,6 +34,8 @@ class paymentScreenState extends StatefulWidget {
 
 class _paymentScreenStateState extends State<paymentScreenState> {
   String _metodePembayaran = "Not Selected";
+  int? userId; // Variabel untuk menyimpan ID pengguna
+  String? token; // Variabel untuk menyimpan token
 
   String currentDate = DateFormat('EEEEEE, dd-MM-yyyy').format(DateTime.now());
   late final int idStudio;
@@ -39,9 +48,58 @@ class _paymentScreenStateState extends State<paymentScreenState> {
   );
   late double totalPayment;
 
+  Future<void> ambilToken() async {
+    UserClient userClient = UserClient();
+    String? token = await userClient.getToken();
+
+    if (token != null) {
+      final response = await userClient.dataUser(token);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body)['data'];
+        setState(() {
+          userId = data['id'];
+        });
+      } else {
+        print('Failed to load user data: ${response.statusCode}');
+        // Tampilkan pesan kesalahan jika pemanggilan API gagal
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to load user data. Please try again.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'OK'),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      print('Token is null');
+      // Tampilkan pesan kesalahan jika token tidak ditemukan
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Token not found. Please log in again.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    ambilToken();
     if (widget.jadwalTayang != null) {
       idStudio = widget.jadwalTayang!.idStudio;
     } else {
@@ -52,7 +110,6 @@ class _paymentScreenStateState extends State<paymentScreenState> {
   @override
   Widget build(BuildContext context) {
     Set<String> mySeats = widget.mySeats;
-    // Example movie data
     List<Movie> soldMovies = [
       Movie(name: 'Movie 1', price: 45.00),
       Movie(name: 'Movie 2', price: 50.00),
@@ -63,6 +120,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
       totalPayment = widget.mySeats.length * 50000;
     }
     final Film movie = widget.movie;
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -290,19 +348,88 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                 SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
-                    createPDF(
-                      'John Doe',
-                      90.00,
-                      context,
-                      soldMovies,
-                    );
+                    if (userId == null) {
+                      // Tampilkan pesan kesalahan jika userId tidak ditemukan
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Error'),
+                          content: const Text(
+                              'User ID not found. Please log in again.'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'OK'),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                      return; // Keluar dari fungsi jika userId tidak ada
+                    }
+
                     try {
                       var response = await TransaksiClient.createTransaksi(
                           Transaksi(
+                              // Menggunakan alias
                               metodePembayaran: _metodePembayaran,
-                              idUser: 1,
+                              idUser: BigInt.from(userId!).toInt(),
                               totalHarga: totalPayment,
-                              idPemesananTiket: widget.idPemesananTiket));
+                              idPemesananTiket:
+                                  BigInt.from(widget.idPemesananTiket)
+                                      .toInt()));
+
+                      var data = json.decode(response.body)['data'];
+                      BigInt idTransaksi = BigInt.from(data['id']);
+                      print('anjengoaksoakdsoak ${data['id']}');
+
+                      Response responseHistory = await HistoryClient.create(
+                          history_entity.History(
+                              idTransaksi: idTransaksi,
+                              idUser: BigInt.from(
+                                  userId!), // Menggunakan ID pengguna yang didapat
+                              status: 'Uncompleted', // Status yang sesuai
+                              isReview: false));
+
+                      print('asdasd ${responseHistory.statusCode}');
+                      if (responseHistory.statusCode == 200) {
+                        // History berhasil disimpan
+                        print("History created successfully");
+                      } else {
+                        // Tangani jika penyimpanan history gagal
+                        print(
+                            "Failed to create history: ${responseHistory.reasonPhrase}");
+                      }
+
+                      if (responseHistory.statusCode == 200) {
+                        // Buat PDF
+                        createPDF(
+                          'John Doe',
+                          90.00,
+                          context,
+                          soldMovies,
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Error'),
+                            content: TextButton(
+                                onPressed: () => {},
+                                child: const Text('Transaction failed')),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'OK'),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     } catch (e) {
                       showDialog(
                         context: context,
@@ -310,7 +437,7 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                           title: const Text('Error'),
                           content: TextButton(
                               onPressed: () => {},
-                              child: const Text('Samting wong')),
+                              child: Text('Something went wrong ${e}')),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () => Navigator.pop(context, 'Cancel'),

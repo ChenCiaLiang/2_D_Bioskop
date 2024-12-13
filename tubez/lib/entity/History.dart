@@ -3,18 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:tubez/entity/User.dart'; // Pastikan untuk mengimpor paket intl
 
 class History {
-  BigInt id;
+  BigInt? id;
   BigInt idTransaksi;
-  BigInt idReview;
   BigInt idUser;
   String status;
   bool isReview; // Menggunakan tipe bool
   Transaksi? transaksi;
 
   History({
-    required this.id,
+    this.id,
     required this.idTransaksi,
-    required this.idReview,
     required this.idUser,
     required this.status,
     required this.isReview,
@@ -36,7 +34,6 @@ class History {
     return History(
       id: _parseBigInt(json['id']),
       idTransaksi: _parseBigInt(json['idTransaksi']),
-      idReview: _parseBigInt(json['idReview']),
       idUser: _parseBigInt(json['idUser']),
       status: status,
       isReview: isReview,
@@ -50,7 +47,6 @@ class History {
     return {
       'id': id.toString(),
       'idTransaksi': idTransaksi.toString(),
-      'idReview': idReview.toString(),
       'idUser': idUser.toString(),
       'status': status,
       'isReview': isReview ? 1 : 0,
@@ -268,6 +264,9 @@ class JadwalTayang {
 
   // Factory constructor to parse JSON
   factory JadwalTayang.fromJson(Map<String, dynamic> json) {
+    DateTime dateTime = DateTime.parse(json['tanggalTayang'].toString());
+
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
     return JadwalTayang(
       id: json['id'] is int ? json['id'] : int.parse(json['id']),
       idStudio: json['idStudio'] is int
@@ -278,7 +277,7 @@ class JadwalTayang {
           : int.parse(json['idJadwal']),
       idFilm:
           json['idFilm'] is int ? json['idFilm'] : int.parse(json['idFilm']),
-      tanggalTayang: json['tanggalTayang'].toString(),
+      tanggalTayang: formattedDate,
       studio: json['studio'] != null ? Studio.fromJson(json['studio']) : null,
       film: json['film'] != null ? Film.fromJson(json['film']) : null,
     );
