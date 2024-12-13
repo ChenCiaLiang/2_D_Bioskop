@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubez/screens/menuDetail.dart';
 import 'package:tubez/entity/Menu.dart';
 
-
 class Menus extends StatefulWidget {
   const Menus({
     super.key,
@@ -106,6 +105,7 @@ class _MenusState extends State<Menus> {
                   color: Colors.grey[900],
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: 300,
@@ -132,7 +132,7 @@ class _MenusState extends State<Menus> {
           },
         ),
       ],
-    );  
+    );
   }
 
   List<Menu> selectedMenu(List<Menu> listMenu) {
