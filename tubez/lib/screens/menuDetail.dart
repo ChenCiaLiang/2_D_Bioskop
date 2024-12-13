@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tubez/entity/Menu.dart';
+import 'package:tubez/screens/list.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 
 class MenuDetailScreen extends StatefulWidget {
@@ -19,12 +19,6 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
   late Map<String, double> price;
   late Menu menus;
 
-  NumberFormat currencyFormatter = NumberFormat.currency(
-    locale: 'id',
-    decimalDigits: 0,
-    name: 'Rp ',
-    symbol: 'Rp ',
-  );
   @override
   void initState() {
     super.initState();
