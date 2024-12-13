@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tubez/widgets/HomeWidgets/homeHeader.dart';
+import 'package:tubez/widgets/ListMenuWidgets/menuHeader.dart';
 import 'package:tubez/widgets/ListMenuWidgets/PromoHeader.dart';
 import 'package:tubez/widgets/ListMenuWidgets/Menus.dart';
 import 'package:tubez/widgets/ListMenuWidgets/SpesialPromoCarousel.dart';
@@ -29,8 +29,8 @@ class ListScreen extends StatefulWidget {
 class _ListScreenState extends State<ListScreen> {
   int? userId;
   User user = User(email: '', id: 0, username: '', password: '', noTelepon: '', tanggalLahir: '', foto: '');
-  List<SpesialPromo> spesialPromoList = [];
-  List<Menu> menuList = [];
+  Iterable<SpesialPromo> spesialPromoList = [];
+  Iterable<Menu> menuList = [];
   int selectedTab = 0;
 
   @override
@@ -38,7 +38,7 @@ class _ListScreenState extends State<ListScreen> {
     super.initState();
     ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
     super.initState();
-    fetchDataMenu();
+    fetchAllData();
   }
 
   Future<void> ambilToken() async {
@@ -67,43 +67,19 @@ class _ListScreenState extends State<ListScreen> {
     }
   }
 
-  Future<void> fetchDataMenu() async {
+  Future<void> fetchAllData() async {
     try {
       print('Test : ${user.email}');
-      final data = await MenuClient.fetchAll();
+      final dataMenu = await MenuClient.fetchAll();
+      final dataPromo = await SpesialPromoClient.fetchAll();
 
-      if(data.isEmpty){
+      if(dataMenu.isEmpty || dataPromo.isEmpty){
         throw Exception('Data is empty');
       }
 
       setState(() {
-        menuList = data;
-      });
-
-      // listMenu.forEach((menu) {
-      //   print(menu.fotoMenu); // Assuming `Menu` is a `Menu` object with a `judul` attribute
-      // });
-
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  Future<void> fetchDataSpesialPromo() async {
-    try {
-      print('Test : ${user.email}');
-      final data = await SpesialPromoClient.fetchAll();
-
-      if(data.isEmpty){
-        throw Exception('Data is empty');
-      }
-
-      setState(() {
-        spesialPromoList = data;
-      });
-
-      spesialPromoList.forEach((spesialPromo) {
-        print(spesialPromo.fotoPromo);
+        menuList = dataMenu;
+        spesialPromoList = dataPromo;
       });
 
     } catch (e) {
@@ -118,7 +94,7 @@ class _ListScreenState extends State<ListScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            HomeHeader(size: size, user: user),
+            MenuHeader(size: size, user: user),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -137,13 +113,13 @@ class _ListScreenState extends State<ListScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Spesialpromocarousel(),
+                    Spesialpromocarousel(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'spesial'), menuList: menuList.toList()),
                     const SizedBox(height: 20),
                     const PromoHeader(),
                     const SizedBox(height: 20),
-                    Promo(),
+                    Promo(spesialPromoList: getSpesialPromoList(spesialPromoList.toList(), 'promo'), menuList: menuList.toList()),
                     const SizedBox(height: 20),
-                    Menus(menuList: menuList),
+                    Menus(menuList: menuList.toList()),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -153,5 +129,17 @@ class _ListScreenState extends State<ListScreen> {
         ),
       ),
     );
+  }
+
+  List<SpesialPromo> getSpesialPromoList(List<SpesialPromo> spesialPromoList, String status){
+    List<SpesialPromo> spesialList = [];
+
+    for (var i = 0; i < spesialPromoList.length; i++) {
+      if(spesialPromoList[i].status == status){
+        spesialList.add(spesialPromoList[i]);
+      }
+    }
+
+    return spesialList;
   }
 }

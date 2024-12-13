@@ -3,11 +3,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intl/intl.dart';
 import 'package:tubez/client/TransaksiClient.dart';
 import 'package:tubez/client/PemesananTiketClient.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
 import 'package:tubez/model/pdfItem.dart';
-import 'package:tubez/entity/pemesanantiket.dart';
+import 'package:tubez/entity/pemesanan_tiket.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 import 'package:book_my_seat/book_my_seat.dart';
@@ -15,34 +16,9 @@ import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
 import 'package:tubez/screens/payment.dart';
 import 'package:tubez/entity/Film.dart';
 
-class TrapeziumPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = const Color.fromARGB(
-          255, 255, 255, 255) // Set the color of the trapezium
-      ..style = PaintingStyle.fill; // Fill the trapezium
-
-    Path path = Path()
-      ..moveTo(size.width * 0.1, 0) // Top-left corner
-      ..lineTo(
-          size.width * 0.2, size.height) // Bottom-left corner (20% from left)
-      ..lineTo(
-          size.width * 0.8, size.height) // Bottom-right corner (80% from left)
-      ..lineTo(size.width * 0.9, 0) // Top-right corner
-      ..close(); // Close the path to form the flipped trapezium
-
-    canvas.drawPath(path, paint); // Draw the trapezium path
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false; // Only repaint if needed
-  }
-}
-
 class selectSeatScreen extends StatefulWidget {
-  const selectSeatScreen({super.key, required this.movie, required this.jadwalTayang});
+  const selectSeatScreen(
+      {super.key, required this.movie, required this.jadwalTayang});
   final Film movie;
   final Jadwaltayang? jadwalTayang;
 
@@ -51,56 +27,94 @@ class selectSeatScreen extends StatefulWidget {
 }
 
 class _selectSeatScreenState extends State<selectSeatScreen> {
+  late int idStudio;
   Set<SeatNumber> selectedSeats = Set();
   Set<String> mySeats = {}; // This will store the translated seat numbers
   late Future<List<PemesananTiket>> futureTransaksi;
-  final int rows = 10;
-  final int cols = 10;
+  late int rows;
+  late int cols;
+  late String datePayment;
+
+  NumberFormat currencyFormatter = NumberFormat.currency(
+    locale: 'id',
+    decimalDigits: 0,
+    name: 'Rp ',
+    symbol: 'Rp ',
+  );
 
   @override
   void initState() {
     super.initState();
-    futureTransaksi = PemesananTiketClient
-        .getAllKursi(); // Fetch data when the widget is initialized
+    _fetchSeatData();
+    datePayment = DateFormat('EEEEEE, dd-MM-yyyy').format(widget.jadwalTayang!.tanggalTayang);
+  }
+
+  @override
+  void didUpdateWidget(covariant selectSeatScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.jadwalTayang?.id != oldWidget.jadwalTayang?.id) {
+      _fetchSeatData();
+    } else {
+      _fetchSeatData();
+    }
+  }
+
+  void _fetchSeatData() {
+    idStudio = widget.jadwalTayang!.idStudio;
+    if (idStudio == 1) {
+      rows = 10;
+      cols = 10;
+    } else {
+      rows = 8;
+      cols = 8;
+    }
+
+    if (widget.jadwalTayang?.id != null) {
+      setState(() {
+        futureTransaksi =
+            PemesananTiketClient.getAllKursi(widget.jadwalTayang!.id!);
+        log("Fetching seat data for jadwalTayang ID: ${widget.jadwalTayang?.id}");
+      });
+    } else {
+      setState(() {
+        futureTransaksi = Future.error('Invalid jadwalTayang ID');
+      });
+    }
   }
 
   List<List<SeatState>> generateSeatLayout(List<PemesananTiket> transaksiList) {
-    // Collect all reserved seats
-    List<String> reservedSeats =
-        transaksiList.expand((transaksi) => transaksi.kursiDipesan).toList();
-
-    // Initialize the seat layout with unselected seats
+    List<String> reservedSeats = transaksiList.expand((transaksi) {
+      return transaksi.kursiDipesan;
+    }).toList();
     List<List<SeatState>> seatLayout = List.generate(
       rows,
       (rowIndex) => List.generate(
         cols,
-        (colIndex) => SeatState.unselected,
+        (colIndex) {
+          // Create a SeatNumber object for this seat
+          SeatNumber seatNumber = SeatNumber(rowI: rowIndex, colI: colIndex);
+
+          // Translate the SeatNumber object to a seat code (e.g., "A1", "B1")
+          String seatCode = seatNumber.toString();
+
+          // If the seat is reserved, mark it as unavailable, else available
+          if (reservedSeats.contains(seatCode)) {
+            return SeatState.sold; // Seat is reserved
+          } else {
+            return SeatState.unselected; // Seat is available for selection
+          }
+        },
       ),
     );
-
-    // Map reserved seats to their indices and mark them as sold
-    for (String seat in reservedSeats) {
-      String rowLetter = seat[0].toLowerCase(); // Get the row letter
-      int rowIndex =
-          rowLetter.codeUnitAt(0) - 'a'.codeUnitAt(0); // Convert to row index
-      int colIndex =
-          int.parse(seat.substring(1)) - 1; // Get column index (zero-based)
-
-      if (rowIndex >= 0 &&
-          rowIndex < rows &&
-          colIndex >= 0 &&
-          colIndex < cols) {
-        seatLayout[rowIndex][colIndex] = SeatState.sold;
-      }
-    }
 
     return seatLayout;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Jadwaltayang jadwal = widget.jadwalTayang!;
     final Film movie = widget.movie;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -119,10 +133,7 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                   children: [
                     // First widget: CustomPaint for the trapezium
                     Container(
-                      child: CustomPaint(
-                        size: Size(MediaQuery.of(context).size.width, 100),
-                        painter: TrapeziumPainter(),
-                      ),
+                      child: Image.asset('assets/images/screen.png'),
                     ),
 
                     const SizedBox(height: 10),
@@ -139,6 +150,8 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                                 return Center(
                                     child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
+                                log("Reserved Seats: ${snapshot.error}"); // Perbaiki untuk menampilkan data yang diterima
+
                                 return Center(
                                     child: Text("Error: ${snapshot.error}"));
                               } else if (snapshot.hasData) {
@@ -149,7 +162,6 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                                     String seatString =
                                         SeatNumber(rowI: rowI, colI: colI)
                                             .toString();
-
                                     if (seatState == SeatState.selected) {
                                       selectedSeats.add(
                                           SeatNumber(rowI: rowI, colI: colI));
@@ -209,7 +221,8 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
-                          showSlideInModal(context, mySeats, movie, jadwal);
+                          showSlideInModal(context, mySeats, movie,
+                              widget.jadwalTayang!, currencyFormatter, 0, datePayment);
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
@@ -340,7 +353,20 @@ class SeatNumber {
   }
 }
 
-void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jadwaltayang jadwal) {
+void showSlideInModal(
+    BuildContext context,
+    Set<String> mySeats,
+    Film movie,
+    Jadwaltayang? jadwalTayang,
+    NumberFormat currencyFormatter,
+    double totalPayment,
+    String datePayment) {
+  if (jadwalTayang!.idStudio == 1) {
+    totalPayment = mySeats.length * 35000;
+  } else {
+    totalPayment = mySeats.length * 50000;
+  }
+
   showModalBottomSheet(
     context: context,
     isScrollControlled: true, // Allow height to adjust based on content
@@ -388,14 +414,15 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                       Container(
                           height: 80,
                           width: 80,
-                          child: Image.network('http://10.0.2.2:8000${movie.fotoFilm}')),
+                          child: Image.network(
+                              'http://10.0.2.2:8000${movie.fotoFilm}')),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${movie.judul}",
+                              movie.judul,
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -404,11 +431,11 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              "Monday, 07 Desember 2024",
+                              datePayment,
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 72, 70, 70)),
+                                  color: Color.fromARGB(255, 180, 180, 180)),
                             ),
                           ],
                         ),
@@ -443,39 +470,45 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
+                      padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
                       width: MediaQuery.of(context).size.width,
-                      height: 56,
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 63, 62, 62),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Row(
                         children: [
-                          Column(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0, top: 8),
-                                child: Text(
-                                  "Number of Seats: 2", // This number can be dynamic if needed
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: Colors.white,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 8.0, top: 8),
+                                  child: Text(
+                                    "Number of Seats: ${mySeats.length}", // This number can be dynamic if needed
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 7.0),
-                                child: Text(
-                                  "My Seats: ${mySeats.join(', ')}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: Colors.white,
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 7.0),
+                                  child: Text(
+                                    "My Seats: ${mySeats.join(', ')}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -495,7 +528,7 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                               color: Colors.white),
                         ),
                         Text(
-                          "Rp 90.000",
+                          currencyFormatter.format(totalPayment),
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,
@@ -508,18 +541,33 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        var response = await PemesananTiketClient.createPemesananTiket(
-                            jadwal.id!,
-                            mySeats.toList());
+                        var response =
+                            await PemesananTiketClient.createPemesananTiket(
+                                jadwalTayang.id!, mySeats.toList());
 
                         if (response.statusCode == 200) {
-                          Navigator.push(
+                          Map<String, dynamic> responseData =
+                              jsonDecode(response.body);
+
+                          // Check if the response contains 'data' and 'id' inside it
+                          if (responseData.containsKey('data') &&
+                              responseData['data'] != null) {
+                            var data = responseData['data'];
+
+                            var idPemesananTiket = data['id'];
+
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => paymentScreenState(
-                                        mySeats: mySeats,
-                                        movie: movie,
-                                      )));
+                                builder: (context) => paymentScreenState(
+                                  mySeats: mySeats,
+                                  movie: movie,
+                                  idPemesananTiket: idPemesananTiket,
+                                  jadwalTayang: jadwalTayang,
+                                ),
+                              ),
+                            );
+                          }
                         } else {
                           showDialog(
                             context: context,
@@ -544,7 +592,6 @@ void showSlideInModal(BuildContext context, Set<String> mySeats, Film movie, Jad
                         }
                       } catch (e) {
                         showDialog(
-                          
                           context: context,
                           builder: (_) => AlertDialog(
                             title: const Text('Error'),

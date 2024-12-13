@@ -1,91 +1,44 @@
-import 'dart:developer';
-
 import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:get/get_connect/http/src/response/response.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/entity/transaksi.dart';
 
 class TransaksiClient {
-  // sesuaikan url dan endpoint dengan device yang digunakan
+  static const String baseUrl =
+      'http://10.0.2.2:8000/api'; // Your Laravel backend base URL
 
-  //untuk emulator
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api';
-
-  static Future<List<Transaksi>> getAllKursi() async {
+  static Future<http.Response> createTransaksi(Transaksi transaksi) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString('auth_token');
+      String? token = prefs.getString('auth_token'); // Retrieve the token
 
-      var response = await get(Uri.http(url, '$endpoint/kursi/all'), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
-
-      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
-      final List<dynamic> parsedJson = json.decode(response.body);
-      final List<Transaksi> list = parsedJson
-          .map((data) => Transaksi.fromJson(data as Map<String, dynamic>))
-          .toList();
-      for (var transaksi in list) {
-        log('ID: ${transaksi.id}');
-        log('Kursi Dipesan: ${transaksi.kursiDipesan}');
-        for (var kursi in transaksi.kursiDipesan) {
-          log('Kursi ${transaksi.id}: $kursi');
-        }
+      if (token == null) {
+        throw Exception('No auth token found');
       }
 
-      return list;
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
-
-  static Future<Response> createTransaksi(
-      int idPemesananTiket,
-      String metodePembayaran,
-      double totalHarga,
-      List<String> kursiDipesan) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int? userId = int.parse(prefs.getString('userId')!);
-      String? token = prefs.getString('auth_token');
-
-      final data = Transaksi(
-        idUser: userId,
-        idPemesananTiket: idPemesananTiket,
-        metodePembayaran: metodePembayaran,
-        totalHarga: totalHarga,
-        kursiDipesan: kursiDipesan,
-      );
-
-      log("Data: $data");
-
-      // Encode to JSON
-      final bodyData = jsonEncode(data.toJson());
-      log("BodyData: $bodyData");
+      // Convert Transaksi object to JSON
+      final bodyData = jsonEncode(transaksi.toJson());
 
       // Send POST request with headers and body
-      var response = await post(  
-        Uri.http(url, '$endpoint/pemesanantiket'),
+      final response = await http.post(
+        Uri.parse('$baseUrl/transaksi/create'), // Your Transaksi API endpoint
         headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json", // Set Content-Type header to application/json
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
         },
-        body: bodyData, // Send the JSON data in the body
+        body: bodyData,
       );
-
-      print(response.statusCode);
+      print('asdasd ${response.body}');
+      print('aaaaaaaaaaaaaaaaaaaa ${response.statusCode}');
 
       if (response.statusCode != 200) {
-        throw Exception(
-            "Error: ${response.statusCode} ${response.reasonPhrase}");
+        throw Exception('Failed to create transaksi: ${response.body}');
       }
-
       return response;
     } catch (e) {
-      log("Error: ${e.toString()}");
-      return Future.error(e.toString());
+      print('Error creating transaksi: $e');
+      throw e; // Re-throw the error so the calling function can handle it
     }
   }
 }

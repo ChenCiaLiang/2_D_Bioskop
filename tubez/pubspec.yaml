@@ -28,6 +28,7 @@ dependencies:
   fluttertoast: ^8.2.8
   rflutter_alert: ^2.0.7
   awesome_snackbar_content: ^0.1.1
+  barcode: ^2.1.0
   
 dev_dependencies:
   camera: ^0.10.5+2
@@ -42,11 +43,14 @@ dev_dependencies:
   book_my_seat: ^1.0.1
   flutter_svg: ^1.0.0
   image_picker: ^1.1.2
-
+  json_serializable: ^6.9.0
+  build_runner: ^2.1.4
+  
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/storage/films/
     - assets/images/
 
   fonts:

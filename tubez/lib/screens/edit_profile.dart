@@ -94,6 +94,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Send updated profile data to backend
     try {
       File? profileImage = _profileImage ?? File(widget.currentPhoto);
+      print('File exists: ${File(widget.currentPhoto).existsSync()}');
+
       var updatedData = {
         'username': controllerUsername.text,
         'email': controllerEmail.text,
@@ -112,6 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
 
       var response = await UserClient.update(user, profileImage: profileImage);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final snackBar = SnackBar(
           elevation: 0,

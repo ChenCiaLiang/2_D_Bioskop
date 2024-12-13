@@ -4,21 +4,16 @@ import 'package:tubez/entity/History.dart'; // Mengimpor model history untuk mem
 import 'package:tubez/client/UserClient.dart';
 
 class HistoryClient {
-  final String apiUrl =
+  static final String apiUrl =
       'http://10.0.2.2:8000/api'; // Ganti dengan URL API yang benar
 
-  // Fungsi untuk mengambil data history dari API
-  Future<List<History>> fetchHistory(int userId) async {
+  static Future<List<History>> fetchHistory(int userId) async {
     try {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
 
-      if (userId == null) {
-        throw Exception("User ID is missing");
-      }
-
       final response = await http.get(
-        Uri.parse('$apiUrl/history?user_id=$userId'),
+        Uri.parse('$apiUrl/history?userId=$userId'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -26,25 +21,37 @@ class HistoryClient {
       );
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body); // Decode JSON data from response
-        print('Response Data: $data'); // Log the raw response data
-
-        // Pastikan data['history'] tidak null
-        if (data['history'] != null && data['history'] is List) {
-          List<History> historyList = (data['history'] as List)
-              .map((historyData) => History.fromJson(historyData))
-              .toList();
-          return historyList;
-        } else {
-          // Jika data['history'] tidak ditemukan atau tidak berupa list
-          return [];
-        }
+        print('Response body: ${response.body}');
+        Iterable list = json.decode(response.body)['history'];
+        print('Parsed data: $list');
+        return list.map((e) => History.fromJson(e)).toList();
       } else {
         throw Exception('Failed to load history');
       }
     } catch (e) {
-      print('Error: $e');
-      return []; // Mengembalikan list kosong jika terjadi error
+      print('Error fetching history: $e');
+      return [];
+    }
+  }
+
+  static Future<http.Response> create(History history) async {
+    try {
+      UserClient userClient = UserClient();
+      String? token = await userClient.getToken();
+      var response = await http.post(
+          Uri.parse('$apiUrl/history/create'), // pergi ke /api/register
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token'
+          },
+          body: history.toRawJson());
+      // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
+      if (response.statusCode != 200) throw Exception(response.reasonPhrase);
+      print('aaaaaaaaaaaaaaaaaaaaa ${response.statusCode}');
+
+      return response;
+    } catch (e) {
+      return Future.error(e.toString());
     }
   }
 }

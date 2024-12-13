@@ -26,7 +26,7 @@ class SpesialPromoClient{
 
       return list.map((e) => SpesialPromo.fromJson(e)).toList();
     }catch(e){
-      return Future.error('-_- ${e.toString()}');
+      return Future.error('SpesialPromo Error at ${e.toString()}');
     }
   }
 }

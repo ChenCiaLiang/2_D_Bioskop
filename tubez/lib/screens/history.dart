@@ -14,35 +14,29 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final HistoryClient _historyClient = HistoryClient();
-  int? userId; // Menyimpan userId yang akan digunakan
+  int? userId;
   Future<List<History>>? _historyFuture;
 
-  // Fungsi untuk mengambil userId dari token
+  Future<void> initializeData() async {
+    await ambilToken();
+    if (userId != null) {
+      setState(() {
+        _historyFuture = HistoryClient.fetchHistory(userId!);
+      });
+    }
+  }
+
   Future<void> ambilToken() async {
     UserClient userClient = UserClient();
     String? token = await userClient.getToken();
 
     if (token != null) {
       final response = await userClient.dataUser(token);
-
       if (response.statusCode == 200) {
-        // Mengambil data dari response body
-        var data = json.decode(response.body);
-        var dataUser = data['data'];
-
+        var data = json.decode(response.body)['data'];
         setState(() {
-          userId = dataUser['id']; // Menyimpan userId di state
+          userId = data['id'];
         });
-
-        print('User ID: ${userId}');
-
-        // Setelah userId diperoleh, ambil data history
-        if (userId != null) {
-          setState(() {
-            _historyFuture = _historyClient.fetchHistory(userId!);
-          });
-        }
       } else {
         print('Failed to load user data');
       }
@@ -54,20 +48,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     super.initState();
-    ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
+    initializeData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Jika userId masih null atau _historyFuture belum diinisialisasi, tampilkan loading indicator
-    if (userId == null || _historyFuture == null) {
-      return Scaffold(
-        appBar: HistoryHeader(),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    // Jika userId sudah terisi, maka tampilkan data history
     return Scaffold(
       appBar: HistoryHeader(),
       body: FutureBuilder<List<History>>(
@@ -78,7 +63,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                '${snapshot.error}',
+                'Error: ${snapshot.error}',
                 style: TextStyle(color: Colors.white),
               ),
             );
@@ -92,21 +77,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           } else {
             List<History> historyList = snapshot.data!;
-
             return ListView.builder(
               itemCount: historyList.length,
               itemBuilder: (context, index) {
                 History history = historyList[index];
                 return IsiHistory(
-                  image:
-                      'http://10.0.2.2:8000${history.fotoFilm}', // Gambar film
-                  title: history.judul, // Judul film
-                  status: history.status, // Status film
-                  studio: history.idStudio.toInt(), // ID studio
-                  date: history.tanggalTayang, // Tanggal tayang
-                  total: 'Rp ${history.totalHarga}', // Total harga
-                  isReviewed: history.isReviewed, // Sudah review apa belum
-                  ticketCount: history.ticketCount, // Jumlah tiket
+                  image: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
+                              ?.fotoFilm !=
+                          null
+                      ? 'http://10.0.2.2:8000${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
+                      : 'http://10.0.2.2:8000/storage/profilepict/profile.jpg',
+                  title: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
+                          ?.judul ??
+                      'Unknown',
+                  status: history.status ?? 'Unknown',
+                  studio: history
+                          .transaksi?.pemesanan_tiket?.jadwal_tayang?.studio?.id
+                          ?.toInt() ??
+                      0,
+                  date: history.transaksi?.pemesanan_tiket?.jadwal_tayang
+                          ?.tanggalTayang
+                          .toString() ??
+                      'Unknown Date',
+                  total: 'Rp ${history.transaksi?.totalHarga ?? 0}',
+                  isReviewed: history.isReview ?? false,
+                  ticketCount:
+                      history.transaksi?.pemesanan_tiket?.countTiket ?? 0,
                 );
               },
             );

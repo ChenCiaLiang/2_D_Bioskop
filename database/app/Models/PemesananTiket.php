@@ -21,6 +21,6 @@ class PemesananTiket extends Model
     ];
 
     public function JadwalTayang(){
-        return $this->belongsTo(JadwalTayang::class);
+        return $this->belongsTo(JadwalTayang::class, 'idJadwalTayang', 'id');
     }
 }

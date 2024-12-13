@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
 
 class Schedulewidget extends StatefulWidget {
-  const Schedulewidget({super.key, required this.jadwalTayang, required this.onTimeSelected});
+  const Schedulewidget(
+      {super.key, required this.jadwalTayang, required this.onTimeSelected});
   final List<Jadwaltayang> jadwalTayang;
   final Function(DateTime) onTimeSelected;
 
@@ -14,10 +14,10 @@ class Schedulewidget extends StatefulWidget {
 
 class _SchedulewidgetState extends State<Schedulewidget> {
   int selectedIndex = 0;
-  
+
   // Function to format the DateTime to String (dd/MM/yyyy)
   String formatDate(DateTime dateTime) {
-    if(dateTime == null){
+    if (dateTime == null) {
       return 'NO DATE';
     }
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
@@ -27,12 +27,12 @@ class _SchedulewidgetState extends State<Schedulewidget> {
   @override
   Widget build(BuildContext context) {
     final uniqueDates = widget.jadwalTayang
-        .map((e) => e.tanggalTayang) 
+        .map((e) => e.tanggalTayang)
         .where((date) => date != null)
         .toSet()
         .toList();
 
-        final limitedDates = uniqueDates.take(5).toList();
+    final limitedDates = uniqueDates.take(5).toList();
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -56,7 +56,7 @@ class _SchedulewidgetState extends State<Schedulewidget> {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(
                   isActive ? Colors.amber : Colors.transparent,
-                ),  
+                ),
                 foregroundColor: WidgetStateProperty.all(
                   isActive ? Colors.white : Colors.white,
                 ),
@@ -66,6 +66,9 @@ class _SchedulewidgetState extends State<Schedulewidget> {
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                        color: isActive ? Colors.amber : Colors.white,
+                        width: 1),
                   ),
                 ),
               ),
