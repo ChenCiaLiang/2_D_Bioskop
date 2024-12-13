@@ -19,6 +19,7 @@ import 'package:tubez/entity/User.dart';
 import 'package:tubez/client/FilmClient.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/entity/Film.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 final themeMode = ValueNotifier(2);
 
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
+    ambilToken();
     super.initState();
     fetchDataFilm();
   }

@@ -9,23 +9,26 @@ class LoginOption extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        BuildButton(
-          iconImage: const Image(
-              height: 35,
-              width: 35,
-              image: AssetImage('assets/images/facebook.png')),
-          onPressed: () {
-            Direct.launchURL('https://www.instagram.com/');
+        GestureDetector(
+          onTap: () {
+            Direct.launchURL('https://www.facebook.com/');
           },
+          child: const Image(
+            height: 35,
+            width: 35,
+            image: AssetImage('assets/images/facebook.png'),
+          ),
         ),
-        BuildButton(
-          iconImage: const Image(
-              height: 35,
-              width: 35,
-              image: AssetImage('assets/images/gugel.png')),
-          onPressed: () {
-            Direct.launchURL('https://www.instagram.com/');
+        const SizedBox(width: 20), // Add some spacing between the buttons
+        GestureDetector(
+          onTap: () {
+            Direct.launchURL('https://www.google.com/');
           },
+          child: const Image(
+            height: 35,
+            width: 35,
+            image: AssetImage('assets/images/gugel.png'),
+          ),
         ),
       ],
     );

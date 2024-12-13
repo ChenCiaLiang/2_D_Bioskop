@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'dart:io';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 import 'package:tubez/entity/User.dart';
 
@@ -35,6 +36,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController controllerDateBirth;
   late TextEditingController controllerPassword;
   late TextEditingController controllerConfirm;
+  late File? _profileImage;
 
   @override
   void initState() {
@@ -45,9 +47,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     controllerDateBirth = TextEditingController(text: widget.dateBirth);
     controllerPassword = TextEditingController();
     controllerConfirm = TextEditingController();
-  }
+    _profileImage = widget.currentPhoto.isNotEmpty
+        ? File(widget.currentPhoto)
+        : null;
+    }
 
-  File? _profileImage;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -109,14 +113,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       var response = await UserClient.update(user, profileImage: profileImage);
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile updated successfully!")),
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+          content: AwesomeSnackbarContent(
+            title: 'Success!',
+            message: 'Profile updated successfully!',
+            contentType: ContentType.success,
+          ),
         );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Future.delayed(Duration(seconds: 1));
         Navigator.pop(context, updatedData);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to update profile")),
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+          content: AwesomeSnackbarContent(
+            title: 'Failed!',
+            message: 'Failed to Update Profile!',
+            contentType: ContentType.failure,
+          ),
         );
+
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Future.delayed(Duration(seconds: 1));
       }
     } catch (e) {
       print("Error updating profile: $e");
@@ -231,7 +257,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return;
                 }
 
+                if (controllerPassword.text != controllerConfirm.text) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Passwords do not match!")),
+                  );
+                  return;
+                }
+
                 _updateProfile();
+              
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
