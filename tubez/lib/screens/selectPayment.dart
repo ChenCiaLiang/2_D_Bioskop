@@ -4,7 +4,10 @@ import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
 
 class selectPaymentScreen extends StatefulWidget {
-  const selectPaymentScreen({super.key});
+  const selectPaymentScreen(
+      {super.key, required this.onPaymentSelected, required this.title});
+  final String title;
+  final Function(String) onPaymentSelected;
 
   @override
   State<selectPaymentScreen> createState() => _selectPaymentScreenState();
@@ -41,6 +44,12 @@ class _selectPaymentScreenState extends State<selectPaymentScreen> {
           'Cashback 50% maks. 50rb untuk transaksi pertama menggunakan Aplikasi GoPay.'
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPaymentMethod = widget.title;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +152,7 @@ class _selectPaymentScreenState extends State<selectPaymentScreen> {
                         onChanged: (String? value) {
                           setState(() {
                             _selectedPaymentMethod = value;
+                            widget.onPaymentSelected(value ?? '');
                           });
                         },
                         activeColor:

@@ -8,15 +8,16 @@ use Exception;
 
 class PemesananTiketController extends Controller
 {
-    public function getAll()
+    public function getAll($idJadwalTayang)
     {
-        $allKursiDipesan = PemesananTiket::all()->pluck('kursiDipesan');
+        // Fetch reserved seats for the specific idJadwalTayang
+        $allKursiDipesan = PemesananTiket::where('idJadwalTayang', $idJadwalTayang)
+            ->pluck('kursiDipesan')
+            ->flatten(); // Flattening in case kursiDipesan is an array
 
-        // Return a flat array if you need all seats as a single list
-        $flatKursiDipesan = $allKursiDipesan->flatten()->toArray();
-
-        return PemesananTiket::all();
+        return response()->json($allKursiDipesan);
     }
+
 
     public function store(Request $request)
     {
@@ -24,43 +25,45 @@ class PemesananTiketController extends Controller
             'idJadwalTayang' => 'required|integer',
             'kursiDipesan' => 'required|array', // Ensure it's an array
         ]);
-        
-        // Fetch all existing booked seats and decode kursiDipesan
-        $existingSeats = PemesananTiket::all()
-        ->pluck('kursiDipesan')
-        ->map(function ($item) {
-            return json_decode($item, true); // Decode JSON string to array
-        })
-        ->flatten()
-        ->toArray();
-        
+
+        // Fetch all existing booked seats for the same idJadwalTayang
+        $existingSeats = PemesananTiket::where('idJadwalTayang', $validated['idJadwalTayang'])
+            ->pluck('kursiDipesan')
+            ->map(function ($item) {
+                return json_decode($item, true); // Decode JSON string to array
+            })
+            ->flatten()
+            ->toArray();
+
         // Check for seat conflicts
         $conflictingSeats = array_intersect($validated['kursiDipesan'], $existingSeats);
-        
+
         if (!empty($conflictingSeats)) {
             return response()->json([
                 'message' => 'Seats are taken',
                 'conflictingSeats' => $conflictingSeats
             ], 401); // 400 Bad Request
         }
-        
+
         // Encode kursiDipesan as a JSON string before saving
         $validated['kursiDipesan'] = json_encode($validated['kursiDipesan']);
-        
+
         // Store the new transaction
         $transaksi = PemesananTiket::create($validated);
-        try{
-            
+
+        try {
             return response()->json([
                 'status' => true,
-                'message' => 'Transaksi created successfully',
+                'message' => 'Transaksi berhasil!',
                 'data' => $transaksi
-            ], 200); // 200 Created
-        }catch(Exception $e){
+            ]);
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => $e->getMessage()
-            ], 401); // 500 Internal Server Error
+                'message' => 'Terjadi kesalahan saat menyimpan transaksi',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
 }
