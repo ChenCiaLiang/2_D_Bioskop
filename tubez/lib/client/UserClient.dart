@@ -24,7 +24,7 @@ class UserClient {
   // mengambil semua data user dari API
   // static Future<List<User>> fetchAll() async{
   //   try{
-  //     var response = await get(Uri.http(url, endpoint));
+  //     var response = await get(Uri.https(url, endpoint));
 
   //     if(response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -41,7 +41,7 @@ class UserClient {
   // // Mengambil data User dari API sesuai ID
   // static Future<User> find(id) async {
   //   try{
-  //     var response = await get(Uri.http(url, '$endpoint/$id'));
+  //     var response = await get(Uri.https(url, '$endpoint/$id'));
 
   //     if(response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -57,6 +57,7 @@ class UserClient {
       var response = await post(
           Uri.https(apibro.url,
               '/api/register'), // pergi ke /api/register
+
           headers: {"Content-Type": "application/json"},
           body: user.toRawJson());
       // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
@@ -73,7 +74,7 @@ class UserClient {
 
   // static Future<bool> login(String email, String password) async {
   //   try {
-  //     var response = await post(Uri.http(url, '$endpoint/login'),
+  //     var response = await post(Uri.https(url, '$endpoint/login'),
   //         headers: {"Content-Type": "application/json"},
   //         body: json.encode({"email": email, "password": password}));
   //     // masukin emiail dan password yang sudah diinput ke dalam body untuk dibawa ke API login
@@ -105,7 +106,7 @@ class UserClient {
   // static Future<bool> login(String email, String password) async {
   //   try {
   //     var response = await post(
-  //       Uri.http(url, '$endpoint/login'),
+  //       Uri.https(url, '$endpoint/login'),
   //       headers: {"Content-Type": "application/json"},
   //       body: json.encode({"email": email, "password": password}),
   //     );
@@ -280,7 +281,7 @@ class UserClient {
   //     SharedPreferences prefs = await SharedPreferences.getInstance();
   //     String? token = prefs.getString('auth_token');
 
-  //     var response = await post(Uri.http(url, '$endpoint/logout'), headers: {
+  //     var response = await post(Uri.https(url, '$endpoint/logout'), headers: {
   //       "Content-Type": "application/json",
   //       "Authorization": "Bearer $token"
   //     });
@@ -303,7 +304,7 @@ class UserClient {
   //     SharedPreferences prefs = await SharedPreferences.getInstance();
   //     String? token = prefs.getString('auth_token');
 
-  //     var response = await post(Uri.http(url, '$endpoint/logout'), headers: {
+  //     var response = await post(Uri.https(url, '$endpoint/logout'), headers: {
   //       "Content-Type": "application/json",
   //       "Authorization": "Bearer $token"
   //     });

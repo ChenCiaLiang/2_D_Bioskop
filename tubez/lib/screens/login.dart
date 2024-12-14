@@ -144,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             bool response = await UserClient.login(
                                 emailController.text, passwordController.text);
 
+
                             if (response) {
                               final snackBar = SnackBar(
                                 elevation: 0,

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 
 import 'package:tubez/entity/Film.dart';
 import 'package:tubez/model/tiket.dart';
