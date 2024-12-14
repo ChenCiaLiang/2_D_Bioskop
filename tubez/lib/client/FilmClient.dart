@@ -3,39 +3,41 @@ import 'package:tubez/entity/Film.dart';
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class FilmClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
 
   //untuk emulator
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api/film';
+  // static final String url = '10.0.2.2:8000';
+  // static final String endpoint = '/api/film';
 
   // untuk hp
-  // static final String url = 'ipv4 kalian';
-  // static final String endpoint = '/GD_API_1697/public/api/user';
+  // static final String url = '192.168.1.134';
+  // static final String endpoint = '/database/public/api/film';
 
   // mengambil semua data user dari API
-  static Future<List<Film>> fetchAll() async{
-    try{
+  static Future<List<Film>> fetchAll() async {
+    try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/get'), headers: {
+      var response = await get(Uri.http(url, '$endpoint/film/get'), headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer $token"});
+        "Authorization": "Bearer $token"
+      });
 
-      if(response.statusCode != 200){
+      if (response.statusCode != 200) {
         print(response.statusCode);
         throw Exception(response.reasonPhrase);
-      } 
+      }
 
       //mengambil bagian data dari response body
       Iterable list = json.decode(response.body)['data'];
 
       // list.map untuk membuat list objek User berdasarkan tiap elemen dari list
       return list.map((e) => Film.fromJson(e)).toList();
-    }catch(e){
+    } catch (e) {
       return Future.error('anjay ${e.toString()}');
     }
   }
@@ -45,10 +47,11 @@ class FilmClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/find/$searchText'), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
+      var response = await get(Uri.http(url, '$endpoint/film/find/$searchText'),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token"
+          });
 
       if (response.statusCode != 200) {
         throw Exception('Failed to load films');
@@ -62,7 +65,6 @@ class FilmClient {
       } else {
         throw Exception('Unexpected response format');
       }
-      
     } catch (e) {
       print("Error: $e");
       throw Exception('Failed to load films');
@@ -138,7 +140,6 @@ class FilmClient {
 //       if (data['status'] == true) {
 //         // di cek kalau status nya true maka akan diambil token nya, status itu dari controller login di laravel
 //         String token = data['token'];
-
 
 //         // token disimpan di shared preferences biar bisa diambil dari manapun
 //         SharedPreferences prefs = await SharedPreferences.getInstance();

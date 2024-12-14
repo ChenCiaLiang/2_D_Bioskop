@@ -5,6 +5,7 @@ import 'package:tubez/entity/History.dart';
 import 'package:tubez/client/HistoryClient.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -85,8 +86,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   image: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                               ?.fotoFilm !=
                           null
-                      ? 'http://10.0.2.2:8000${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
-                      : 'http://10.0.2.2:8000/storage/profilepict/profile.jpg',
+                      ? '$url${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
+                      : '$url/storage/profilepict/profile.jpg',
                   title: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                           ?.judul ??
                       'Unknown',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Film.dart';
 
 class MovieDescription extends StatelessWidget {
@@ -26,7 +27,7 @@ class MovieDescription extends StatelessWidget {
         child: Row(
           children: [
             Image.network(
-              'http://10.0.2.2:8000${movie.fotoFilm}',
+              '$url${movie.fotoFilm}',
               width: 100,
               height: 160,
               fit: BoxFit.cover,

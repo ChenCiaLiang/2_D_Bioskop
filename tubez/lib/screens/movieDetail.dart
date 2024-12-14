@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/selectSeat.dart';
 import 'dart:ui';
 import 'package:tubez/widgets/MovieDetailWidgets/MovieDescription.dart';
@@ -90,7 +91,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                       top: 0,
                       left: 0,
                       child: Image.network(
-                        'http://10.0.2.2:8000${movie.fotoFilm!}',
+                        '$url${movie.fotoFilm!}',
                         width: MediaQuery.of(context).size.width,
                         height: 500,
                         fit: BoxFit.cover,

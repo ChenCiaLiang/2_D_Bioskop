@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart'; // Untuk MIME type
 import 'package:mime/mime.dart'; // Untuk deteksi MIME type file
+import 'package:tubez/client/apiURL.dart' as apibro;
 
 import 'package:tubez/entity/User.dart';
 
@@ -13,8 +14,8 @@ class UserClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
 
   //untuk emulator
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api';
+  // static final String url = '10.0.2.2:8000';
+  // static final String endpoint = '/api';
 
   // untuk hp
   // static final String url = 'ipv4 kalian';
@@ -54,7 +55,8 @@ class UserClient {
   static Future<Response> register(User user) async {
     try {
       var response = await post(
-          Uri.http(url, '$endpoint/register'), // pergi ke /api/register
+          Uri.http(apibro.url,
+              '${apibro.endpoint}/register'), // pergi ke /api/register
           headers: {"Content-Type": "application/json"},
           body: user.toRawJson());
       // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
@@ -139,7 +141,8 @@ class UserClient {
 
   static Future<bool> login(String email, String password) async {
     try {
-      var response = await post(Uri.http(url, '$endpoint/login'),
+      var response = await post(
+          Uri.http(apibro.url, '${apibro.endpoint}/login'),
           headers: {"Content-Type": "application/json"},
           body: json.encode({"email": email, "password": password}));
       // masukin emiail dan password yang sudah diinput ke dalam body untuk dibawa ke API login
@@ -193,8 +196,8 @@ class UserClient {
           : 0; // Jika null atau gagal parse, gunakan 0
 
       if (token != null) {
-        var uri = Uri.http(
-            url, '$endpoint/update/$userId'); // URL untuk update profil
+        var uri = Uri.http(apibro.url,
+            '${apibro.endpoint}/update/$userId'); // URL untuk update profil
 
         var request = http.MultipartRequest('POST', uri)
           ..headers.addAll({
@@ -238,7 +241,8 @@ class UserClient {
   // Menghapus data user sesuai ID
   static Future<Response> destroy(id) async {
     try {
-      var response = await delete(Uri.http(url, '$endpoint/$id'));
+      var response =
+          await delete(Uri.http(apibro.url, '${apibro.endpoint}/$id'));
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -253,10 +257,12 @@ class UserClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await post(Uri.http(url, '$endpoint/logout'), headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
-      });
+      var response = await post(
+          Uri.http(apibro.url, '${apibro.endpoint}/logout'),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $token"
+          });
 
       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -316,7 +322,7 @@ class UserClient {
   Future<Response> dataUser(String? token) async {
     if (token != null) {
       final response = await get(
-        Uri.http(url, '$endpoint/index'),
+        Uri.http(apibro.url, '${apibro.endpoint}/index'),
         headers: {
           'Authorization': 'Bearer $token',
           "Content-Type": "application/json",

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/entity/Review.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class ReviewClient {
-  static const String apiUrl = 'http://10.0.2.2:8000/api';
+  // static const String apiUrl = 'http://10.0.2.2:8000/api';
 
   static Future<bool> submitReview(
       int idFilm, BigInt idHistory, String review, double rating) async {
@@ -12,8 +14,8 @@ class ReviewClient {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
 
-      final response = await http.post(
-        Uri.parse('$apiUrl/review/create'),
+      var response = await post(
+        Uri.http(url, '$endpoint/review/create'),
         headers: {
           'Authorization': 'Bearer $token',
           "Content-Type": "application/json",
@@ -44,8 +46,8 @@ class ReviewClient {
     UserClient userClient = UserClient();
     String? token = await userClient.getToken();
     try {
-      final response = await http.post(
-        Uri.parse('$apiUrl/history/update/$idHistory'),
+      var response = await post(
+        Uri.http(url, '$endpoint/history/update/$idHistory'),
         headers: {
           'Authorization': 'Bearer $token',
           "Content-Type": "application/json",
@@ -71,8 +73,8 @@ class ReviewClient {
     UserClient userClient = UserClient();
     String? token = await userClient.getToken();
     try {
-      final response = await http.get(
-        Uri.parse('$apiUrl/review/$idHistory'),
+      var response = await get(
+        Uri.http(url, '$endpoint/review/$idHistory'),
         headers: {
           'Authorization': 'Bearer $token',
           "Content-Type": "application/json",

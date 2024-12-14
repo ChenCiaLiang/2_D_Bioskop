@@ -1,23 +1,26 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:tubez/entity/History.dart';
 import 'package:tubez/client/UserClient.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class HistoryClient {
-  static final String apiUrl = 'http://10.0.2.2:8000/api';
+  // static final String apiUrl = '192.168.1.134/database/public/api/film';
+
+  // untuk hp
+  // static final String url = '192.168.1.134';
+  // static final String endpoint = '/database/public/api/film';
 
   static Future<List<History>> fetchHistory() async {
     try {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
 
-      final response = await http.get(
-        Uri.parse('$apiUrl/history'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-      );
+      var response = await get(Uri.http(url, '$endpoint/history'), headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token"
+      });
 
       if (response.statusCode == 200) {
         print('Response body: ${response.body}');
@@ -37,7 +40,7 @@ class HistoryClient {
     try {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
-      var response = await http.post(Uri.parse('$apiUrl/history/create'),
+      var response = await post(Uri.http(url, '$endpoint/history/create'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'

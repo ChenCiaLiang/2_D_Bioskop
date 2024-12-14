@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 
 import 'package:tubez/screens/movieDetail.dart';
 import 'package:tubez/entity/Film.dart';
@@ -11,12 +12,15 @@ class comingSoonScreen extends StatefulWidget {
   State<comingSoonScreen> createState() => _comingSoonScreenState();
 }
 
-class _comingSoonScreenState extends State<comingSoonScreen> with TickerProviderStateMixin {
+class _comingSoonScreenState extends State<comingSoonScreen>
+    with TickerProviderStateMixin {
   late List<Film> comingSoonMovies;
   @override
   void initState() {
     super.initState();
-    comingSoonMovies = widget.movieList.where((movie) => movie.status == 'Coming Soon').toList();
+    comingSoonMovies = widget.movieList
+        .where((movie) => movie.status == 'Coming Soon')
+        .toList();
   }
 
   @override
@@ -24,7 +28,9 @@ class _comingSoonScreenState extends State<comingSoonScreen> with TickerProvider
     super.didUpdateWidget(oldWidget);
     if (widget.movieList != oldWidget.movieList) {
       setState(() {
-        comingSoonMovies = widget.movieList.where((movie) => movie.status == 'Coming Soon').toList();
+        comingSoonMovies = widget.movieList
+            .where((movie) => movie.status == 'Coming Soon')
+            .toList();
       });
     }
   }
@@ -42,8 +48,7 @@ class _comingSoonScreenState extends State<comingSoonScreen> with TickerProvider
           crossAxisCount: 2, // Number of columns
           mainAxisSpacing: 13,
           crossAxisSpacing: 8,
-          childAspectRatio: 0.5, 
-
+          childAspectRatio: 0.5,
         ),
         itemCount: comingSoonMovies.length, // Use widget.movieList here
         itemBuilder: (context, index) {
@@ -61,7 +66,8 @@ class _comingSoonScreenState extends State<comingSoonScreen> with TickerProvider
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.transparent, // Transparent background for separation
+                color:
+                    Colors.transparent, // Transparent background for separation
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -73,7 +79,7 @@ class _comingSoonScreenState extends State<comingSoonScreen> with TickerProvider
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        'http://10.0.2.2:8000${movie.fotoFilm}',
+                        '$url${movie.fotoFilm}',
                         fit: BoxFit.cover,
                       ),
                     ),

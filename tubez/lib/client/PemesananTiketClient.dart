@@ -4,13 +4,14 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/entity/pemesanan_tiket.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class PemesananTiketClient {
   // sesuaikan url dan endpoint dengan device yang digunakan
 
   //untuk emulator
-  static final String url = '10.0.2.2:8000';
-  static final String endpoint = '/api';
+  // static final String url = '10.0.2.2:8000';
+  // static final String endpoint = '/api';
 
   static Future<List<PemesananTiket>> getAllKursi(int idJadwalTayang) async {
     try {

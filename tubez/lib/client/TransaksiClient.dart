@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubez/entity/transaksi.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class TransaksiClient {
-  static const String baseUrl =
-      'http://10.0.2.2:8000/api'; // Your Laravel backend base URL
+  // static const String baseUrl =
+  //     'http://10.0.2.2:8000/api'; // Your Laravel backend base URL
 
   static Future<http.Response> createTransaksi(Transaksi transaksi) async {
     try {
@@ -21,8 +23,9 @@ class TransaksiClient {
       final bodyData = jsonEncode(transaksi.toJson());
 
       // Send POST request with headers and body
-      final response = await http.post(
-        Uri.parse('$baseUrl/transaksi/create'), // Your Transaksi API endpoint
+      var response = await post(
+        Uri.http(
+            url, '$endpoint/transaksi/create'), // Your Transaksi API endpoint
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/screens/list.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
@@ -43,7 +44,7 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                 children: [
                   Positioned.fill(
                     child: Image.network(
-                      'http://10.0.2.2:8000${menus.fotoMenu}',
+                      '$url${menus.fotoMenu}',
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,
