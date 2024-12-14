@@ -22,7 +22,7 @@ class FilmClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/film/get'), headers: {
+      var response = await get(Uri.https(url, '$endpoint/film/get'), headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       });
@@ -47,7 +47,7 @@ class FilmClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/film/find/$searchText'),
+      var response = await get(Uri.https(url, '$endpoint/film/find/$searchText'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -75,7 +75,7 @@ class FilmClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await post(Uri.http(url, '$endpoint/updateRating/$id'), headers: {
+      var response = await post(Uri.https(url, '$endpoint/film/updateRating/$id'), headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       });
@@ -96,7 +96,7 @@ class FilmClient {
   // // Mengambil data User dari API sesuai ID
   // static Future<User> find(id) async {
   //   try{
-  //     var response = await get(Uri.http(url, '$endpoint/$id'));
+  //     var response = await get(Uri.https(url, '$endpoint/$id'));
 
   //     if(response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -110,7 +110,7 @@ class FilmClient {
 //   static Future<Response> register(Film film) async {
 //     try {
 //       var response = await post(
-//           Uri.http(url, '$endpoint/register'), // pergi ke /api/register
+//           Uri.https(url, '$endpoint/register'), // pergi ke /api/register
 //           headers: {"Content-Type": "application/json"},
 //           body: user.toRawJson());
 //       // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body
@@ -127,7 +127,7 @@ class FilmClient {
 
 //   static Future<bool> login(String email, String password) async {
 //     try {
-//       var response = await post(Uri.http(url, '$endpoint/login'),
+//       var response = await post(Uri.https(url, '$endpoint/login'),
 //           headers: {"Content-Type": "application/json"},
 //           body: json.encode({"email": email, "password": password}));
 //       // masukin emiail dan password yang sudah diinput ke dalam body untuk dibawa ke API login
@@ -169,7 +169,7 @@ class FilmClient {
 //   // Mengubah data user sesuai ID
 //   static Future<Response> update(Film film) async {
 //     try {
-//       var response = await put(Uri.http(url, '$endpoint/${user.id}'),
+//       var response = await put(Uri.https(url, '$endpoint/${user.id}'),
 //           headers: {"Content-Type": "application/json"},
 //           body: user.toRawJson());
 
@@ -184,7 +184,7 @@ class FilmClient {
 //   // Menghapus data user sesuai ID
 //   static Future<Response> destroy(id) async {
 //     try {
-//       var response = await delete(Uri.http(url, '$endpoint/$id'));
+//       var response = await delete(Uri.https(url, '$endpoint/$id'));
 
 //       if (response.statusCode != 200) throw Exception(response.reasonPhrase);
 
@@ -199,7 +199,7 @@ class FilmClient {
 //       SharedPreferences prefs = await SharedPreferences.getInstance();
 //       String? token = prefs.getString('auth_token');
 
-//       var response = await post(Uri.http(url, '$endpoint/logout'), headers: {
+//       var response = await post(Uri.https(url, '$endpoint/logout'), headers: {
 //         "Content-Type": "application/json",
 //         "Authorization": "Bearer $token"
 //       });
@@ -218,7 +218,7 @@ class FilmClient {
 //   Future<Response> dataUser(String? token) async {
 //     if (token != null) {
 //       final response = await get(
-//         Uri.http(url, '$endpoint/index'),
+//         Uri.https(url, '$endpoint/index'),
 //         headers: {
 //           'Authorization': 'Bearer $token',
 //           "Content-Type": "application/json",

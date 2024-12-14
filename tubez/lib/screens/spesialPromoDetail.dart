@@ -43,7 +43,7 @@ class _SpesialPromoDetailScreenState extends State<SpesialPromoDetailScreen> {
                 Positioned.fill(
                   //tampil foto spesialnya-_-
                   child: Image.network(
-                    '$url${spesial.fotoPromo}',
+                    '$urlGambar${spesial.fotoPromo}',
                     width: double.infinity,
                     height: double.infinity,
                     fit: BoxFit.cover,

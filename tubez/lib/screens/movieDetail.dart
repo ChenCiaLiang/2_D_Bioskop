@@ -91,7 +91,7 @@ class _moveiDetailScreenState extends State<moveiDetailScreen> {
                       top: 0,
                       left: 0,
                       child: Image.network(
-                        '$url${movie.fotoFilm!}',
+                        '$urlGambar${movie.fotoFilm!}',
                         width: MediaQuery.of(context).size.width,
                         height: 500,
                         fit: BoxFit.cover,

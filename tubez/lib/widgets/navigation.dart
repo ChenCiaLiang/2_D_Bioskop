@@ -29,7 +29,6 @@ class _navigationBarState extends State<navigationBar> {
     const HomeScreen(),
     const ListScreen(),
     HistoryScreen(),
-    const profileScreen(),
   ];
 
   @override

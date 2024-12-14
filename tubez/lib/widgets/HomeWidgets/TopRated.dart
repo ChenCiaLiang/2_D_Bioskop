@@ -40,7 +40,7 @@ class TopRated extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            '$url${movie.fotoFilm!}', // Ensure you append the correct path
+                            '$urlGambar${movie.fotoFilm!}', // Ensure you append the correct path
                             width: 140,
                             height: 200,
                             fit: BoxFit.cover,

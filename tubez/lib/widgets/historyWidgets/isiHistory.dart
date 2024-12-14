@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tubez/widgets/historyWidgets/isiReview.dart';
 
+// ignore: must_be_immutable
 class IsiHistory extends StatelessWidget {
-  const IsiHistory({
+  IsiHistory({
     super.key,
     required this.image,
     required this.title,
@@ -23,7 +24,7 @@ class IsiHistory extends StatelessWidget {
   final int studio;
   final String date;
   final String total;
-  final bool isReview;
+  bool isReview;
   final int ticketCount;
   final int idFilm; // ID Film untuk dikirim ke IsiReview
   final BigInt idHistory; // ID History untuk dikirim ke IsiReview
@@ -45,9 +46,15 @@ class IsiHistory extends StatelessWidget {
           ticketCount: ticketCount,
           idFilm: idFilm, // Kirim idFilm
           idHistory: idHistory, // Kirim idHistory
+          onReview: handleIsReview,
         );
       },
     );
+  }
+
+  void handleIsReview(bool isReviewUpdate) {
+    print('Selected Day: ${isReviewUpdate}');
+    isReview = isReviewUpdate;
   }
 
   @override
@@ -69,12 +76,12 @@ class IsiHistory extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          Container(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
                 image,
-                width: 80,
+                width: 90,
                 height: 140,
                 fit: BoxFit.cover,
               ),
@@ -90,7 +97,7 @@ class IsiHistory extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -182,6 +189,8 @@ class IsiHistory extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ],
                 ),

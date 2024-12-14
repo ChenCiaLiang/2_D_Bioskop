@@ -66,10 +66,10 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
     idStudio = widget.jadwalTayang!.idStudio;
     if (idStudio == 1) {
       rows = 10;
-      cols = 10;
+      cols = 18;
     } else {
       rows = 8;
-      cols = 8;
+      cols = 12;
     }
 
     if (widget.jadwalTayang?.id != null) {
@@ -99,7 +99,22 @@ class _selectSeatScreenState extends State<selectSeatScreen> {
 
           // Translate the SeatNumber object to a seat code (e.g., "A1", "B1")
           String seatCode = seatNumber.toString();
-
+          if(idStudio ==1){
+            if(colIndex==2||
+            colIndex==3||
+            colIndex==14||
+            colIndex==15){
+              return SeatState.empty;
+            }
+          }else{
+            if(colIndex==2||
+            colIndex==5||
+            colIndex==8||
+            colIndex==11){
+              return SeatState.empty;
+            }
+          }
+          
           // If the seat is reserved, mark it as unavailable, else available
           if (reservedSeats.contains(seatCode)) {
             return SeatState.sold; // Seat is reserved
@@ -422,7 +437,7 @@ void showSlideInModal(
                       Container(
                           height: 80,
                           width: 80,
-                          child: Image.network('$url${movie.fotoFilm}')),
+                          child: Image.network('$urlGambar${movie.fotoFilm}')),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(

@@ -20,6 +20,7 @@ import 'package:tubez/client/FilmClient.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/entity/Film.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tubez/client/apiURL.dart';
 
 final themeMode = ValueNotifier(2);
 
@@ -43,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     ambilToken();
-
   }
   
   Future<void> ambilToken() async {
@@ -152,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  'http://10.0.2.2:8000/storage/films/venom2.jpg',
+                                  '$urlGambar/storage/films/venom2.jpg',
                                   fit: BoxFit.cover,
                                 ),
                               ),

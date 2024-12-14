@@ -40,14 +40,14 @@ class _ListScreenState extends State<ListScreen> {
   Iterable<SpesialPromo> spesialPromoList = [];
   Iterable<Menu> menuList = [];
   int selectedTab = 0;
-  late Future<void> dataMakanan;
+  late Future<void> dataMakanan = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     ambilToken(); // Memanggil ambilToken() saat screen pertama kali dimuat
     super.initState();
-    dataMakanan = fetchAllData();
+    
   }
 
   Future<void> ambilToken() async {
@@ -66,6 +66,7 @@ class _ListScreenState extends State<ListScreen> {
 
           setState(() {
             userId = user.id; // Menyimpan userId di state
+            dataMakanan = fetchAllData();
           });
 
           print('User ID: $userId');

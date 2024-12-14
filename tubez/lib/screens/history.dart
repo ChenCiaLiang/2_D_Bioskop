@@ -86,8 +86,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   image: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                               ?.fotoFilm !=
                           null
-                      ? '$url${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
-                      : '$url/storage/profilepict/profile.jpg',
+                      ? '$urlGambar${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
+                      : '$urlGambar/storage/profilepict/profile.jpg',
                   title: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                           ?.judul ??
                       'Unknown',

@@ -71,7 +71,7 @@ class _HomeCarouselState extends State<HomeCarousel>
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        '$url${movie.fotoFilm!}',
+                        '$urlGambar${movie.fotoFilm!}',
                         fit: BoxFit.cover,
                         width: 220,
                       ),

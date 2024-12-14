@@ -14,7 +14,7 @@ class MenuClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/menu/get'), headers: {
+      var response = await get(Uri.https(url, '$endpoint/menu/get'), headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       });
@@ -37,7 +37,7 @@ class MenuClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/menu/find/$searchText'),
+      var response = await get(Uri.https(url, '$endpoint/menu/find/$searchText'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"

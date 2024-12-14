@@ -3,6 +3,7 @@ import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
 import 'package:tubez/screens/list.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class PromoDetailScreen extends StatefulWidget {
   final SpesialPromo itemPromo;
@@ -43,7 +44,7 @@ class _PromoDetailScreenState extends State<PromoDetailScreen> {
                   Positioned.fill(
                     //ini foto promonya-_-
                     child: Image.network(
-                      'http://10.0.2.2:8000${promo.fotoPromo}',
+                      '$urlGambar${promo.fotoPromo}',
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,

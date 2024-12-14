@@ -18,6 +18,7 @@ class IsiReview extends StatefulWidget {
   final int ticketCount;
   final int idFilm; // Tambahkan idFilm
   final BigInt idHistory; // Tambahkan idHistory
+  final void Function(bool) onReview;
 
   const IsiReview({
     super.key,
@@ -31,6 +32,7 @@ class IsiReview extends StatefulWidget {
     required this.ticketCount,
     required this.idFilm,
     required this.idHistory,
+    required this.onReview,
   });
 
   @override
@@ -142,6 +144,7 @@ class _IsiReviewState extends State<IsiReview> {
     });
 
     if (success && successUpdate && updateRating) {
+      widget.onReview(true);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Review berhasil dikirim'),
       ));

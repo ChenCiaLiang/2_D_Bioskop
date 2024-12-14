@@ -14,7 +14,7 @@ class SpesialPromoClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await get(Uri.http(url, '$endpoint/spesialPromo/get'),
+      var response = await get(Uri.https(url, '$endpoint/spesialPromo/get'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -22,6 +22,8 @@ class SpesialPromoClient {
 
       if (response.statusCode != 200) {
         print(response.statusCode);
+        var responseBody = json.decode(response.body);
+        print(responseBody['data']);
         throw Exception(response.reasonPhrase);
       }
 

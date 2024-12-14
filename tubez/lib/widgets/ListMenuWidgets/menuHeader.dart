@@ -8,15 +8,21 @@ import 'package:tubez/client/MenuClient.dart';
 import 'package:tubez/screens/menuDetail.dart';
 import 'package:tubez/entity/Menu.dart';
 
+// ignore: must_be_immutable
 class MenuHeader extends StatelessWidget {
-  const MenuHeader({
+  MenuHeader({
     super.key,
     required this.size,
     required this.user,
   });
 
   final Size size;
-  final User user;
+  User user;
+
+  void handleUpdate(User updatedUser) {
+    print('Selected Day: ${updatedUser}');
+    user = updatedUser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +87,7 @@ class MenuHeader extends StatelessWidget {
                                             const EdgeInsets.symmetric(
                                                 vertical: 8),
                                         leading: Image.network(
-                                          '$url${menus[index].fotoMenu}',
+                                          '$urlGambar${menus[index].fotoMenu}',
                                           width: 50,
                                           height: 75,
                                           fit: BoxFit.cover,
@@ -145,12 +151,12 @@ class MenuHeader extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const profileScreen()),
+                      builder: (context) => profileScreen(updatedUser: handleUpdate)),
                 );
               },
               child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage: NetworkImage('$url/storage/${user.foto}'),
+                backgroundImage: NetworkImage('$urlGambar/storage/${user.foto}'),
               ),
             ),
           ],

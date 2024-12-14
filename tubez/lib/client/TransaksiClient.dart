@@ -24,7 +24,7 @@ class TransaksiClient {
 
       // Send POST request with headers and body
       var response = await post(
-        Uri.http(
+        Uri.https(
             url, '$endpoint/transaksi/create'), // Your Transaksi API endpoint
         headers: {
           'Content-Type': 'application/json',
@@ -32,9 +32,7 @@ class TransaksiClient {
         },
         body: bodyData,
       );
-      print('asdasd ${response.body}');
-      print('aaaaaaaaaaaaaaaaaaaa ${response.statusCode}');
-
+      
       if (response.statusCode != 200) {
         throw Exception('Failed to create transaksi: ${response.body}');
       }
