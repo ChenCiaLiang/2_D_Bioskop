@@ -6,6 +6,9 @@ import 'package:tubez/widgets/checkbox.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/entity/User.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -48,6 +51,38 @@ class _RegisterViewState extends State<RegisterView> {
   DateTime parseDate(String input) {
     String formattedDate = formatDate(input);
     return DateTime.parse(formattedDate);
+  }
+
+  void _showAlertDialog(BuildContext context, Function onConfirm) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Register Alert!!!",
+      desc: "Apakah kamu yakin data nya sudah benar?",
+      buttons: [
+        DialogButton(
+          child: const Text(
+            "Cancel",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          color: Colors.red,
+        ),
+        DialogButton(
+          child: const Text(
+            "Confirm",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+            onConfirm();
+          },
+          color: Colors.green,
+        )
+      ],
+    ).show();
   }
 
   @override
@@ -262,45 +297,58 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // buat tanggalLahir yang awalnya dd/mm/yyyy jadi yyyy-mm-dd
-                      DateTime tanggalLahir =
-                          parseDate(dateBirthController.text);
-                      DateFormat formatter = DateFormat('yyyy-MM-dd');
-                      String formatted = formatter.format(tanggalLahir);
+                      _showAlertDialog(context, () async {
+                          // buat tanggalLahir yang awalnya dd/mm/yyyy jadi yyyy-mm-dd
+                          DateTime tanggalLahir =
+                              parseDate(dateBirthController.text);
+                          DateFormat formatter = DateFormat('yyyy-MM-dd');
+                          String formatted = formatter.format(tanggalLahir);
 
-                      User newUser = User(
-                        username: firstNameController.text +
-                            " " +
-                            lastNameController.text,
-                        password: passwordController.text,
-                        tanggalLahir: formatted,
-                        email: emailController.text,
-                        noTelepon: phoneController.text,
-                        foto: "",
-                      );
+                          User newUser = User(
+                            username: firstNameController.text +
+                                " " +
+                                lastNameController.text,
+                            password: passwordController.text,
+                            tanggalLahir: formatted,
+                            email: emailController.text,
+                            noTelepon: phoneController.text,
+                            foto: "",
+                          );
 
-                      try {
-                        // ngelakuin register lalu response nya disimpan di variabel response
-                        var response = await UserClient.register(newUser);
-                        // jika status code nya 200 atau berhasil maka akan di push ke halaman login
-                        if (response.statusCode == 200) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const LoginScreen()),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    'Registration failed: ${response.body}')),
-                          );
-                        }
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error Nya: $e')),
-                        );
-                      }
+                          try {
+                            // ngelakuin register lalu response nya disimpan di variabel response
+                            var response = await UserClient.register(newUser);
+                            // jika status code nya 200 atau berhasil maka akan di push ke halaman login
+                            if (response.statusCode == 200) {
+                                Fluttertoast.showToast(
+                                msg: "Berhasil Register! :D",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                                fontSize: 25.0
+                              );
+
+                              await Future.delayed(Duration(seconds: 2));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const LoginScreen()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Registration failed: ${response.body}')),
+                              );
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error Nya: $e')),
+                            );
+                          }
+                      });
                     }
                   },
                   child: const Text('Sign Up'))

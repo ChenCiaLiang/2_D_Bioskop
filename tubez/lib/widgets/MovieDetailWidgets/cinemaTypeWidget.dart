@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tubez/entity/JadwalTayang.dart';
 
 class cinemaTypeWidget extends StatefulWidget {
-  const cinemaTypeWidget({super.key, required this.jadwalTayang, required this.onTimeSelected});
+  const cinemaTypeWidget(
+      {super.key, required this.jadwalTayang, required this.onTimeSelected});
   final List<Jadwaltayang> jadwalTayang;
   final Function(int) onTimeSelected;
 
@@ -37,7 +38,8 @@ class _cinemaTypeWidgetState extends State<cinemaTypeWidget> {
                 setState(() {
                   selectedIndex = index;
                 });
-                var selectedJadwal = widget.jadwalTayang.firstWhere((jadwal) => jadwal.studio?.jenis == jenisStudio);
+                var selectedJadwal = widget.jadwalTayang.firstWhere(
+                    (jadwal) => jadwal.studio?.jenis == jenisStudio);
                 widget.onTimeSelected(selectedJadwal.idStudio!);
               },
               style: ButtonStyle(
@@ -54,7 +56,7 @@ class _cinemaTypeWidgetState extends State<cinemaTypeWidget> {
                     borderRadius: BorderRadius.circular(12.0),
                     side: BorderSide(
                         color: isActive ? Colors.amber : Colors.white,
-                        width: 2),
+                        width: 1),
                   ),
                 ),
               ),

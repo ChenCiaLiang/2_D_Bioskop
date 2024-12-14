@@ -31,11 +31,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/history/create', [HistoryController::class, 'store']);
 
+    Route::post('/history/update/{id}', [HistoryController::class, 'update']);
+
     Route::post('/review/create', [ReviewController::class, 'store']);
 
-    Route::get('/kursi/all', [PemesananTiketController::class, 'getAll']);
+    Route::get('/review/{id}', [ReviewController::class, 'index']);
+
+    Route::get('/kursi/all/{idJadwalTayang}', [PemesananTiketController::class, 'getAll']);
 
     Route::post('/pemesanantiket', [PemesananTiketController::class, 'store']);
+
 
     Route::get('/menu/get', [MenuController::class, 'fetchAll']);
     Route::get('/menu/find/{nama}', [MenuController::class, 'find']);
@@ -43,6 +48,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/film/get', [FilmController::class, 'fetchAll']);
     Route::get('/film/find/{judul}', [FilmController::class, 'find']);
+    Route::post('/film/updateRating/{id}', [FilmController::class, 'updateRating']);
 
     Route::get('/jadwaltayang/get/{id}', [JadwalTayangController::class, 'fetchByIdFilm']);
+
+    Route::post('/transaksi/create', [TransaksiController::class, 'store']);
+
+    Route::delete('/pemesanantiket/delete/{id}', [PemesananTiketController::class, 'deleteSeat']);
 });

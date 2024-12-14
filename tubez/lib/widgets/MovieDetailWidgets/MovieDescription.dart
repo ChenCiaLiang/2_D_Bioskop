@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Film.dart';
 
 class MovieDescription extends StatelessWidget {
@@ -22,9 +23,9 @@ class MovieDescription extends StatelessWidget {
             Container(
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height,
-              padding: EdgeInsets.symmetric(horizontal:8),
+              padding: EdgeInsets.symmetric(horizontal: 8),
               child: Container(
-                child: Image.network('http://10.0.2.2:8000${movie.fotoFilm!}',
+                child: Image.network('$url${movie.fotoFilm!}',
                     fit: BoxFit.cover, width: 200),
               ),
             ),
@@ -60,7 +61,7 @@ class MovieDescription extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "${movie.jumlahRating}",
+                                "${movie.jumlahRating.toStringAsFixed(1)}",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -99,8 +100,7 @@ class MovieDescription extends StatelessWidget {
                             child: Container(
                               margin: const EdgeInsets.only(right: 6.0),
                               child: SingleChildScrollView(
-                                  child: Text(
-                                      "${movie.sinopsis}",
+                                  child: Text("${movie.sinopsis}",
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,

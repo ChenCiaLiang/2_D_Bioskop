@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/menuDetail.dart';
 import 'package:tubez/entity/Menu.dart';
-
 
 class Menus extends StatefulWidget {
   const Menus({
@@ -106,6 +106,7 @@ class _MenusState extends State<Menus> {
                   color: Colors.grey[900],
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: 300,
@@ -113,7 +114,7 @@ class _MenusState extends State<Menus> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'http://10.0.2.2:8000${item.fotoMenu!}',
+                          '$url${item.fotoMenu!}',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -132,7 +133,7 @@ class _MenusState extends State<Menus> {
           },
         ),
       ],
-    );  
+    );
   }
 
   List<Menu> selectedMenu(List<Menu> listMenu) {

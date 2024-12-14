@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubez/widgets/historyWidgets/historyHeader.dart';
-import 'package:tubez/entity/History.dart'; // Mengimpor model History
-import 'package:tubez/client/HistoryClient.dart'; // Mengimpor HistoryClient untuk mengambil data
+import 'package:tubez/entity/History.dart';
+import 'package:tubez/client/HistoryClient.dart';
 import 'package:tubez/client/UserClient.dart';
-import 'package:tubez/widgets/historyWidgets/isiHistory.dart'; // Mengimpor IsiHistory
+import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -21,7 +22,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     await ambilToken();
     if (userId != null) {
       setState(() {
-        _historyFuture = HistoryClient.fetchHistory(userId!);
+        _historyFuture = HistoryClient.fetchHistory();
       });
     }
   }
@@ -70,7 +71,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
               child: Text(
-                'No History Found',
+                'Fetching History',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
@@ -85,8 +86,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   image: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                               ?.fotoFilm !=
                           null
-                      ? 'http://10.0.2.2:8000${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
-                      : 'http://10.0.2.2:8000/storage/profilepict/profile.jpg',
+                      ? '$url${history.transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.fotoFilm}'
+                      : '$url/storage/profilepict/profile.jpg',
                   title: history.transaksi?.pemesanan_tiket?.jadwal_tayang?.film
                           ?.judul ??
                       'Unknown',
@@ -100,9 +101,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           .toString() ??
                       'Unknown Date',
                   total: 'Rp ${history.transaksi?.totalHarga ?? 0}',
-                  isReviewed: history.isReview ?? false,
+                  isReview: history.isReview ?? false,
                   ticketCount:
                       history.transaksi?.pemesanan_tiket?.countTiket ?? 0,
+                  idFilm: history
+                      .transaksi!.pemesanan_tiket!.jadwal_tayang!.film!.id,
+                  idHistory: history.id!,
                 );
               },
             );

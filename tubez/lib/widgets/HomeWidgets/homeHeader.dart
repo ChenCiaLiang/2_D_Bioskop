@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/profile.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'dart:convert';
@@ -80,7 +81,7 @@ class HomeHeader extends StatelessWidget {
                                             const EdgeInsets.symmetric(
                                                 vertical: 8),
                                         leading: Image.network(
-                                          'http://10.0.2.2:8000${films[index].fotoFilm}',
+                                          '$url${films[index].fotoFilm}',
                                           width: 50,
                                           height: 75,
                                           fit: BoxFit.cover,
@@ -149,8 +150,7 @@ class HomeHeader extends StatelessWidget {
               },
               child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage:
-                    NetworkImage('http://10.0.2.2:8000/storage/${user.foto}'),
+                backgroundImage: NetworkImage('$url/storage/${user.foto}'),
               ),
             ),
           ],

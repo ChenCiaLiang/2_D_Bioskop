@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/movieDetail.dart';
 import 'package:tubez/entity/Film.dart';
 
@@ -11,13 +12,15 @@ class nowPlayingScreen extends StatefulWidget {
   State<nowPlayingScreen> createState() => _nowPlayingScreenState();
 }
 
-class _nowPlayingScreenState extends State<nowPlayingScreen> with TickerProviderStateMixin {
-
+class _nowPlayingScreenState extends State<nowPlayingScreen>
+    with TickerProviderStateMixin {
   late List<Film> nowPlayingMovies;
   @override
   void initState() {
     super.initState();
-    nowPlayingMovies = widget.movieList.where((movie) => movie.status == 'Now Playing').toList();
+    nowPlayingMovies = widget.movieList
+        .where((movie) => movie.status == 'Now Playing')
+        .toList();
   }
 
   @override
@@ -25,14 +28,15 @@ class _nowPlayingScreenState extends State<nowPlayingScreen> with TickerProvider
     super.didUpdateWidget(oldWidget);
     if (widget.movieList != oldWidget.movieList) {
       setState(() {
-        nowPlayingMovies = widget.movieList.where((movie) => movie.status == 'Now Playing').toList();
+        nowPlayingMovies = widget.movieList
+            .where((movie) => movie.status == 'Now Playing')
+            .toList();
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: GridView.builder(
@@ -61,7 +65,8 @@ class _nowPlayingScreenState extends State<nowPlayingScreen> with TickerProvider
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.transparent, // Transparent background for separation
+                color:
+                    Colors.transparent, // Transparent background for separation
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -73,7 +78,7 @@ class _nowPlayingScreenState extends State<nowPlayingScreen> with TickerProvider
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        'http://10.0.2.2:8000${movie.fotoFilm}',
+                        '$url${movie.fotoFilm}',
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/entity/Film.dart';
 
 class MovieDescription extends StatelessWidget {
-  const MovieDescription({
+  MovieDescription({
     super.key,
     required this.movie,
+    required this.currentDate,
   });
 
   final Film movie;
+  String currentDate = DateFormat('EEEEEE, dd-MM-yyyy').format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +27,17 @@ class MovieDescription extends StatelessWidget {
         child: Row(
           children: [
             Image.network(
-              'http://10.0.2.2:8000${movie.fotoFilm}',
+              '$url${movie.fotoFilm}',
               width: 100,
               height: 160,
               fit: BoxFit.cover,
             ),
             SizedBox(width: 20),
             Expanded(
-              // Added Expanded to wrap text
               child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start, // Align text to start (left)
+
                 children: [
                   Text(
                     "${movie.judul}",
@@ -41,8 +47,7 @@ class MovieDescription extends StatelessWidget {
                         fontSize: 18),
                     softWrap: true, // Ensure text wraps
                     maxLines: 2,
-                    overflow:
-                        TextOverflow.ellipsis, // Ellipsis if text overflows
+                    overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 5),
                   Row(
@@ -97,7 +102,7 @@ class MovieDescription extends StatelessWidget {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          "Monday, 07 Desember 2003",
+                          "$currentDate",
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.w400),
                           softWrap: true, // Ensure text wraps

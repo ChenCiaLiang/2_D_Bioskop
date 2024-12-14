@@ -23,16 +23,14 @@ class HistoryController extends Controller
                 ], 404);
             }
 
-            // Mengambil history, transaksi, dan pemesanantikets berdasarkan user_id
             $historyData = History::with([
                 'transaksi',
                 'transaksi.pemesananTiket.JadwalTayang.film',
                 'transaksi.pemesananTiket.JadwalTayang.studio',
             ])
-                ->where('idUser', $userId)
-                ->get();
-
-            // Jika tidak ada data yang ditemukan
+            ->where('idUser', $userId)
+            ->get();
+            
             if ($historyData->isEmpty()) {
                 return response()->json([
                     'status' => false,
@@ -41,7 +39,6 @@ class HistoryController extends Controller
                 ], 404);
             }
 
-            // Mengembalikan data yang sudah diambil
             return response()->json([
                 'status' => true,
                 'message' => 'History, transaction, and ticket reservation data retrieved successfully',
@@ -49,7 +46,6 @@ class HistoryController extends Controller
             ], 200);
 
         } catch (Exception $e) {
-            // Menangani error jika terjadi
             return response()->json([
                 'status' => false,
                 'message' => 'Error: ' . $e->getMessage(),
@@ -60,14 +56,13 @@ class HistoryController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'idTransaksi' => 'required',
-            'status' => 'required',
             'idUser' => 'required',
+            'status' => 'required',
             'isReview' => 'required|integer|max:1',
         ]);
-
+        
         try {
 
             History::create([
@@ -77,13 +72,41 @@ class HistoryController extends Controller
                 'isReview' => $request->isReview,
             ]);
 
-            return response()->json([ // respon ketika berhasil
+            return response()->json([
                 "status" => true,
                 "message" => "Create History Successful",
             ], 200);
 
         } catch (Exception $e) {
-            // Menangani error jika terjadi
+            return response()->json([
+                'status' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+                'history' => [],
+            ], 400);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required',
+            'isReview' => 'required',
+        ]);
+
+        $history = History::find($id);
+
+        try {
+            $history->update([
+                'status' => $request->status,
+                'isReview' => $request->isReview,
+            ]);
+
+            return response()->json([
+                "status" => true,
+                "message" => "Update History Successful",
+            ], 200);
+
+        } catch (Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'Error: ' . $e->getMessage(),

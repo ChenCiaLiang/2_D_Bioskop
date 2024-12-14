@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/spesialPromoDetail.dart';
 import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
@@ -26,11 +27,13 @@ class Spesialpromocarousel extends StatelessWidget {
         int? index = spesialPromo.id;
         return GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SpesialPromoDetailScreen(
-                  itemSpesial: spesialPromo,
-                  itemMenu: getMenu(menuList, index),
-                )));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SpesialPromoDetailScreen(
+                          itemSpesial: spesialPromo,
+                          itemMenu: getMenu(menuList, index),
+                        )));
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -41,7 +44,7 @@ class Spesialpromocarousel extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                     child: Image.network(
-                      'http://10.0.2.2:8000${spesialPromo.fotoPromo}',
+                      '$url${spesialPromo.fotoPromo}',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -54,11 +57,11 @@ class Spesialpromocarousel extends StatelessWidget {
     );
   }
 
-  List<Menu> getMenu(List<Menu> menuList, int? promoIndex){
+  List<Menu> getMenu(List<Menu> menuList, int? promoIndex) {
     List<Menu> menus = [];
-    
+
     for (var i = 0; i < menuList.length; i++) {
-      if(menuList[i].idSpesialPromo == promoIndex){
+      if (menuList[i].idSpesialPromo == promoIndex) {
         menus.add(menuList[i]);
       }
     }

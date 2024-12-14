@@ -1,6 +1,8 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tubez/client/UserClient.dart';
+import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/edit_profile.dart';
 import 'dart:convert';
 import 'package:tubez/screens/login.dart';
@@ -55,7 +57,7 @@ class _profileScreenState extends State<profileScreen> {
       print("Token is null");
     }
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,8 +125,8 @@ class _profileScreenState extends State<profileScreen> {
                         GestureDetector(
                           child: CircleAvatar(
                             radius: 60,
-                            backgroundImage: NetworkImage(
-                                'http://10.0.2.2:8000/storage/$_profileImage'),
+                            backgroundImage:
+                                NetworkImage('$url/storage/$_profileImage'),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -223,6 +225,20 @@ class _profileScreenState extends State<profileScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      final snackBar = SnackBar(
+                        elevation: 0,
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.transparent,
+                        content: AwesomeSnackbarContent(
+                          title: 'Success!',
+                          message: 'Berhasil Logout!',
+                          contentType: ContentType.success,
+                        ),
+                      );
+
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                      await Future.delayed(Duration(seconds: 1));
                       try {
                         // ngelakuin logout lalu response nya disimpan di variabel response
                         var response = await UserClient.logout();

@@ -1,314 +1,408 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:tubez/client/FilmClient.dart';
+import 'package:tubez/client/ReviewClient.dart';
+import 'dart:convert';
+import 'package:tubez/client/UserClient.dart';
+import 'package:tubez/entity/Review.dart'; // Untuk encode JSON
 
 class IsiReview extends StatefulWidget {
-  const IsiReview({Key? key}) : super(key: key);
+  final String image;
+  final String title;
+  final String status;
+  final int studio;
+  final String date;
+  final String total;
+  final bool isReview;
+  final int ticketCount;
+  final int idFilm; // Tambahkan idFilm
+  final BigInt idHistory; // Tambahkan idHistory
+
+  const IsiReview({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.status,
+    required this.studio,
+    required this.date,
+    required this.total,
+    required this.isReview,
+    required this.ticketCount,
+    required this.idFilm,
+    required this.idHistory,
+  });
 
   @override
   _IsiReviewState createState() => _IsiReviewState();
 }
 
-class _IsiReviewState extends State<IsiReview> with WidgetsBindingObserver {
+class _IsiReviewState extends State<IsiReview> {
   final TextEditingController _reviewController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   final SpeechToText _speechToText = SpeechToText();
-
-  double _bottomInset = 0.0;
-  double _rating = 5.0; // Nilai default rating (bisa diubah sesuai kebutuhan)
-  bool _speechEnable = false;
-  String _wordSpoken = "";
+  bool _isListening = false;
+  double _rating = 5.0;
+  bool _isLoading = false; // Untuk menampilkan loading saat submit
+  late Review review;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addObserver(this); // Mengamati perubahan widget (keyboard)
-    initSpeech();
+    if (widget.isReview) {
+      print('id history ${widget.idHistory}');
+      ambilReview(widget.idHistory);
+      print('test review ${_reviewController.text}');
+    }
+    _initializeSpeech();
   }
 
-  @override
-  void dispose() {
-    _reviewController.dispose();
-    _scrollController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    // Mengatur padding saat keyboard muncul atau menghilang
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+  Future<void> ambilReview(BigInt idHistory) async {
     setState(() {
-      _bottomInset = bottomInset;
+      _isLoading = true;
     });
+
+    try {
+      // Fetch data review based on idHistory
+      review = await ReviewClient.fetchDataReview(idHistory);
+      print('dsaasadsasd ${review.review}');
+      setState(() {
+        _reviewController.text = review.review;
+        _rating = review.rating;
+      });
+    } catch (e) {
+      print("Error fetching review: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
-  void initSpeech() async {
-    _speechEnable = await _speechToText.initialize();
-    setState(() {});
+  Future<void> _initializeSpeech() async {
+    bool available = await _speechToText.initialize(
+      onStatus: (status) => print('Status: $status'),
+      onError: (error) => print('Error: $error'),
+    );
+    if (!available) {
+      print('Speech recognition not available');
+    }
   }
 
   void _startListening() async {
-    await _speechToText.listen(
-      onResult: _onSpeechResult,
-    );
-    setState(() {});
+    if (!_isListening && await _speechToText.hasPermission) {
+      setState(() {
+        _isListening = true;
+      });
+      await _speechToText.listen(onResult: (result) {
+        setState(() {
+          _reviewController.text += result.recognizedWords;
+          _reviewController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _reviewController.text.length),
+          );
+        });
+      });
+    }
   }
 
   void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {});
+    if (_isListening) {
+      await _speechToText.stop();
+      setState(() {
+        _isListening = false;
+      });
+    }
   }
 
-  void _onSpeechResult(result) {
+  void _submitReview() async {
+    if (_reviewController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Review tidak boleh kosong'),
+      ));
+      return;
+    }
+
     setState(() {
-      _wordSpoken = "${result.recognizedWords}";
-      _reviewController.text +=
-          "" + _wordSpoken; // Tambahkan hasil suara ke TextField
-      _reviewController.selection = TextSelection.fromPosition(
-        // Menjaga kursor di posisi akhir
-        TextPosition(offset: _reviewController.text.length),
-      );
+      _isLoading = true; // Menampilkan loading saat submit
     });
+
+    bool success = await ReviewClient.submitReview(
+      widget.idFilm,
+      widget.idHistory,
+      _reviewController.text,
+      _rating,
+    );
+
+    bool successUpdate = await ReviewClient.updateStatusHistory(
+        widget.idHistory, "Completed", 1);
+
+    bool updateRating = await FilmClient.updateRating(widget.idFilm);
+
+    setState(() {
+      _isLoading = false; // Menyembunyikan loading setelah selesai
+    });
+
+    if (success && successUpdate && updateRating) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Review berhasil dikirim'),
+      ));
+      Navigator.pop(context); // Tutup modal jika sukses
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Gagal mengirim review'),
+      ));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedPadding(
       duration: const Duration(milliseconds: 300),
-      padding: EdgeInsets.only(bottom: _bottomInset),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 18.0),
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16),
+          ),
+        ),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40.0,
-                  height: 4.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
                   decoration: BoxDecoration(
                     color: Colors.grey,
-                    borderRadius: BorderRadius.circular(2.0),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset(
-                        'assets/images/spiderman.jpg',
-                        height: 150.0,
-                        width: 100.0,
-                        fit: BoxFit.cover,
-                      ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      widget.image,
+                      width: 100,
+                      height: 140,
+                      fit: BoxFit.cover,
                     ),
-                    const SizedBox(width: 12.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'SPIDER-MAN : INTO THE SPIDER-VERSE',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(height: 8.0),
-                          RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Status: ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Status: ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                TextSpan(
-                                  text: 'Completed\n',
-                                  style: TextStyle(
-                                      color: Colors.amber,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: widget.status,
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                TextSpan(
-                                  text: 'Studio: ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: '1\n',
-                                  style: TextStyle(
-                                      color: Colors.amber,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: 'Date: ',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: '07-10-2024\n\n',
-                                  style: TextStyle(
-                                      color: Colors.amber,
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: 'Rating: ',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // Menampilkan rating yang dipilih
-                                TextSpan(
-                                  text: '${_rating.toStringAsFixed(1)}/10.0',
-                                  style: TextStyle(
-                                    color: Colors.amber,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 4),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Studio: ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: widget.studio.toString(),
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Date: ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: widget.date,
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Rating: ',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextSpan(
+                                text: _rating.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12.0),
-                // Slider untuk mengatur rating
-                Slider(
-                  value: _rating,
-                  min: 1,
-                  max: 10,
-                  divisions: 100,
-                  label: _rating.toStringAsFixed(1),
-                  onChanged: (double value) {
-                    setState(() {
-                      _rating = value;
-                    });
-                  },
-                  activeColor: Colors.amber,
-                  inactiveColor: Colors.grey,
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 200,
-                  padding: const EdgeInsets.all(12.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Slider(
+                value: _rating,
+                min: 1,
+                max: 10,
+                divisions: 90,
+                label: _rating.toStringAsFixed(1),
+                onChanged: widget.isReview
+                    ? null
+                    : (double value) {
+                        setState(() {
+                          _rating = value;
+                        });
+                      },
+                activeColor: Colors.amber,
+                inactiveColor: Colors.amber,
+              ),
+              const SizedBox(height: 16),
+              Container(
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: TextField(
-                    controller: _reviewController,
-                    maxLines: null,
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Write your review here...',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: 48.0,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Menutup keyboard
-                            FocusScope.of(context).unfocus();
-
-                            // Cetak review dan rating yang diinputkan
-                            print(
-                                'Review Submitted: ${_reviewController.text}');
-                            print('Rating Submitted: $_rating/10.0');
-
-                            // Menutup modal
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                  child: widget.isReview
+                      ? (TextField(
+                          controller: _reviewController,
+                          maxLines: 4,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          enabled: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: _reviewController.text,
+                            hintStyle: const TextStyle(color: Colors.white54),
+                          ),
+                        ))
+                      : (TextField(
+                          controller: _reviewController,
+                          maxLines: 4,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Tulis ulasan Anda di sini...',
+                            hintStyle: TextStyle(color: Colors.white54),
+                          ),
+                        ))),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _submitReview,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Send',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          child: const Text(
-                            'Send',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                        ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  GestureDetector(
+                    onTap: _isListening ? _stopListening : _startListening,
+                    child: Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isListening ? Icons.mic : Icons.mic_off,
+                        color: Colors.black,
                       ),
                     ),
-                    const SizedBox(width: 8.0),
-                    SizedBox(
-                      height: 48.0,
-                      width: 48.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            _speechToText.isListening
-                                ? _stopListening()
-                                : _startListening();
-                          },
-                          icon: Icon(
-                            _speechToText.isNotListening
-                                ? Icons.mic_off
-                                : Icons.mic,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
   }
-}
-
-void showIsiReview(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) => const IsiReview(),
-  );
 }

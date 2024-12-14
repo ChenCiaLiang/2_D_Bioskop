@@ -1,20 +1,18 @@
-import 'dart:convert'; // Untuk jsonDecode
+import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:tubez/entity/User.dart'; // Pastikan untuk mengimpor paket intl
+import 'package:tubez/entity/User.dart';
 
 class History {
-  BigInt id;
+  BigInt? id;
   BigInt idTransaksi;
-  BigInt idReview;
   BigInt idUser;
   String status;
-  bool isReview; // Menggunakan tipe bool
+  bool isReview;
   Transaksi? transaksi;
 
   History({
-    required this.id,
+    this.id,
     required this.idTransaksi,
-    required this.idReview,
     required this.idUser,
     required this.status,
     required this.isReview,
@@ -23,7 +21,6 @@ class History {
 
   factory History.fromRawJson(String str) => History.fromJson(json.decode(str));
 
-  // Factory constructor untuk parsing JSON
   factory History.fromJson(Map<String, dynamic> json) {
     bool isReview = json['isReview'] == 1;
 
@@ -34,10 +31,9 @@ class History {
     String status = json['status'] ?? '';
 
     return History(
-      id: _parseBigInt(json['id']),
-      idTransaksi: _parseBigInt(json['idTransaksi']),
-      idReview: _parseBigInt(json['idReview']),
-      idUser: _parseBigInt(json['idUser']),
+      id: BigInt.from(json['id']),
+      idTransaksi: BigInt.from(json['idTransaksi']),
+      idUser: BigInt.from(json['idUser']),
       status: status,
       isReview: isReview,
       transaksi: transaksi,
@@ -45,39 +41,20 @@ class History {
   }
 
   String toRawJson() => json.encode(toJson());
-  // Convert object ke JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id.toString(),
       'idTransaksi': idTransaksi.toString(),
-      'idReview': idReview.toString(),
       'idUser': idUser.toString(),
       'status': status,
       'isReview': isReview ? 1 : 0,
-      'transaksi': transaksi?.toJson(), // Jika transaksi tidak null
+      'transaksi': transaksi?.toJson(),
     };
-  }
-
-  // Fungsi untuk parsing BigInt dengan aman
-  static BigInt _parseBigInt(dynamic value) {
-    // Jika nilai null atau tidak valid, kembalikan BigInt.zero
-    if (value == null) {
-      return BigInt.zero;
-    }
-    // Jika nilai berupa string, coba konversi ke BigInt
-    if (value is String) {
-      return BigInt.tryParse(value) ?? BigInt.zero;
-    }
-    // Jika sudah berupa BigInt, langsung kembalikan
-    if (value is BigInt) {
-      return value;
-    }
-    return BigInt.zero; // fallback
   }
 }
 
 class Film {
-  int? id;
+  int id;
   String judul;
   String status;
   String durasi;
@@ -144,7 +121,6 @@ class Transaksi {
     required this.pemesanan_tiket,
   });
 
-  // Factory constructor to parse JSON
   factory Transaksi.fromJson(Map<String, dynamic> json) {
     return Transaksi(
       id: json['id'] is int ? json['id'] : int.parse(json['id']),
@@ -220,14 +196,12 @@ class PemesananTiket {
     required this.countTiket,
   });
 
-  // Factory constructor to parse JSON
   factory PemesananTiket.fromJson(Map<String, dynamic> json) {
     return PemesananTiket(
       id: json['id'] is int ? json['id'] : int.parse(json['id']),
       idJadwalTayang: json['idJadwalTayang'] is int
           ? json['idJadwalTayang']
           : int.parse(json['idJadwalTayang']),
-      // Decode kursiDipesan string into a List<String>
       kursiDipesan: List<String>.from(jsonDecode(json['kursiDipesan'])),
       countTiket: json['kursiDipesan'] is String
           ? List<String>.from(jsonDecode(json['kursiDipesan'])).length
@@ -266,8 +240,10 @@ class JadwalTayang {
     required this.film,
   });
 
-  // Factory constructor to parse JSON
   factory JadwalTayang.fromJson(Map<String, dynamic> json) {
+    DateTime dateTime = DateTime.parse(json['tanggalTayang'].toString());
+
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
     return JadwalTayang(
       id: json['id'] is int ? json['id'] : int.parse(json['id']),
       idStudio: json['idStudio'] is int
@@ -278,7 +254,7 @@ class JadwalTayang {
           : int.parse(json['idJadwal']),
       idFilm:
           json['idFilm'] is int ? json['idFilm'] : int.parse(json['idFilm']),
-      tanggalTayang: json['tanggalTayang'].toString(),
+      tanggalTayang: formattedDate,
       studio: json['studio'] != null ? Studio.fromJson(json['studio']) : null,
       film: json['film'] != null ? Film.fromJson(json['film']) : null,
     );
