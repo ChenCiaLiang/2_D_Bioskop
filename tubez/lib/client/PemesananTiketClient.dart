@@ -19,7 +19,7 @@ class PemesananTiketClient {
       String? token = prefs.getString('auth_token');
 
       var response = await get(
-        Uri.http(url,
+        Uri.https(url,
             '$endpoint/kursi/all/$idJadwalTayang'), // Passing idJadwalTayang
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ class PemesananTiketClient {
 
       // Send POST request with headers and body
       var response = await post(
-        Uri.http(url, '$endpoint/pemesanantiket'),
+        Uri.https(url, '$endpoint/pemesanantiket'),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type":
@@ -114,7 +114,7 @@ class PemesananTiketClient {
       String? token = prefs.getString('auth_token');
 
       var response = await delete(
-        Uri.http(url, '$endpoint/pemesanantiket/delete/$id'),
+        Uri.https(url, '$endpoint/pemesanantiket/delete/$id'),
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token"

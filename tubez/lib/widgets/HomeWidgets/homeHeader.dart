@@ -81,7 +81,7 @@ class HomeHeader extends StatelessWidget {
                                             const EdgeInsets.symmetric(
                                                 vertical: 8),
                                         leading: Image.network(
-                                          '$url${films[index].fotoFilm}',
+                                          '$urlGambar${films[index].fotoFilm}',
                                           width: 50,
                                           height: 75,
                                           fit: BoxFit.cover,

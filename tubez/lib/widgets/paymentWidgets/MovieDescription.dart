@@ -27,7 +27,7 @@ class MovieDescription extends StatelessWidget {
         child: Row(
           children: [
             Image.network(
-              '$url${movie.fotoFilm}',
+              '$urlGambar${movie.fotoFilm}',
               width: 100,
               height: 160,
               fit: BoxFit.cover,

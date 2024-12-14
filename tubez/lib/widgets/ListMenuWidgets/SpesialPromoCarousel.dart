@@ -44,7 +44,7 @@ class Spesialpromocarousel extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                     child: Image.network(
-                      '$url${spesialPromo.fotoPromo}',
+                      '$urlGambar${spesialPromo.fotoPromo}',
                       fit: BoxFit.cover,
                     ),
                   ),

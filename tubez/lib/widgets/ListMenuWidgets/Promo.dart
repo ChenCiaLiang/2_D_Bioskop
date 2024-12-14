@@ -45,7 +45,7 @@ class Promo extends StatelessWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10.0)),
                       child: Image.network(
-                        '$url${promo.fotoPromo}',
+                        '$urlGambar${promo.fotoPromo}',
                         fit: BoxFit.cover,
                       ),
                     ),
