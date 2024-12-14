@@ -56,7 +56,8 @@ class UserClient {
     try {
       var response = await post(
           Uri.https(apibro.url,
-              '${apibro.endpoint}/register'), // pergi ke /api/register
+              '/api/register'), // pergi ke /api/register
+
           headers: {"Content-Type": "application/json"},
           body: user.toRawJson());
       // hasil inputan register kita dalam bentuk user dirubah menjadi json dan dimasukkan ke dalam body

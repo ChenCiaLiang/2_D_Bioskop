@@ -8,15 +8,21 @@ import 'package:tubez/client/FilmClient.dart';
 import 'package:tubez/screens/movieDetail.dart';
 import 'package:tubez/entity/Film.dart';
 
+// ignore: must_be_immutable
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({
+  HomeHeader({
     super.key,
     required this.size,
     required this.user,
   });
 
   final Size size;
-  final User user;
+  User user;
+
+  void handleUpdate(User updatedUser) {
+    print('Selected Day: ${updatedUser}');
+    user = updatedUser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,12 +151,12 @@ class HomeHeader extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const profileScreen()),
+                      builder: (context) => profileScreen(updatedUser: handleUpdate)),
                 );
               },
               child: CircleAvatar(
                 radius: size.width / 16,
-                backgroundImage: NetworkImage('$url/storage/${user.foto}'),
+                backgroundImage: NetworkImage('$urlGambar/storage/${user.foto}'),
               ),
             ),
           ],
