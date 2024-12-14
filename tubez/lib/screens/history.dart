@@ -6,6 +6,7 @@ import 'package:tubez/client/HistoryClient.dart';
 import 'package:tubez/client/UserClient.dart';
 import 'package:tubez/widgets/historyWidgets/isiHistory.dart';
 import 'package:tubez/client/apiURL.dart';
+import 'package:rxdart/rxdart.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -16,14 +17,18 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   int? userId;
-  Future<List<History>>? _historyFuture;
+  final _historySubject = BehaviorSubject<List<History>>();
+
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+  }
 
   Future<void> initializeData() async {
     await ambilToken();
     if (userId != null) {
-      setState(() {
-        _historyFuture = HistoryClient.fetchHistory();
-      });
+      fetchHistory();
     }
   }
 
@@ -46,18 +51,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
   }
 
+  void fetchHistory() async {
+    try {
+      List<History> historyList = await HistoryClient.fetchHistory();
+      _historySubject.add(historyList);
+    } catch (error) {
+      _historySubject.addError(error);
+    }
+  }
+
   @override
-  void initState() {
-    super.initState();
-    initializeData();
+  void dispose() {
+    _historySubject.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HistoryHeader(),
-      body: FutureBuilder<List<History>>(
-        future: _historyFuture,
+      body: StreamBuilder<List<History>>(
+        stream: _historySubject.stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

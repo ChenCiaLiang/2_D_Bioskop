@@ -42,7 +42,7 @@ class _IsiReviewState extends State<IsiReview> {
   final SpeechToText _speechToText = SpeechToText();
   bool _isListening = false;
   double _rating = 5.0;
-  bool _isLoading = false; // Untuk menampilkan loading saat submit
+  bool _isLoading = false;
   late Review review;
 
   @override
@@ -62,9 +62,7 @@ class _IsiReviewState extends State<IsiReview> {
     });
 
     try {
-      // Fetch data review based on idHistory
       review = await ReviewClient.fetchDataReview(idHistory);
-      print('dsaasadsasd ${review.review}');
       setState(() {
         _reviewController.text = review.review;
         _rating = review.rating;
@@ -114,6 +112,11 @@ class _IsiReviewState extends State<IsiReview> {
   }
 
   void _submitReview() async {
+    if (widget.isReview) {
+      Navigator.pop(context);
+      return;
+    }
+
     if (_reviewController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Review tidak boleh kosong'),
@@ -122,7 +125,7 @@ class _IsiReviewState extends State<IsiReview> {
     }
 
     setState(() {
-      _isLoading = true; // Menampilkan loading saat submit
+      _isLoading = true;
     });
 
     bool success = await ReviewClient.submitReview(
@@ -138,14 +141,14 @@ class _IsiReviewState extends State<IsiReview> {
     bool updateRating = await FilmClient.updateRating(widget.idFilm);
 
     setState(() {
-      _isLoading = false; // Menyembunyikan loading setelah selesai
+      _isLoading = false;
     });
 
     if (success && successUpdate && updateRating) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Review berhasil dikirim'),
       ));
-      Navigator.pop(context); // Tutup modal jika sukses
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Gagal mengirim review'),
