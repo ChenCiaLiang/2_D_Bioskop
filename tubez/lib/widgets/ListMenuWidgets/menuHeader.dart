@@ -81,7 +81,7 @@ class MenuHeader extends StatelessWidget {
                                             const EdgeInsets.symmetric(
                                                 vertical: 8),
                                         leading: Image.network(
-                                          '$url${menus[index].fotoMenu}',
+                                          '$urlGambar${menus[index].fotoMenu}',
                                           width: 50,
                                           height: 75,
                                           fit: BoxFit.cover,

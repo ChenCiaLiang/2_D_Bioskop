@@ -27,7 +27,7 @@ class JadwalTayangClient {
       String? token = prefs.getString('auth_token');
 
       var response = await get(
-          Uri.http(url, '$endpoint/jadwaltayang/get/$idFilm'),
+          Uri.https(url, '$endpoint/jadwaltayang/get/$idFilm'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"
@@ -52,7 +52,7 @@ class JadwalTayangClient {
       String? token = prefs.getString('auth_token');
 
       var response = await get(
-          Uri.http(url, '$endpoint/jadwaltayang/find/$searchText'),
+          Uri.https(url, '$endpoint/jadwaltayang/find/$searchText'),
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token"

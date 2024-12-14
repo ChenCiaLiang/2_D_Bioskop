@@ -44,7 +44,7 @@ class _MenuDetailScreenState extends State<MenuDetailScreen> {
                 children: [
                   Positioned.fill(
                     child: Image.network(
-                      '$url${menus.fotoMenu}',
+                      '$urlGambar${menus.fotoMenu}',
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,

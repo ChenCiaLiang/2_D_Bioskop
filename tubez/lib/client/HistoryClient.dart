@@ -17,7 +17,7 @@ class HistoryClient {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
 
-      var response = await get(Uri.http(url, '$endpoint/history'), headers: {
+      var response = await get(Uri.https(url, '$endpoint/history'), headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       });
@@ -40,7 +40,7 @@ class HistoryClient {
     try {
       UserClient userClient = UserClient();
       String? token = await userClient.getToken();
-      var response = await post(Uri.http(url, '$endpoint/history/create'),
+      var response = await post(Uri.https(url, '$endpoint/history/create'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $token'

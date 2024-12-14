@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:tubez/client/apiURL.dart';
 
 import 'package:tubez/entity/Film.dart';
 import 'package:tubez/model/tiket.dart';
@@ -152,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  'http://10.0.2.2:8000/storage/films/venom2.jpg',
+                                  '$url/storage/films/venom2.jpg',
                                   fit: BoxFit.cover,
                                 ),
                               ),

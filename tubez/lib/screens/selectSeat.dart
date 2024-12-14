@@ -422,7 +422,7 @@ void showSlideInModal(
                       Container(
                           height: 80,
                           width: 80,
-                          child: Image.network('$url${movie.fotoFilm}')),
+                          child: Image.network('$urlGambar${movie.fotoFilm}')),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(

@@ -74,7 +74,7 @@ class _topRatedScreenState extends State<topRatedScreen>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        '$url${movie.fotoFilm}',
+                        '$urlGambar${movie.fotoFilm}',
                         fit: BoxFit.cover,
                       ),
                     ),
