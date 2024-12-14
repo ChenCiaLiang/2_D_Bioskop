@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  '$url/storage/films/venom2.jpg',
+                                  '$urlGambar/storage/films/venom2.jpg',
                                   fit: BoxFit.cover,
                                 ),
                               ),
