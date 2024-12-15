@@ -357,7 +357,17 @@ class _paymentScreenStateState extends State<paymentScreenState> {
                             icon: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.white),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => selectPaymentScreen(
+                                      title: _metodePembayaran,
+                                      onPaymentSelected: (metodePembayaran) =>
+                                          setState(() {
+                                            _metodePembayaran = metodePembayaran;
+                                          })),
+                                ),
+                              );
                             },
                           ),
                         ],

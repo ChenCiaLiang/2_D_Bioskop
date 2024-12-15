@@ -151,7 +151,9 @@ Future<void> createPDF(
                           "${mySeats.length} x ${currencyFormatter.format(getHargaKursi(idStudio))}",
                           style: pw.TextStyle(
                               color: PdfColor.fromHex('#ffffff'),
-                              fontSize: 16)),
+                              fontSize: 16)
+                              ,overflow: pw.TextOverflow.clip,
+                              maxLines: 3),
                     ]),
                     pw.SizedBox(height: 4),
                     pw.Row(

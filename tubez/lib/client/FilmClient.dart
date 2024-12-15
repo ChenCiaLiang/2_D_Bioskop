@@ -75,7 +75,7 @@ class FilmClient {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('auth_token');
 
-      var response = await post(Uri.https(url, '$endpoint/updateRating/$id'), headers: {
+      var response = await post(Uri.https(url, '$endpoint/film/updateRating/$id'), headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer $token"
       });

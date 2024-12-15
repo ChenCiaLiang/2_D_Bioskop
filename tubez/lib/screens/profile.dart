@@ -6,9 +6,12 @@ import 'package:tubez/client/apiURL.dart';
 import 'package:tubez/screens/edit_profile.dart';
 import 'dart:convert';
 import 'package:tubez/screens/login.dart';
+import 'package:tubez/entity/User.dart';
 
 class profileScreen extends StatefulWidget {
-  const profileScreen({super.key});
+  profileScreen({super.key, required this.updatedUser});
+
+  final Function(User) updatedUser;
 
   @override
   State<profileScreen> createState() => _profileScreenState();
@@ -65,6 +68,14 @@ class _profileScreenState extends State<profileScreen> {
         backgroundColor: const Color.fromARGB(0, 35, 35, 35),
         leading: IconButton(
           onPressed: () {
+            widget.updatedUser(User(
+              username: _name!,
+              email: _email!,
+              noTelepon: _noTelp!,
+              tanggalLahir: _dateBirth!,
+              password: _password!,
+              foto: _profileImage!,
+            ));
             Navigator.pop(context);
           },
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
@@ -126,7 +137,7 @@ class _profileScreenState extends State<profileScreen> {
                           child: CircleAvatar(
                             radius: 60,
                             backgroundImage:
-                                NetworkImage('$url/storage/$_profileImage'),
+                                NetworkImage('$urlGambar/storage/$_profileImage'),
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -197,6 +208,8 @@ class _profileScreenState extends State<profileScreen> {
                                 _profileImage = updatedData['currentPhoto'];
                               });
                             }
+
+                            _loadUserProfile();
                           },
                           child: const Text(
                             'EDIT',
@@ -225,6 +238,7 @@ class _profileScreenState extends State<profileScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      // ngeluarin snackbar
                       final snackBar = SnackBar(
                         elevation: 0,
                         behavior: SnackBarBehavior.floating,

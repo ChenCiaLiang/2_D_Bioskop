@@ -22,6 +22,8 @@ class SpesialPromoClient {
 
       if (response.statusCode != 200) {
         print(response.statusCode);
+        var responseBody = json.decode(response.body);
+        print(responseBody['data']);
         throw Exception(response.reasonPhrase);
       }
 

@@ -48,8 +48,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     controllerDateBirth = TextEditingController(text: widget.dateBirth);
     controllerPassword = TextEditingController();
     controllerConfirm = TextEditingController();
-    _profileImage =
-        widget.currentPhoto.isNotEmpty ? File(widget.currentPhoto) : null;
+    _profileImage = File(widget.currentPhoto);
+  }
+
+  @override
+  void didUpdateWidget(covariant EditProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentPhoto != oldWidget.currentPhoto) {
+      setState(() {
+        _profileImage = widget.currentPhoto.isNotEmpty ? File(widget.currentPhoto) : null;
+      });
+    }
   }
 
   final ImagePicker _picker = ImagePicker();
@@ -205,9 +214,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: _profileImage != null
                       ? FileImage(_profileImage!)
                       : widget.currentPhoto.isNotEmpty
-                          ? NetworkImage('$url/storage/${widget.currentPhoto}')
+                          ? NetworkImage('$urlGambar/storage/${widget.currentPhoto}')
                               as ImageProvider
-                          : NetworkImage('$url/storage/$_profileImage')
+                          : NetworkImage('$urlGambar/storage/$_profileImage')
                               as ImageProvider,
                 ),
                 Positioned(

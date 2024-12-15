@@ -4,6 +4,7 @@ import 'package:tubez/entity/Menu.dart';
 import 'package:tubez/entity/SpesialPromo.dart';
 import 'package:tubez/screens/list.dart';
 import 'package:tubez/widgets/MovieDetailWidgets/BackButton.dart';
+import 'package:tubez/client/apiURL.dart';
 
 class PromoDetailScreen extends StatefulWidget {
   final SpesialPromo itemPromo;
